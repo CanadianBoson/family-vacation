@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ymlato2cu7hc"]
+
+[ext_resource type="Texture2D" uid="uid://duph3aslo601i" path="res://pin.png" id="1_nikp6"]
+
+[node name="Pin" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(6.10352e-05, 3)
+scale = Vector2(0.0520831, 0.0438656)
+texture = ExtResource("1_nikp6")

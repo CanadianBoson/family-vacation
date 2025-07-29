@@ -1,3 +1,22 @@
-[gd_scene format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=3 format=3 uid="uid://d1r2dwh600cam"]
+
+[ext_resource type="Texture2D" uid="uid://cev5vsiqpslrt" path="res://blank_map.png" id="1_mlf6e"]
+[ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://game_scene.gd" id="1_po0ka"]
 
 [node name="GameScene" type="Node2D"]
+script = ExtResource("1_po0ka")
+
+[node name="PinsContainer" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(-6, 3)
+
+[node name="GameScene" type="Node2D" parent="."]
+
+[node name="MapBackground" type="TextureRect" parent="GameScene"]
+z_index = -1
+offset_left = -159.0
+offset_top = -65.0
+offset_right = 4433.0
+offset_bottom = 3131.0
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_mlf6e")
