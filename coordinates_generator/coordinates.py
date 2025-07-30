@@ -1,9 +1,9 @@
 import pandas as pd
 import json
-import numpy as np # For mathematical functions like log, tan, radians
+import numpy as np
+import math # For math.ceil
 
-# List of European countries (ISO2 codes for consistency with your CSV)
-# This list is based on common definitions of European countries.
+# This list is no longer used in the primary filter but is kept for reference.
 EUROPEAN_COUNTRIES = [
     "AL", "AD", "AM", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ",
     "DK", "EE", "FI", "FR", "GE", "DE", "GR", "HU", "IS", "IE", "IT",
@@ -26,80 +26,106 @@ def mercator_y(lat):
     lat_rad = np.radians(np.clip(lat, -85.05112878, 85.05112878))
     return R * np.log(np.tan(np.pi / 4 + lat_rad / 2))
 
-# Reference points for coordinate transformation
-# Istanbul:   lng=28.9795, lat=41.0082 -> pixel_x=730, pixel_y=600
-# Copenhagen: lng=12.5683, lat=55.6761 -> pixel_x=517, pixel_y=338
-
-# Calculate Mercator coordinates for new reference points
-istanbul_lng_merc = mercator_x(28.9795)
-istanbul_lat_merc = mercator_y(41.0082)
-
-copenhagen_lng_merc = mercator_x(12.5683)
-copenhagen_lat_merc = mercator_y(55.6761)
-
-# Now, calculate the scaling factors and offsets from Mercator coordinates to pixel coordinates
-# pixel_x = scale_x * mercator_x_coord + offset_x
-# pixel_y = scale_y * mercator_y_coord + offset_y
-
-# For X coordinates (pixel_x vs mercator_x_coord):
-# 730 = SCALE_X * istanbul_lng_merc + OFFSET_X
-# 517 = SCALE_X * copenhagen_lng_merc + OFFSET_X
-# Solving for SCALE_X and OFFSET_X
-# (730 - 517) = SCALE_X * (istanbul_lng_merc - copenhagen_lng_merc)
-SCALE_X = (730 - 517) / (istanbul_lng_merc - copenhagen_lng_merc)
-OFFSET_X = 730 - SCALE_X * istanbul_lng_merc
-
-# For Y coordinates (pixel_y vs mercator_y_coord):
-# 600 = SCALE_Y * istanbul_lat_merc + OFFSET_Y
-# 338 = SCALE_Y * copenhagen_lat_merc + OFFSET_Y
-# Solving for SCALE_Y and OFFSET_Y
-# (600 - 338) = SCALE_Y * (istanbul_lat_merc - copenhagen_lat_merc)
-SCALE_Y = (600 - 338) / (istanbul_lat_merc - copenhagen_lat_merc)
-OFFSET_Y = 600 - SCALE_Y * istanbul_lat_merc
-
-
-def filter_cities_to_json(csv_file_path, json_file_path):
+def calculate_transform_parameters(point1, point2):
     """
-    Reads city data from a CSV using pandas, filters it, and writes selected data to a JSON file.
-    Coordinates are transformed using Mercator projection and then scaled to pixel values.
+    Calculates the scale and offset for transforming Mercator coordinates to pixel coordinates.
+
+    Args:
+        point1 (dict): The first reference point with keys 'lng', 'lat', 'x', 'y'.
+        point2 (dict): The second reference point with keys 'lng', 'lat', 'x', 'y'.
+
+    Returns:
+        tuple: A tuple containing (scale_x, offset_x, scale_y, offset_y).
+    """
+    # Calculate Mercator coordinates for the reference points
+    p1_merc_x = mercator_x(point1['lng'])
+    p1_merc_y = mercator_y(point1['lat'])
+    p2_merc_x = mercator_x(point2['lng'])
+    p2_merc_y = mercator_y(point2['lat'])
+
+    # Calculate scale and offset for the X-axis
+    scale_x = (point1['x'] - point2['x']) / (p1_merc_x - p2_merc_x)
+    offset_x = point1['x'] - scale_x * p1_merc_x
+
+    # Calculate scale and offset for the Y-axis
+    scale_y = (point1['y'] - point2['y']) / (p1_merc_y - p2_merc_y)
+    offset_y = point1['y'] - scale_y * p1_merc_y
+    
+    return scale_x, offset_x, scale_y, offset_y
+
+
+def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scale_y, offset_y):
+    """
+    Reads city data, filters it based on map area and a dynamic population-based
+    quota per country, and writes the result to a JSON file.
 
     Args:
         csv_file_path (str): The path to the input CSV file.
         json_file_path (str): The path to the output JSON file.
+        scale_x (float): The scaling factor for the x-coordinate.
+        offset_x (float): The offset for the x-coordinate.
+        scale_y (float): The scaling factor for the y-coordinate.
+        offset_y (float): The offset for the y-coordinate.
     """
     try:
         # Read the CSV file into a pandas DataFrame
         df = pd.read_csv(csv_file_path)
 
-        # Ensure relevant columns are treated correctly
+        # --- Data Cleaning and Preparation ---
         df['population'] = pd.to_numeric(df['population'], errors='coerce').fillna(0).astype(int)
-        df['capital'] = df['capital'].fillna('').astype(str).str.strip().str.lower()
         df['iso2'] = df['iso2'].fillna('').astype(str).str.upper()
         df['lng'] = pd.to_numeric(df['lng'], errors='coerce')
         df['lat'] = pd.to_numeric(df['lat'], errors='coerce')
-        
-        # Drop rows where 'lng' or 'lat' became NaN due to coercion errors
         df.dropna(subset=['lng', 'lat'], inplace=True)
 
-        # Filter criteria:
-        is_european = df['iso2'].isin(EUROPEAN_COUNTRIES)
-        meets_criteria = ((df['capital'] == 'primary') | (df['population'] > 500000))
-        
-        filtered_df = df[is_european & meets_criteria].copy()
+        # --- Coordinate Transformation ---
+        df['merc_x'] = mercator_x(df['lng'])
+        df['merc_y'] = mercator_y(df['lat'])
+        df['x'] = scale_x * df['merc_x'] + offset_x
+        df['y'] = scale_y * df['merc_y'] + offset_y
 
-        # Apply Mercator projection to longitude and latitude
-        filtered_df['merc_x'] = mercator_x(filtered_df['lng'])
-        filtered_df['merc_y'] = mercator_y(filtered_df['lat'])
+        # --- NEW FILTERING LOGIC ---
+        # 1. Filter for cities within the map's pixel boundaries.
+        is_in_map_area = df['x'].between(0, 940) & df['y'].between(0, 1000)
+        map_cities_df = df[is_in_map_area & df['iso2'].isin(EUROPEAN_COUNTRIES)].copy()
 
-        # Apply the linear transformation from Mercator coordinates to pixel coordinates
-        filtered_df['x'] = SCALE_X * filtered_df['merc_x'] + OFFSET_X
-        filtered_df['y'] = SCALE_Y * filtered_df['merc_y'] + OFFSET_Y
+        # 2. Filter those cities for populations over 100k.
+        pop_filtered_df = map_cities_df
 
-        is_in_map_area = filtered_df['x'].between(0, 1000) & filtered_df['y'].between(0, 1000)
-        filtered_df = filtered_df[is_in_map_area]
+        # 3. Dynamically select cities per country.
+        final_selection = []
+        for country_code, group in pop_filtered_df.groupby('iso2'):
+            num_available = len(group)
+            if num_available == 0:
+                continue
+
+            # Sum population for all cities in the country that are on the map and >100k pop
+            total_country_pop = group['population'].sum()
+            
+            # Calculate the target number of cities based on population
+            target_count = math.ceil(total_country_pop / 6_000_000)
+
+            # Determine the number of cities to select based on availability
+            if num_available >= 3:
+                # If 3 or more are available, take at least 3, but up to the target_count
+                num_to_select = min(num_available, max(2, target_count))
+            else:
+                # If 1 or 2 are available, just take 1
+                num_to_select = 1
+            
+            # Sort by population and take the top N cities
+            top_cities = group.sort_values(by='population', ascending=False).head(num_to_select)
+            final_selection.append(top_cities)
+
+        # Combine the selected cities from all countries into the final DataFrame
+        if final_selection:
+            final_df = pd.concat(final_selection)
+        else:
+            final_df = pd.DataFrame(columns=df.columns)
+        # --- END OF NEW LOGIC ---
 
         # Select columns for the output JSON
-        output_data = filtered_df[['city', 'x', 'y', 'lng', 'lat']]
+        output_data = final_df[['city', 'x', 'y', 'lng', 'lat', 'iso2']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')
@@ -118,7 +144,16 @@ def filter_cities_to_json(csv_file_path, json_file_path):
         print(f"An unexpected error occurred: {e}")
 
 # --- Usage Example ---
+# Define reference points as dictionaries
+ref_point1 = {'lng': 28.9795, 'lat': 41.0082, 'x': 730, 'y': 600} # Istanbul
+ref_point2 = {'lng': 12.5683, 'lat': 55.6761, 'x': 517, 'y': 338} # Copenhagen
+
+# Calculate transformation parameters
+scale_x, offset_x, scale_y, offset_y = calculate_transform_parameters(ref_point1, ref_point2)
+
+# Define file paths
 csv_input_file = "worldcities.csv"
 json_output_file = "locations.json"
 
-filter_cities_to_json(csv_input_file, json_output_file)
+# Run the main function with the calculated parameters
+filter_cities_to_json(csv_input_file, json_output_file, scale_x, offset_x, scale_y, offset_y)

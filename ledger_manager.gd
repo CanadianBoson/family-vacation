@@ -4,8 +4,6 @@ extends Node
 
 # Reference to the VBoxContainer that holds ledger entries (inside the ScrollContainer)
 @onready var _ledger_entries_vbox: VBoxContainer = $"../LedgerScrollContainer/LedgerEntriesVBox" 
-# Reference to the VBoxContainer that holds the title and overall distance
-@onready var _ledger_header_vbox: VBoxContainer = $"../LedgerHeaderVBox"
 # Reference to the Label that displays the overall distance
 @onready var _overall_distance_label: Label = $"../LedgerHeaderVBox/OverallDistanceLabel" # Adjust path if label name differs
 

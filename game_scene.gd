@@ -25,6 +25,7 @@ var hovered_location_data = null
 
 # The _ready function is called once when the node enters the scene tree.
 func _ready():
+	_print_tree_with_types(self)
 	# Initialize PinManager with the pins_container reference
 	pin_manager.initialize(pins_container, pin_scene)
 	
@@ -40,6 +41,12 @@ func _ready():
 	# Update the ledger display initially
 	ledger_manager.update_ledger_display(pin_manager.dropped_pin_data)
 
+func _print_tree_with_types(node, indent=""):
+	# Print the node's name and its class/type
+	print(indent + "- " + node.name + " (" + node.get_class() + ")")
+	# Recursively call for each child
+	for child in node.get_children():
+		_print_tree_with_types(child, indent + "  ")
 
 # This function is called for every input event.
 func _unhandled_input(event):
@@ -69,7 +76,7 @@ func _unhandled_input(event):
 		if hovered_data:
 			hover_label.text = hovered_data.city
 			hover_label.set("theme_override_colors/font_color", Color.DARK_ORCHID)
-			hover_label.position = mouse_position + Vector2(15, 15) # Offset label
+			hover_label.position = mouse_position + Vector2(15, -10) # Offset label
 			hover_label.show()
 		else:
 			hover_label.hide()
@@ -81,6 +88,11 @@ func _on_clear_all_button_pressed():
 	ledger_manager.update_ledger_display(pin_manager.dropped_pin_data) # Update ledger
 	queue_redraw() # Redraw the map to remove lines and reset circle colors
 
+# This function is called when the 'Back' button is pressed.
+func _on_back_button_pressed():
+	var result = get_tree().change_scene_to_file("res://main_menu.tscn")
+	if result != OK:
+		print("Error: Could not load the main menu scene.")
 
 # This function is called when the node needs to be drawn.
 func _draw():
