@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=15 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://blank_map.png" id="2_po0ka"]
@@ -6,43 +6,17 @@
 [ext_resource type="Shader" uid="uid://dq8ika0127r0u" path="res://side_panel.gdshader" id="3_mj2jn"]
 [ext_resource type="Script" uid="uid://dpyelxgx1eew2" path="res://pin_manager.gd" id="4_mj2jn"]
 [ext_resource type="Script" uid="uid://bqyrkqgeqeen8" path="res://info_popup.gd" id="6_kdryc"]
+[ext_resource type="Script" uid="uid://dguaa8uarvjss" path="res://grid_overlay.gd" id="7_6e45b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
 shader_parameter/solid_color = Color(0.901961, 0.941176, 0.972549, 1)
-shader_parameter/gradient_start = 0.096
-shader_parameter/gradient_end = 0.441
+shader_parameter/gradient_start = 0.0
+shader_parameter/gradient_end = 0.0
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_6e45b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kdryc"]
-
-[sub_resource type="Animation" id="Animation_mj2jn"]
-resource_name = "popup_info"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("InfoPopup:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.8),
-"transitions": PackedFloat32Array(2),
-"update": 0,
-"values": [Vector2(1, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("InfoPopup:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.8),
-"transitions": PackedFloat32Array(-2),
-"update": 0,
-"values": [Color(0.50097, 0.683024, 1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_kdryc"]
 length = 0.001
@@ -98,6 +72,33 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_mj2jn"]
+resource_name = "popup_info"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("InfoPopup:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.8),
+"transitions": PackedFloat32Array(2),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("InfoPopup:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.8),
+"transitions": PackedFloat32Array(-2),
+"update": 0,
+"values": [Color(0.50097, 0.683024, 1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6e45b"]
 _data = {
 &"RESET": SubResource("Animation_kdryc"),
@@ -130,10 +131,10 @@ texture = ExtResource("2_po0ka")
 [node name="SidePanel" type="TextureRect" parent="GameScene/CanvasLayer"]
 modulate = Color(0.960865, 0.937108, 0.968803, 1)
 material = SubResource("ShaderMaterial_kdryc")
-offset_left = 839.0
-offset_top = -1.0
-offset_right = 1151.0
-offset_bottom = 706.0
+offset_left = 1000.0
+offset_top = -5.0
+offset_right = 1312.0
+offset_bottom = 702.0
 texture = SubResource("CanvasTexture_6e45b")
 
 [node name="HoverLabel" type="Label" parent="."]
@@ -142,6 +143,7 @@ offset_right = 40.0
 offset_bottom = 12.0
 
 [node name="LedgerPanel" type="Control" parent="."]
+z_index = 2
 layout_mode = 3
 anchors_preset = 0
 offset_left = 4.0
@@ -190,10 +192,10 @@ offset_bottom = 40.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuButtons"]
 layout_mode = 0
-offset_left = 1043.0
-offset_top = 17.0
-offset_right = 1117.0
-offset_bottom = 75.0
+offset_left = 1008.0
+offset_top = 5.0
+offset_right = 1144.0
+offset_bottom = 106.0
 
 [node name="BackButton" type="Button" parent="MenuButtons/VBoxContainer"]
 layout_mode = 2
@@ -202,6 +204,10 @@ text = "Back"
 [node name="InfoButton" type="Button" parent="MenuButtons/VBoxContainer"]
 layout_mode = 2
 text = "Info"
+
+[node name="GridToggleButton" type="CheckButton" parent="MenuButtons/VBoxContainer"]
+layout_mode = 2
+text = "Grid"
 
 [node name="InfoPopup" type="PanelContainer" parent="."]
 z_index = 1
@@ -237,7 +243,11 @@ libraries = {
 &"": SubResource("AnimationLibrary_6e45b")
 }
 
+[node name="GridOverlay" type="Node2D" parent="."]
+script = ExtResource("7_6e45b")
+
 [connection signal="pressed" from="LedgerPanel/LedgerHeaderVBox/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/InfoButton" to="." method="_on_info_button_pressed"]
+[connection signal="toggled" from="MenuButtons/VBoxContainer/GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="pressed" from="InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

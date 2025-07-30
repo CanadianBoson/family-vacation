@@ -11,6 +11,9 @@ var pin_scene = preload("res://pin.tscn")
 # This node will be used to display the city name on hover.
 @onready var hover_label = $HoverLabel
 
+# Grid overlay
+@onready var grid_overlay = $GridOverlay
+
 # References to our manager scripts
 @onready var pin_manager = $PinManager
 @onready var ledger_manager = $LedgerPanel/LedgerManager
@@ -120,3 +123,9 @@ func _on_back_button_pressed():
 	var result = get_tree().change_scene_to_file("res://main_menu.tscn")
 	if result != OK:
 		print("Error: Could not load the main menu scene.")
+
+# This function is called when the GridToggleButton's state changes.
+func _on_grid_toggle_button_toggled(button_pressed: bool):
+	# Pass the button's state (true for on, false for off)
+	# to the GridOverlay script.
+	grid_overlay.set_visibility(button_pressed)
