@@ -99,7 +99,7 @@ def filter_cities_to_json(csv_file_path, json_file_path):
         filtered_df = filtered_df[is_in_map_area]
 
         # Select columns for the output JSON
-        output_data = filtered_df[['city', 'x', 'y']]
+        output_data = filtered_df[['city', 'x', 'y', 'lng', 'lat']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')
