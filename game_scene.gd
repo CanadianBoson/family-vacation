@@ -1,7 +1,5 @@
 # GameScene.gd
-# This script handles the main game screen, which displays a map
-# and allows the user to drop pins on it at specific, pre-determined locations.
-# Attach this script to the root Node2D of your game scene.
+# ... (all your existing code at the top remains the same) ...
 
 extends Node2D
 
@@ -11,11 +9,16 @@ var pin_scene = preload("res://pin.tscn")
 # This node will hold all the pins that are dropped on the map.
 @onready var pins_container = $PinsContainer
 # This node will be used to display the city name on hover.
-@onready var hover_label = $HoverLabel # Assuming you have a Label node named HoverLabel
+@onready var hover_label = $HoverLabel
 
-# References to our new manager scripts
-@onready var pin_manager = $PinManager # Assuming PinManager is a child of GameScene
-@onready var ledger_manager = $LedgerPanel/LedgerManager # Assuming LedgerManager is a child of LedgerPanel
+# References to our manager scripts
+@onready var pin_manager = $PinManager
+@onready var ledger_manager = $LedgerPanel/LedgerManager
+
+# --- New Node References ---
+@onready var info_popup = $InfoPopup
+@onready var animation_player = $AnimationPlayer
+# -------------------------
 
 # This defines how close (in pixels) the user must click to a valid spot.
 const CLICK_RADIUS = 3.0
@@ -25,7 +28,8 @@ var hovered_location_data = null
 
 # The _ready function is called once when the node enters the scene tree.
 func _ready():
-	_print_tree_with_types(self)
+	# print the scene tree for Gemini
+	# _print_tree_with_types(self)
 	# Initialize PinManager with the pins_container reference
 	pin_manager.initialize(pins_container, pin_scene)
 	
@@ -81,19 +85,6 @@ func _unhandled_input(event):
 		else:
 			hover_label.hide()
 
-# New function: Called when the "Clear All" button is pressed
-func _on_clear_all_button_pressed():
-	print("Clear All button pressed!")
-	pin_manager.clear_all_pins() # Clear pins and data in PinManager
-	ledger_manager.update_ledger_display(pin_manager.dropped_pin_data) # Update ledger
-	queue_redraw() # Redraw the map to remove lines and reset circle colors
-
-# This function is called when the 'Back' button is pressed.
-func _on_back_button_pressed():
-	var result = get_tree().change_scene_to_file("res://main_menu.tscn")
-	if result != OK:
-		print("Error: Could not load the main menu scene.")
-
 # This function is called when the node needs to be drawn.
 func _draw():
 	# Draw circles for valid pin locations
@@ -111,3 +102,21 @@ func _draw():
 			var end_point = pin_manager.dropped_pin_data[i+1].position
 			# Draw a thin red line with a thickness of 2 pixels
 			draw_line(start_point, end_point, Color.RED, 2)
+
+# This function is called when the "Info" button is pressed.
+func _on_info_button_pressed():
+	# We pass all the valid location data from PinManager to the popup.
+	info_popup.show_popup(pin_manager.dropped_pin_data)
+
+# --- Existing Signal Handlers (Make sure they are still there) ---
+
+func _on_clear_all_button_pressed():
+	print("Clear All button pressed!")
+	pin_manager.clear_all_pins()
+	ledger_manager.update_ledger_display(pin_manager.dropped_pin_data)
+	queue_redraw()
+
+func _on_back_button_pressed():
+	var result = get_tree().change_scene_to_file("res://main_menu.tscn")
+	if result != OK:
+		print("Error: Could not load the main menu scene.")

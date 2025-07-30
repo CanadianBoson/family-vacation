@@ -48,7 +48,8 @@ func load_pin_locations():
 			"placed": false,
 			"city": city_name,
 			"lat": lat_val,
-			"lng": lng_val
+			"lng": lng_val,
+			"country": location.get("iso2", ""),
 		})
 	
 	print("Successfully loaded %d pin locations." % valid_pin_locations.size())
