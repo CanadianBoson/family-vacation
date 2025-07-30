@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://fy5xvtergi3a"]
+
+[ext_resource type="Script" uid="uid://cddoylei1y73" path="res://vertical_menu.gd" id="1_hbco0"]
+
+[node name="VerticalMenu" type="Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_hbco0")
+
+[node name="MenuVBox" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 10

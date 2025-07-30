@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=16 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://blank_map.png" id="2_po0ka"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://dpyelxgx1eew2" path="res://pin_manager.gd" id="4_mj2jn"]
 [ext_resource type="Script" uid="uid://bqyrkqgeqeen8" path="res://info_popup.gd" id="6_kdryc"]
 [ext_resource type="Script" uid="uid://dguaa8uarvjss" path="res://grid_overlay.gd" id="7_6e45b"]
+[ext_resource type="PackedScene" uid="uid://fy5xvtergi3a" path="res://vertical_menu.tscn" id="8_e35lh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
@@ -245,6 +246,12 @@ libraries = {
 
 [node name="GridOverlay" type="Node2D" parent="."]
 script = ExtResource("7_6e45b")
+
+[node name="VerticalMenu" parent="." instance=ExtResource("8_e35lh")]
+offset_left = 1029.0
+offset_top = 128.0
+offset_right = 1079.0
+offset_bottom = 178.0
 
 [connection signal="pressed" from="LedgerPanel/LedgerHeaderVBox/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

@@ -1,0 +1,103 @@
+[gd_scene load_steps=9 format=3 uid="uid://16ha4ef8tflw"]
+
+[ext_resource type="Script" uid="uid://cyyvq30j8gqb7" path="res://menu_item.gd" id="1_lg34y"]
+[ext_resource type="Shader" uid="uid://ctggyy2ad2qhe" path="res://circle_mask.gdshader" id="2_7i8jb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i8jb"]
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 15.0
+expand_margin_top = 5.0
+expand_margin_right = 15.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1khwl"]
+shader = ExtResource("2_7i8jb")
+
+[sub_resource type="Animation" id="Animation_7i8jb"]
+resource_name = "open"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DropdownContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_1khwl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DropdownContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_hcqda"]
+resource_name = "close"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DropdownContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nxtqp"]
+_data = {
+&"RESET": SubResource("Animation_1khwl"),
+&"close": SubResource("Animation_hcqda"),
+&"open": SubResource("Animation_7i8jb")
+}
+
+[node name="MenuItem" type="VBoxContainer"]
+offset_right = 35.0
+offset_bottom = 34.0
+script = ExtResource("1_lg34y")
+
+[node name="Header" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7i8jb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Header"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+alignment = 1
+
+[node name="CircleImage" type="TextureRect" parent="Header/HBoxContainer"]
+material = SubResource("ShaderMaterial_1khwl")
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+expand_mode = 2
+
+[node name="ItemLabel" type="Label" parent="Header/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="DropdownContainer" type="VBoxContainer" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="DropdownAnimator" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_nxtqp")
+}
