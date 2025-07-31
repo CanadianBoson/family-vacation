@@ -23,6 +23,8 @@ var pin_scene = preload("res://pin.tscn")
 @onready var animation_player = $AnimationPlayer
 # -------------------------
 
+@onready var quest_manager = $QuestManager # <-- Add this reference
+
 
 var CAR_COLOR = Color.GREEN  # Green
 var BOAT_COLOR = Color.BLUE  # Blue
@@ -73,6 +75,7 @@ func _unhandled_input(event):
 			if placed:
 				ledger_manager.update_ledger_display(pin_manager)
 				queue_redraw() # Redraw to show new line
+				quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
 				
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			# Right-click to remove a pin and its connecting lines
@@ -80,6 +83,7 @@ func _unhandled_input(event):
 			if removed:
 				ledger_manager.update_ledger_display(pin_manager)
 				queue_redraw() # Redraw to update lines and circle color
+				quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
 	
 	# Handle mouse motion for hovering and displaying city names.
 	if event is InputEventMouseMotion:

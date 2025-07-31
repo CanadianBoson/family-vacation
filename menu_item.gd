@@ -9,18 +9,20 @@ extends VBoxContainer
 @onready var dropdown_container: VBoxContainer = $DropdownContainer
 @onready var dropdown_animator: AnimationPlayer = $DropdownAnimator
 
-var dropdown_data = []
 var is_open = false
 var is_animating = false
 
+# This array is now set by the parent menu and contains dictionaries.
+var bullet_points_to_display = []
+
 func _ready():
-	_load_dropdown_data()
 	header.gui_input.connect(_on_header_gui_input)
-	# Start with the dropdown hidden. Its size will not be part of the layout.
 	dropdown_container.hide()
 
-func setup(item_text: String, background_color: Color, image_path: String):
+# The setup function now accepts the pre-generated list of bullet point dictionaries.
+func setup(item_text: String, background_color: Color, image_path: String, bullet_points: Array):
 	label.text = item_text
+	bullet_points_to_display = bullet_points # Store the unique list of dictionaries
 	
 	if not image_path.is_empty():
 		circle_image.texture = load(image_path)
@@ -28,16 +30,6 @@ func setup(item_text: String, background_color: Color, image_path: String):
 	var new_stylebox = header.get("theme_override_styles/panel").duplicate()
 	new_stylebox.bg_color = background_color
 	header.add_theme_stylebox_override("panel", new_stylebox)
-
-func _load_dropdown_data():
-	var file_path = "res://dropdown_data.json"
-	if not FileAccess.file_exists(file_path): return
-
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var content = file.get_as_text()
-	var json_data = JSON.parse_string(content)
-	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("details"):
-		dropdown_data = json_data.details
 
 func _on_header_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -50,45 +42,38 @@ func toggle_dropdown():
 	
 	if is_open:
 		_populate_dropdown()
-		# Make the dropdown visible. The parent VBoxContainer will now
-		# automatically account for its size and push other items down.
 		dropdown_container.show()
 		dropdown_animator.play("open")
 		await dropdown_animator.animation_finished
 	else:
 		dropdown_animator.play("close")
 		await dropdown_animator.animation_finished
-		# Hide the dropdown. The parent VBoxContainer will automatically
-		# reclaim the space, moving other items up.
 		dropdown_container.hide()
-		_clear_dropdown()
+		_clear_dropdown_nodes()
 	
 	is_animating = false
 
+# This function now creates the UI from the pre-generated list of dictionaries.
 func _populate_dropdown():
-	_clear_dropdown()
-	if dropdown_data.is_empty(): return
+	_clear_dropdown_nodes()
 
-	var num_to_show = randi_range(1,3)
-	dropdown_data.shuffle()
-
-	for i in range(min(num_to_show, dropdown_data.size())):
+	for item_data in bullet_points_to_display:
 		var bullet_point = Label.new()
-		bullet_point.text = "• " + dropdown_data[i]
 		
-		# --- FIX: Enable text wrapping for bullet points ---
-		# 1. Tell the label to fill the available horizontal space.
+		# Get the text and difficulty from the dictionary.
+		var item_text = item_data.get("text", "N/A")
+		var item_difficulty = item_data.get("difficulty", 0)
+		
+		# Format the string to include the difficulty.
+		bullet_point.text = "• %s (%d)" % [item_text, item_difficulty]
+		
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		# 2. Set the autowrap mode to break text into new lines.
-		# The constant is now part of the TextServer class in Godot 4.
 		bullet_point.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		# ----------------------------------------------------
 		
-		# Add a smaller font size for the bullet points.
 		bullet_point.add_theme_font_size_override("font_size", 12)
 		bullet_point.set("theme_override_colors/font_color", Color.DARK_ORCHID)
 		dropdown_container.add_child(bullet_point)
 
-func _clear_dropdown():
+func _clear_dropdown_nodes():
 	for child in dropdown_container.get_children():
 		child.queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=17 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://blank_map.png" id="2_po0ka"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bqyrkqgeqeen8" path="res://info_popup.gd" id="6_kdryc"]
 [ext_resource type="Script" uid="uid://dguaa8uarvjss" path="res://grid_overlay.gd" id="7_6e45b"]
 [ext_resource type="PackedScene" uid="uid://fy5xvtergi3a" path="res://vertical_menu.tscn" id="8_e35lh"]
+[ext_resource type="Script" uid="uid://bqpydbv16hqws" path="res://quest_manager.gd" id="9_udeyl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
@@ -248,10 +249,14 @@ libraries = {
 script = ExtResource("7_6e45b")
 
 [node name="VerticalMenu" parent="." instance=ExtResource("8_e35lh")]
+custom_minimum_size = Vector2(80, 50)
 offset_left = 1029.0
 offset_top = 128.0
 offset_right = 1079.0
 offset_bottom = 178.0
+
+[node name="QuestManager" type="Node" parent="."]
+script = ExtResource("9_udeyl")
 
 [connection signal="pressed" from="LedgerPanel/LedgerHeaderVBox/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

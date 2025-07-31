@@ -1,14 +1,44 @@
 {
-  "details": [
-	"Analyze the star charts.",
-	"Prepare the expedition supplies.",
-	"Scout the northern pass.",
-	"Gather local intelligence.",
-	"Secure the artifact.",
-	"Report back to the council.",
-	"Unlock ancient secrets.",
-	"Forge a new alliance.",
-	"Defend the outpost.",
-	"Explore the ruins."
-  ]
+  "details": {
+	"three_letter": {
+	  "text": "Go to at least three cities starting with the same letter.",
+	  "difficulty": 2
+	},
+	"Prepare": {
+	  "text": "Prepare the expedition supplies.",
+	  "difficulty": 3
+	},
+	"Scout": {
+	  "text": "Scout the northern pass.",
+	  "difficulty": 5
+	},
+	"Gather": {
+	  "text": "Gather local intelligence.",
+	  "difficulty": 2
+	},
+	"Secure": {
+	  "text": "Secure the artifact.",
+	  "difficulty": 5
+	},
+	"Report": {
+	  "text": "Report back to the council.",
+	  "difficulty": 1
+	},
+	"Unlock": {
+	  "text": "Unlock ancient secrets.",
+	  "difficulty": 3
+	},
+	"Forge": {
+	  "text": "Forge a new alliance.",
+	  "difficulty": 3
+	},
+	"Defend": {
+	  "text": "Defend the outpost.",
+	  "difficulty": 4
+	},
+	"Explore": {
+	  "text": "Explore the ruins.",
+	  "difficulty": 2
+	}
+  }
 }
