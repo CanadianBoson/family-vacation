@@ -26,6 +26,32 @@ def mercator_y(lat):
     lat_rad = np.radians(np.clip(lat, -85.05112878, 85.05112878))
     return R * np.log(np.tan(np.pi / 4 + lat_rad / 2))
 
+def pixel_to_latlon(pixel_x, pixel_y, scale_x, offset_x, scale_y, offset_y):
+    """
+    Converts pixel coordinates back to latitude and longitude.
+
+    Args:
+        pixel_x (float): The x-coordinate of the pixel.
+        pixel_y (float): The y-coordinate of the pixel.
+        scale_x (float): The scaling factor used for the x-coordinate.
+        offset_x (float): The offset used for the x-coordinate.
+        scale_y (float): The scaling factor used for the y-coordinate.
+        offset_y (float): The offset used for the y-coordinate.
+
+    Returns:
+        tuple: A tuple containing (latitude, longitude).
+    """
+    # Step 1: Reverse the scaling and offset to get Mercator coordinates
+    merc_x = (pixel_x - offset_x) / scale_x
+    merc_y = (pixel_y - offset_y) / scale_y
+
+    # Step 2: Convert Mercator coordinates back to lon/lat in degrees
+    lon = np.degrees(merc_x / R)
+    lat = np.degrees(2 * np.arctan(np.exp(merc_y / R)) - np.pi / 2)
+    
+    return lat, lon
+
+
 def calculate_transform_parameters(point1, point2):
     """
     Calculates the scale and offset for transforming Mercator coordinates to pixel coordinates.
@@ -124,8 +150,11 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
             final_df = pd.DataFrame(columns=df.columns)
         # --- END OF NEW LOGIC ---
 
+        # Reset index for the final DataFrame
+        final_df = final_df.reset_index(drop=True)
+        final_df = final_df.reset_index(drop=False)
         # Select columns for the output JSON
-        output_data = final_df[['city', 'x', 'y', 'lng', 'lat', 'iso2']]
+        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')
@@ -150,6 +179,7 @@ ref_point2 = {'lng': 12.5683, 'lat': 55.6761, 'x': 517, 'y': 338} # Copenhagen
 
 # Calculate transformation parameters
 scale_x, offset_x, scale_y, offset_y = calculate_transform_parameters(ref_point1, ref_point2)
+print(f"Calculated parameters: scale_x={scale_x}, offset_x={offset_x}, scale_y={scale_y}, offset_y={offset_y}")
 
 # Define file paths
 csv_input_file = "worldcities.csv"
@@ -157,3 +187,11 @@ json_output_file = "locations.json"
 
 # Run the main function with the calculated parameters
 filter_cities_to_json(csv_input_file, json_output_file, scale_x, offset_x, scale_y, offset_y)
+
+# Calculate the lat/lon from the pixel coordinates
+for x in [0, 1000]:
+    for y in [0, 700]:
+        calculated_lat, calculated_lon = pixel_to_latlon(
+            x, y, scale_x, offset_x, scale_y, offset_y
+        )
+        print(f"Pixel ({x}, {y}) -> Lat: {calculated_lat:.3f}, Lon: {calculated_lon:.3f}")
