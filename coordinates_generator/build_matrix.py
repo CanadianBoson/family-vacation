@@ -95,6 +95,13 @@ def build_travel_matrix(locations_file):
                 travel_matrix[j, i] = travel_mode
                 
         print("Travel matrix successfully built.")
+        try:
+            with open("../travel_matrix.json", 'w') as f:
+                # Convert numpy array to a standard Python list for JSON serialization
+                json.dump({"matrix": travel_matrix.tolist()}, f)
+            print(f"Matrix successfully saved to JSON")
+        except Exception as e:
+            print(f"\nError saving matrix to JSON: {e}")
         return travel_matrix
 
     except FileNotFoundError:

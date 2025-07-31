@@ -47,15 +47,17 @@ func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 	return cumulative_distances_km
 
 # Updates the ledger display on the right-hand side
-func update_ledger_display(dropped_pin_data: Array):
-	# Clear only the dynamically added entries within the scrollable VBoxContainer
+func update_ledger_display(pin_manager: Node):
+	# Get the dropped pin data from the manager
+	var dropped_pin_data = pin_manager.dropped_pin_data
+
+	# Clear only the dynamically added entries
 	for child in _ledger_entries_vbox.get_children():
 		child.queue_free()
 
 	var cumulative_distances_km = _calculate_cumulative_distances_km(dropped_pin_data)
 	var overall_distance_km = cumulative_distances_km.back() if not cumulative_distances_km.is_empty() else 0.0
 
-	# Update the existing overall distance label
 	_overall_distance_label.text = "Overall Distance: %.2f km" % overall_distance_km
 	_overall_distance_label.add_theme_color_override("font_color", Color.DARK_BLUE)
 
@@ -65,17 +67,35 @@ func update_ledger_display(dropped_pin_data: Array):
 		_ledger_entries_vbox.add_child(no_pins_label)
 		return
 
-	# Add entries for each dropped pin to the scrollable VBoxContainer
+	# Add entries for each dropped pin
 	for i in range(dropped_pin_data.size()):
 		var pin_number = i + 1
 		var city_name = dropped_pin_data[i].city
-		var total_dist_at_this_pin_km = max(0.0, cumulative_distances_km[i] - cumulative_distances_km[i-1])
+		var entry_text = ""
 
-		var entry_text = "%d. %s (%.2f km away)" % [pin_number, city_name, total_dist_at_this_pin_km]
+		if i == 0:
+			# The first pin is the starting point
+			entry_text = "%d. %s (Start)" % [pin_number, city_name]
+		else:
+			# For subsequent pins, calculate segment distance and get travel mode
+			var prev_pin_data = dropped_pin_data[i-1]
+			var current_pin_data = dropped_pin_data[i]
+			var segment_distance_km = _calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
+			
+			# Get the travel mode from PinManager
+			var travel_mode_int = pin_manager.get_travel_mode(prev_pin_data.index, current_pin_data.index)
+			var travel_mode_str = "Plane" # Default
+			match travel_mode_int:
+				0: travel_mode_str = "Car"
+				1: travel_mode_str = "Boat"
+				2: travel_mode_str = "Train"
+
+			entry_text = "%d. %s (%.1f km by %s)" % [pin_number, city_name, segment_distance_km, travel_mode_str]
+
 		var entry_label = Label.new()
 		entry_label.text = entry_text
 		entry_label.add_theme_color_override("font_color", Color.DARK_BLUE)
-		entry_label.add_theme_font_size_override("font_size", 14) # Smaller font for entries
+		entry_label.add_theme_font_size_override("font_size", 14)
 		_ledger_entries_vbox.add_child(entry_label)
 		
 		var spacer_entry = Control.new()

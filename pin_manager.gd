@@ -1,5 +1,6 @@
-# PinManager.gd
-# This script manages all pin-related data and node instantiation/removal.
+# pin_manager.gd
+# This script manages all pin-related data, node instantiation/removal,
+# and travel mode lookups.
 extends Node
 
 # Reference to the PinsContainer node in the main scene
@@ -8,21 +9,22 @@ var _pins_container: Node2D
 var _pin_scene: PackedScene
 
 # This array will store the valid locations loaded from the JSON file.
-# Each item will now include 'lat' and 'lng' for distance calculations.
+# Each item will include 'lat', 'lng', 'index', etc.
 var valid_pin_locations = []
-# Store the full data (including lat, lng, city, position) of all dropped pins
+# Store the full data of all dropped pins
 var dropped_pin_data = []
-
-# Earth's radius in kilometers for Haversine formula (moved here for completeness, though LedgerManager uses it)
-const EARTH_RADIUS_KM = 6371.0
+# This array will hold the loaded travel classification matrix
+var travel_matrix = []
 
 # Initialize the PinManager with necessary scene references
 func initialize(pins_container_node: Node2D, pin_packed_scene: PackedScene):
 	_pins_container = pins_container_node
 	_pin_scene = pin_packed_scene
+	# Load both data files upon initialization
+	_load_travel_matrix()
 
-# This function loads the coordinates from our JSON "database".
-func load_pin_locations():
+# This function loads the coordinates from our "locations.json" file.
+func _load_pin_locations():
 	var file_path = "res://locations.json"
 	
 	if not FileAccess.file_exists(file_path):
@@ -39,20 +41,35 @@ func load_pin_locations():
 
 	for location in json_data.locations:
 		var pos = Vector2(location.x, location.y)
-		var city_name = location.get("city", "")
-		var lat_val = float(location.get("lat", 0.0)) 
-		var lng_val = float(location.get("lng", 0.0)) 
 		
 		valid_pin_locations.append({
 			"position": pos,
 			"placed": false,
-			"city": city_name,
-			"lat": lat_val,
-			"lng": lng_val,
-			"country": location.get("iso2", ""),
+			"city": location.get("city", ""),
+			"lat": float(location.get("lat", 0.0)),
+			"lng": float(location.get("lng", 0.0)),
+			"country": location.get("iso2"),
+			"index": int(location.get("index", -1)) # Ensure index is loaded
 		})
 	
 	print("Successfully loaded %d pin locations." % valid_pin_locations.size())
+
+# This function loads the travel classification matrix from its JSON file.
+func _load_travel_matrix():
+	var file_path = "res://travel_matrix.json"
+	if not FileAccess.file_exists(file_path):
+		print("Error: Travel matrix file not found at ", file_path)
+		return
+
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	var content = file.get_as_text()
+	var json_data = JSON.parse_string(content)
+
+	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("matrix"):
+		travel_matrix = json_data.matrix
+		print("Successfully loaded travel matrix.")
+	else:
+		print("Error: Invalid JSON format in travel matrix file.")
 
 # Places a pin if the click is within a valid, unplaced location.
 # Returns true if a pin was placed, false otherwise.
@@ -121,7 +138,7 @@ func get_hovered_location(mouse_position: Vector2, click_radius: float):
 			return location_data
 	return null
 
-# New function: Clears all dropped pins and resets their states
+# Clears all dropped pins and resets their states
 func clear_all_pins():
 	# Remove all pin nodes from the scene
 	for child in _pins_container.get_children():
@@ -135,3 +152,10 @@ func clear_all_pins():
 		location_data.placed = false
 	
 	print("All pins and paths cleared.")
+
+# New function to get the travel mode between two city indices
+func get_travel_mode(index1: int, index2: int) -> int:
+	# Check for invalid indices or an empty matrix
+	if travel_matrix.is_empty() or index1 < 0 or index2 < 0 or index1 >= travel_matrix.size() or index2 >= travel_matrix[index1].size():
+		return 2 # Default to plane (2) if there's an error
+	return travel_matrix[index1][index2]
