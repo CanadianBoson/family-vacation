@@ -1,47 +1,77 @@
 {
   "details": {
 	"ThreeLetter": {
-	  "text": "Go to at least three cities starting with the same letter.",
+	  "text": "Go to at least three cities starting with the same letter",
 	  "difficulty": 2,
 	  "incompatible": ["NoThreeLetter"]
 	},
 	"NoThreeLetter": {
-	  "text": "Ensure no three cities start with the same letter.",
+	  "text": "Ensure no three cities start with the same letter",
 	  "difficulty": 2,
 	  "incompatible": ["ThreeLetter"]
 	},
+	"CarFree": {
+	  "text": "Chart a course that uses no cars",
+	  "difficulty": 4,
+	  "incompatible": ["NoCarFree"]
+	},
+	"NoCarFree": {
+	  "text": "Chart a course that uses cars",
+	  "difficulty": 1,
+	  "incompatible": ["CarFree"]
+	},	
 	"SailFree": {
-	  "text": "Chart a course that uses no boats.",
+	  "text": "Chart a course that uses no boats",
 	  "difficulty": 1,
 	  "incompatible": ["NoSailFree"]
 	},
 	"NoSailFree": {
-	  "text": "Chart a course that uses boats.",
+	  "text": "Chart a course that uses boats",
 	  "difficulty": 2,
 	  "incompatible": ["SailFree"]
 	},
+	"TrainFree": {
+	  "text": "Chart a course that uses no trains",
+	  "difficulty": 1,
+	  "incompatible": ["NoTrainFree"]
+	},
+	"NoTrainFree": {
+	  "text": "Chart a course that uses trains",
+	  "difficulty": 2,
+	  "incompatible": ["TrainFree"]
+	},
+	"PlaneFree": {
+	  "text": "Chart a course that uses no planes",
+	  "difficulty": 1,
+	  "incompatible": ["NoPlaneFree"]
+	},
+	"NoPlaneFree": {
+	  "text": "Chart a course that uses planes",
+	  "difficulty": 2,
+	  "incompatible": ["PlaneFree"]
+	},		
 	"NoCapitals": {
-	  "text": "Plan a route that avoids all capital cities.",
+	  "text": "Plan a route that avoids all capital cities",
 	  "difficulty": 1,
 	  "incompatible": ["SomeCapitals"]
 	},
 	"SomeCapitals": {
-	  "text": "Plan a route that goes to at least one capital city.",
+	  "text": "Plan a route that goes to at least one capital city",
 	  "difficulty": 1,
 	  "incompatible": ["NoCapitals"]
 	},
 	"PathsCrossing": {
-	  "text": "Create a route that crosses over itself.",
+	  "text": "Create a route that crosses over itself",
 	  "difficulty": 3,
 	  "incompatible": ["NoPathsCrossing"]
 	},
 	"NoPathsCrossing": {
-	  "text": "Create a route that never crosses over itself.",
+	  "text": "Create a route that never crosses over itself",
 	  "difficulty": 2,
 	  "incompatible": ["PathsCrossing"]
 	},
 	"MinPopulation": {
-	  "text": "Ensure every city visited has at least 500k people.",
+	  "text": "Ensure every city visited has at least 500k people",
 	  "difficulty": 4,
 	  "incompatible": ["SomeSmallPopulation"]
 	},
@@ -49,6 +79,61 @@
 	  "text": "Visit at least one city with under 500k population",
 	  "difficulty": 2,
 	  "incompatible": ["MinPopulation"]
-	},	
+	},
+	"StayInEU": {
+	  "text": "Don't visit any city outside the EU",
+	  "difficulty": 2,
+	  "incompatible": ["LeaveEU"]
+	},
+	"LeaveEU": {
+	  "text": "Visit at least one city outside the EU",
+	  "difficulty": 2,
+	  "incompatible": ["StayInEU"]
+	},
+	"CrossThree": {
+	  "text": "Cross the EU / non-EU border at least three times",
+	  "difficulty": 3,
+	  "incompatible": ["NoCrossThree", "LeaveEU"]
+	},
+	"NoCrossThree": {
+	  "text": "Don't cross the EU / non-EU border more than twice",
+	  "difficulty": 2,
+	  "incompatible": ["CrossThree"]
+	},
+	"StayAwayDE": {
+	  "text": "Don't get within 200km of any German city",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"StayAwayFR": {
+	  "text": "Don't get within 200km of any French city",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"StayAwayUK": {
+	  "text": "Don't get within 200km of any British city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"StayAwayIT": {
+	  "text": "Don't get within 200km of any Italian city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"StayAwayRU": {
+	  "text": "Don't get within 200km of any Russian city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"UniqueCityLetters": {
+	  "text": "Every city must start with a different letter",
+	  "difficulty": 5,
+	  "incompatible": ["ThreeLetter"]
+	},
+	"UniqueCountryLetters": {
+	  "text": "Every country must start with a different letter",
+	  "difficulty": 4,
+	  "incompatible": []
+	},			
   }
 }

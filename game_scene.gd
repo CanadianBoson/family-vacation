@@ -67,7 +67,7 @@ func _update_game_state():
 	# Update the ledger, map, quests, and score
 	ledger_manager.update_ledger_display(pin_manager)
 	queue_redraw() # Redraw to show new line
-	quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
+	quest_manager.check_all_conditions(pin_manager.dropped_pin_data, pin_manager.valid_pin_locations)
 	
 	# Get the new score and update the label
 	var current_scores = vertical_menu.calculate_scores()
