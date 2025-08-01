@@ -49,6 +49,8 @@ func _load_pin_locations():
 			"lat": float(location.get("lat", 0.0)),
 			"lng": float(location.get("lng", 0.0)),
 			"country": location.get("iso2"),
+			"population": int(location.get("population")),
+			"is_capital": bool(location.get("is_capital")),
 			"index": int(location.get("index", -1)) # Ensure index is loaded
 		})
 	

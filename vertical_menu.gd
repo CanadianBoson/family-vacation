@@ -91,6 +91,9 @@ func _build_menu():
 		for i in range(num_to_show):
 			if not available_dropdown_keys.is_empty():
 				var key = available_dropdown_keys.pop_front()
-				bullet_points_for_item.append(dropdown_data_dict[key])
+				# --- Add the key to the dictionary you pass down ---
+				var item_data = dropdown_data_dict[key]
+				item_data["key"] = key # Add the key itself to the data
+				bullet_points_for_item.append(item_data)
 		
 		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item)

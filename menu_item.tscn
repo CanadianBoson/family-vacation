@@ -78,7 +78,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7i8jb")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Header"]
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(120, 30)
 layout_mode = 2
 alignment = 1
 

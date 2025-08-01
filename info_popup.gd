@@ -31,14 +31,18 @@ func _update_content(all_locations_data: Array):
 	_add_header_label("Country")
 	_add_header_label("Latitude")
 	_add_header_label("Longitude")
+	_add_header_label("Population")
+	_add_header_label("Capital")
 
 	# Add a row for each city from the loaded data.
 	for location in all_locations_data:
 		_add_cell_label(location.city)
 		_add_cell_label(location.get("country", "N/A"))
-		_add_cell_label("%.4f" % location.lat)
-		_add_cell_label("%.4f" % location.lng)
-		for i in range(4):
+		_add_cell_label("%.2f" % location.lat)
+		_add_cell_label("%.2f" % location.lng)
+		_add_cell_label("%.0fK" % float(location.population / 1000))
+		_add_cell_label("Yes" if location.get("is_capital") else "No")
+		for i in range(6):
 			var separator = HSeparator.new()
 			info_grid.add_child(separator)
 

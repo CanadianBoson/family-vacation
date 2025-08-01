@@ -6,6 +6,8 @@ extends Node2D
 # Preload the Pin scene so we can create instances of it.
 var pin_scene = preload("res://pin.tscn")
 
+signal data_updated
+
 # This node will hold all the pins that are dropped on the map.
 @onready var pins_container = $PinsContainer
 # This node will be used to display the city name on hover.
@@ -43,7 +45,8 @@ func _ready():
 	# _print_tree_with_types(self)
 	# Initialize PinManager with the pins_container reference
 	pin_manager.initialize(pins_container, pin_scene)
-	
+	# link the managers
+	quest_manager.pin_manager = pin_manager
 	# Load pin locations via PinManager
 	pin_manager._load_pin_locations()
 	
@@ -66,24 +69,26 @@ func _print_tree_with_types(node, indent=""):
 # This function is called for every input event.
 func _unhandled_input(event):
 	var click_position = event.position
-	
+	var data_changed : bool = false
 	# Handle mouse clicks for dropping/removing pins.
 	if event is InputEventMouseButton and event.is_pressed():
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			# Left-click to place a pin
 			var placed = pin_manager.place_pin_at_click(click_position, CLICK_RADIUS)
 			if placed:
-				ledger_manager.update_ledger_display(pin_manager)
-				queue_redraw() # Redraw to show new line
-				quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
-				
+				data_changed = true
+					
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			# Right-click to remove a pin and its connecting lines
 			var removed = pin_manager.remove_pin_at_click(click_position, CLICK_RADIUS)
 			if removed:
-				ledger_manager.update_ledger_display(pin_manager)
-				queue_redraw() # Redraw to update lines and circle color
-				quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
+				data_changed = true
+
+		if data_changed:
+			ledger_manager.update_ledger_display(pin_manager)
+			queue_redraw() # Redraw to show new line
+			quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
+			data_updated.emit()
 	
 	# Handle mouse motion for hovering and displaying city names.
 	if event is InputEventMouseMotion:
@@ -132,7 +137,7 @@ func _draw():
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
 	# We pass all the valid location data from PinManager to the popup.
-	info_popup.show_popup(pin_manager.dropped_pin_data)
+	info_popup.show_popup(pin_manager.valid_pin_locations)
 
 # --- Existing Signal Handlers (Make sure they are still there) ---
 

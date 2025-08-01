@@ -102,6 +102,7 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         df['iso2'] = df['iso2'].fillna('').astype(str).str.upper()
         df['lng'] = pd.to_numeric(df['lng'], errors='coerce')
         df['lat'] = pd.to_numeric(df['lat'], errors='coerce')
+        df['is_capital'] = (df['capital'] == "primary").fillna(False).astype(bool)
         df.dropna(subset=['lng', 'lat'], inplace=True)
 
         # --- Coordinate Transformation ---
@@ -154,7 +155,7 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         final_df = final_df.reset_index(drop=True)
         final_df = final_df.reset_index(drop=False)
         # Select columns for the output JSON
-        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2']]
+        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2', 'population', 'is_capital']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')

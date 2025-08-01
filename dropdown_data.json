@@ -1,20 +1,16 @@
 {
   "details": {
-	"three_letter": {
+	"ThreeLetter": {
 	  "text": "Go to at least three cities starting with the same letter.",
 	  "difficulty": 2
 	},
-	"Prepare": {
-	  "text": "Prepare the expedition supplies.",
-	  "difficulty": 3
+	"SailFree": {
+	  "text": "Chart a course that uses no boats.",
+	  "difficulty": 1
 	},
-	"Scout": {
-	  "text": "Scout the northern pass.",
-	  "difficulty": 5
-	},
-	"Gather": {
-	  "text": "Gather local intelligence.",
-	  "difficulty": 2
+	"NoCapitals": {
+	  "text": "Plan a route that avoids all capital cities.",
+	  "difficulty": 1
 	},
 	"Secure": {
 	  "text": "Secure the artifact.",
