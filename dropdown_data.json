@@ -2,39 +2,53 @@
   "details": {
 	"ThreeLetter": {
 	  "text": "Go to at least three cities starting with the same letter.",
-	  "difficulty": 2
+	  "difficulty": 2,
+	  "incompatible": ["NoThreeLetter"]
+	},
+	"NoThreeLetter": {
+	  "text": "Ensure no three cities start with the same letter.",
+	  "difficulty": 2,
+	  "incompatible": ["ThreeLetter"]
 	},
 	"SailFree": {
 	  "text": "Chart a course that uses no boats.",
-	  "difficulty": 1
+	  "difficulty": 1,
+	  "incompatible": ["NoSailFree"]
+	},
+	"NoSailFree": {
+	  "text": "Chart a course that uses boats.",
+	  "difficulty": 2,
+	  "incompatible": ["SailFree"]
 	},
 	"NoCapitals": {
 	  "text": "Plan a route that avoids all capital cities.",
-	  "difficulty": 1
+	  "difficulty": 1,
+	  "incompatible": ["SomeCapitals"]
 	},
-	"Secure": {
-	  "text": "Secure the artifact.",
-	  "difficulty": 5
+	"SomeCapitals": {
+	  "text": "Plan a route that goes to at least one capital city.",
+	  "difficulty": 1,
+	  "incompatible": ["NoCapitals"]
 	},
-	"Report": {
-	  "text": "Report back to the council.",
-	  "difficulty": 1
+	"PathsCrossing": {
+	  "text": "Create a route that crosses over itself.",
+	  "difficulty": 3,
+	  "incompatible": ["NoPathsCrossing"]
 	},
-	"Unlock": {
-	  "text": "Unlock ancient secrets.",
-	  "difficulty": 3
+	"NoPathsCrossing": {
+	  "text": "Create a route that never crosses over itself.",
+	  "difficulty": 2,
+	  "incompatible": ["PathsCrossing"]
 	},
-	"Forge": {
-	  "text": "Forge a new alliance.",
-	  "difficulty": 3
+	"MinPopulation": {
+	  "text": "Ensure every city visited has at least 500k people.",
+	  "difficulty": 4,
+	  "incompatible": ["SomeSmallPopulation"]
 	},
-	"Defend": {
-	  "text": "Defend the outpost.",
-	  "difficulty": 4
-	},
-	"Explore": {
-	  "text": "Explore the ruins.",
-	  "difficulty": 2
-	}
+	"SomeSmallPopulation": {
+	  "text": "Visit at least one city with under 500k population",
+	  "difficulty": 2,
+	  "incompatible": ["MinPopulation"]
+	},	
   }
 }

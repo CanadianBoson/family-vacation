@@ -67,13 +67,14 @@ func _populate_dropdown():
 		
 		var quest_key = item_data.get("key", "") # Assumes the key is passed from vertical_menu
 		var item_text = item_data.get("text", "N/A")
+		var difficulty = item_data.get("difficulty", 0)
 		
 		# --- FIX: Check quest status and set the icon ---
 		var icon = "✗" # Default to 'X'
 		if quest_manager.is_quest_satisfied(quest_key):
 			icon = "✓" # Change to checkmark if satisfied
 		
-		bullet_point.text = "%s %s" % [icon, item_text]
+		bullet_point.text = "%s %s (%s)" % [icon, item_text, int(difficulty)]
 		# -------------------------------------------------
 		
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL

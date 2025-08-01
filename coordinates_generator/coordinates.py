@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import numpy as np
 import math # For math.ceil
+import pycountry
 
 # This list is no longer used in the primary filter but is kept for reference.
 EUROPEAN_COUNTRIES = [
@@ -151,11 +152,15 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
             final_df = pd.DataFrame(columns=df.columns)
         # --- END OF NEW LOGIC ---
 
+        # add country names using pycountry
+        final_df['country'] = df.apply(lambda x: pycountry.countries.get(alpha_2=x.iso2).name if x.iso2 in [n.alpha_2 for n in list(pycountry.countries)] else '', axis=1)
+
         # Reset index for the final DataFrame
         final_df = final_df.reset_index(drop=True)
         final_df = final_df.reset_index(drop=False)
+
         # Select columns for the output JSON
-        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2', 'population', 'is_capital']]
+        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2', 'country', 'population', 'is_capital']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')

@@ -8,12 +8,12 @@ var is_grid_visible = false
 # --- Grid Customization ---
 # The spacing between grid lines in pixels.
 var grid_spacing_y = 98
-var grid_spacing_x = 93
+var grid_spacing_x = 71
 # The color of the grid lines. A low alpha makes it subtle.
 var grid_color = Color(0, 0, 0, 0.2)
 # The dimensions of the area to draw the grid over.
 # This should match your map's size.
-var map_size = Vector2(980, 1000)
+var map_size = Vector2(980, 710)
 
 
 # The _draw function is called by the engine whenever the node needs to be redrawn.

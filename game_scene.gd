@@ -26,7 +26,11 @@ signal data_updated
 # -------------------------
 
 @onready var quest_manager = $QuestManager # <-- Add this reference
-
+# score label
+@onready var quest_score_label = $ScoreTracker/QuestScoreLabel
+@onready var family_score_label = $ScoreTracker/FamilyScoreLabel
+@onready var score_value_label = $ScoreTracker/ScoreValueLabel
+@onready var vertical_menu = $VerticalMenu # <-- Make sure you have this reference
 
 var CAR_COLOR = Color.GREEN  # Green
 var BOAT_COLOR = Color.BLUE  # Blue
@@ -59,6 +63,21 @@ func _ready():
 	# Update the ledger display initially
 	ledger_manager.update_ledger_display(pin_manager)
 
+func _update_game_state():
+	# Update the ledger, map, quests, and score
+	ledger_manager.update_ledger_display(pin_manager)
+	queue_redraw() # Redraw to show new line
+	quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
+	
+	# Get the new score and update the label
+	var current_scores = vertical_menu.calculate_scores()
+	quest_score_label.text = "Quest Score: " + str(current_scores["quest_score"])
+	family_score_label.text = "Family Score: " + str(current_scores["family_score"])
+	score_value_label.text = "Total Score: " + str(current_scores["total_score"])
+	
+	# Notify other UI elements like the menu items
+	data_updated.emit()
+
 func _print_tree_with_types(node, indent=""):
 	# Print the node's name and its class/type
 	print(indent + "- " + node.name + " (" + node.get_class() + ")")
@@ -85,10 +104,7 @@ func _unhandled_input(event):
 				data_changed = true
 
 		if data_changed:
-			ledger_manager.update_ledger_display(pin_manager)
-			queue_redraw() # Redraw to show new line
-			quest_manager.check_all_conditions(pin_manager.dropped_pin_data)
-			data_updated.emit()
+			_update_game_state()
 	
 	# Handle mouse motion for hovering and displaying city names.
 	if event is InputEventMouseMotion:
@@ -144,8 +160,7 @@ func _on_info_button_pressed():
 func _on_clear_all_button_pressed():
 	print("Clear All button pressed!")
 	pin_manager.clear_all_pins()
-	ledger_manager.update_ledger_display(pin_manager)
-	queue_redraw()
+	_update_game_state()
 
 func _on_back_button_pressed():
 	var result = get_tree().change_scene_to_file("res://main_menu.tscn")

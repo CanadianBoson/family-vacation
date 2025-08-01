@@ -40,7 +40,7 @@ func _update_content(all_locations_data: Array):
 		_add_cell_label(location.get("country", "N/A"))
 		_add_cell_label("%.2f" % location.lat)
 		_add_cell_label("%.2f" % location.lng)
-		_add_cell_label("%.0fK" % float(location.population / 1000))
+		_add_cell_label("%.0fk" % float(location.population / 1000))
 		_add_cell_label("Yes" if location.get("is_capital") else "No")
 		for i in range(6):
 			var separator = HSeparator.new()

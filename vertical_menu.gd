@@ -1,26 +1,27 @@
 # vertical_menu.gd
-# This script dynamically builds a vertical menu from a JSON file,
-# ensuring each item gets unique colors, images, and dropdown text.
+# This script now handles scoring, including bonuses.
 extends Control
 
 const MenuItemScene = preload("res://menu_item.tscn")
 
 @onready var vbox: VBoxContainer = $MenuVBox
+# --- New: Reference to the QuestManager ---
+@onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
 
 var ITEM_COLORS = [
-	Color.html("#4A90E2"), # Blue
-	Color.html("#50E3C2"), # Teal
-	Color.html("#F5A623"), # Orange
-	Color.html("#BD10E0"), # Purple
-	Color.html("#7ED321"), # Green
-	Color.html("#D0021B")  # Red
+	Color.html("#4A90E2"), Color.html("#50E3C2"), Color.html("#F5A623"),
+	Color.html("#BD10E0"), Color.html("#7ED321"), Color.html("#D0021B")
 ]
-
 const IMAGE_FOLDER_PATH = "res://menu_images/"
 var image_paths = []
 
+# --- New: Store menu item instances and quest data ---
+var menu_item_instances = []
+var all_quest_data = {}
+
 func _ready():
 	_load_image_paths()
+	all_quest_data = _load_all_dropdown_options() # Load quest data
 	_build_menu()
 
 func _load_image_paths():
@@ -32,14 +33,10 @@ func _load_image_paths():
 			if not dir.current_is_dir() and file_name.ends_with(".png"):
 				image_paths.append(IMAGE_FOLDER_PATH + file_name)
 			file_name = dir.get_next()
-	else:
-		print("Error: Could not open image directory at ", IMAGE_FOLDER_PATH)
 
-# This function now loads the main dictionary.
 func _load_all_dropdown_options() -> Dictionary:
 	var file_path = "res://dropdown_data.json"
 	if not FileAccess.file_exists(file_path): return {}
-
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var content = file.get_as_text()
 	var json_data = JSON.parse_string(content)
@@ -50,28 +47,25 @@ func _load_all_dropdown_options() -> Dictionary:
 func _build_menu():
 	var file_path = "res://menu_items.json"
 	if not FileAccess.file_exists(file_path): return
-
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var content = file.get_as_text()
 	var json_data = JSON.parse_string(content)
 	if typeof(json_data) != TYPE_DICTIONARY or not json_data.has("items"): return
-
+	
 	var item_texts = json_data.items
 	item_texts.shuffle()
 
 	var available_colors = ITEM_COLORS.duplicate()
-	var available_images = image_paths.duplicate()
 	available_colors.shuffle()
+	var available_images = image_paths.duplicate()
 	available_images.shuffle()
-	
-	# Load the dropdown data dictionary and get its keys.
-	var dropdown_data_dict = _load_all_dropdown_options()
-	var available_dropdown_keys = dropdown_data_dict.keys()
+	var available_dropdown_keys = all_quest_data.keys()
 	available_dropdown_keys.shuffle()
 
 	for text in item_texts:
 		var menu_item = MenuItemScene.instantiate()
 		vbox.add_child(menu_item)
+		menu_item_instances.append(menu_item) # Store the instance
 
 		if available_colors.is_empty():
 			available_colors = ITEM_COLORS.duplicate()
@@ -85,15 +79,76 @@ func _build_menu():
 				available_images.shuffle()
 			unique_image_path = available_images.pop_front()
 		
-		# Distribute a unique set of bullet point objects to each item.
+		# --- FIX: Re-integrated incompatibility check logic ---
 		var bullet_points_for_item = []
 		var num_to_show = randi_range(1, 3)
-		for i in range(num_to_show):
-			if not available_dropdown_keys.is_empty():
+		
+		if available_dropdown_keys.size() >= num_to_show:
+			var selected_keys = available_dropdown_keys.slice(0, num_to_show)
+			var is_compatible = true
+			
+			for key1 in selected_keys:
+				var incompatible_list = all_quest_data[key1].get("incompatible", [])
+				for key2 in selected_keys:
+					if key1 != key2 and incompatible_list.has(key2):
+						is_compatible = false
+						break
+				if not is_compatible:
+					break
+			
+			if is_compatible:
+				for i in range(num_to_show):
+					var key = available_dropdown_keys.pop_front()
+					var item_data = all_quest_data[key]
+					item_data["key"] = key
+					bullet_points_for_item.append(item_data)
+			else:
+				# Fallback if the random set was incompatible
 				var key = available_dropdown_keys.pop_front()
-				# --- Add the key to the dictionary you pass down ---
-				var item_data = dropdown_data_dict[key]
-				item_data["key"] = key # Add the key itself to the data
+				var item_data = all_quest_data[key]
+				item_data["key"] = key
 				bullet_points_for_item.append(item_data)
+		elif not available_dropdown_keys.is_empty():
+			# Fallback if not enough keys are left for a full set
+			var key = available_dropdown_keys.pop_front()
+			var item_data = all_quest_data[key]
+			item_data["key"] = key
+			bullet_points_for_item.append(item_data)
+		# --------------------------------------------------------
 		
 		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item)
+
+# --- New function to calculate the total score with bonuses ---
+func calculate_scores() -> Dictionary:
+	var quest_score = 0
+	var family_score = 0 # The bonus score
+	
+	# Iterate through each menu item we've created.
+	for item in menu_item_instances:
+		var all_quests_in_item_satisfied = true
+		
+		# Check if the item has any quests assigned.
+		if item.bullet_points_to_display.is_empty():
+			all_quests_in_item_satisfied = false
+		
+		# Check each quest within this menu item.
+		for quest_data in item.bullet_points_to_display:
+			var quest_key = quest_data.get("key")
+			if quest_manager.is_quest_satisfied(quest_key):
+				# Add difficulty to the main quest score.
+				quest_score += quest_data.get("difficulty", 0)
+			else:
+				# If even one quest is not satisfied, no bonus.
+				all_quests_in_item_satisfied = false
+		
+		# If all quests in this item were satisfied, add the bonus.
+		if all_quests_in_item_satisfied:
+			family_score += 5
+			
+	var total_score = quest_score + family_score
+	
+	return {
+		"quest_score": int(quest_score),
+		"family_score": int(family_score),
+		"total_score": int(total_score)
+	}
