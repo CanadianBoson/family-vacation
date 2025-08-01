@@ -153,7 +153,7 @@ func _draw():
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
 	# We pass all the valid location data from PinManager to the popup.
-	info_popup.show_popup(pin_manager.valid_pin_locations)
+	info_popup.show_popup(pin_manager.valid_pin_locations, pin_manager.dropped_pin_data)
 
 # --- Existing Signal Handlers (Make sure they are still there) ---
 

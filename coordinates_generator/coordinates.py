@@ -3,15 +3,60 @@ import json
 import numpy as np
 import math # For math.ceil
 import pycountry
+import countrygroups
 
 # This list is no longer used in the primary filter but is kept for reference.
-EUROPEAN_COUNTRIES = [
-    "AL", "AD", "AM", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ",
-    "DK", "EE", "FI", "FR", "GE", "DE", "GR", "HU", "IS", "IE", "IT",
-    "XK", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO",
-    "PL", "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "TR",
-    "UA", "GB", "VA"
-]
+EUROPEAN_COUNTRIES_DICT = {
+    'AL': 'Albania',
+    'AD': 'Andorra',
+    'AM': 'Armenia',
+    'AT': 'Austria',
+    'BY': 'Belarus',
+    'BE': 'Belgium',
+    'BA': 'Bosnia and Herzegovina',
+    'BG': 'Bulgaria',
+    'HR': 'Croatia',
+    'CY': 'Cyprus',
+    'CZ': 'Czech Republic',
+    'DK': 'Denmark',
+    'EE': 'Estonia',
+    'FI': 'Finland',
+    'FR': 'France',
+    'GE': 'Georgia',
+    'DE': 'Germany',
+    'GR': 'Greece',
+    'HU': 'Hungary',
+    'IS': 'Iceland',
+    'IE': 'Ireland',
+    'IT': 'Italy',
+    'XK': 'Kosovo',
+    'LV': 'Latvia',
+    'LI': 'Liechtenstein',
+    'LT': 'Lithuania',
+    'LU': 'Luxembourg',
+    'MT': 'Malta',
+    'MD': 'Moldova',
+    'MC': 'Monaco',
+    'ME': 'Montenegro',
+    'NL': 'Netherlands',
+    'MK': 'North Macedonia',
+    'NO': 'Norway',
+    'PL': 'Poland',
+    'PT': 'Portugal',
+    'RO': 'Romania',
+    'RU': 'Russia',
+    'SM': 'San Marino',
+    'RS': 'Serbia',
+    'SK': 'Slovakia',
+    'SI': 'Slovenia',
+    'ES': 'Spain',
+    'SE': 'Sweden',
+    'CH': 'Switzerland',
+    'TR': 'Turkey',
+    'UA': 'Ukraine',
+    'GB': 'United Kingdom',
+    'VA': 'Vatican City',
+}
 
 # --- Mercator Projection Parameters ---
 # Earth's radius in meters (standard for Web Mercator / EPSG:3857)
@@ -115,7 +160,7 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         # --- NEW FILTERING LOGIC ---
         # 1. Filter for cities within the map's pixel boundaries.
         is_in_map_area = df['x'].between(0, 940) & df['y'].between(0, 1000)
-        map_cities_df = df[is_in_map_area & df['iso2'].isin(EUROPEAN_COUNTRIES)].copy()
+        map_cities_df = df[is_in_map_area & df['iso2'].isin(list(EUROPEAN_COUNTRIES_DICT.keys()))].copy()
 
         # 2. Filter those cities for populations over 100k.
         pop_filtered_df = map_cities_df
@@ -153,14 +198,16 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         # --- END OF NEW LOGIC ---
 
         # add country names using pycountry
-        final_df['country'] = df.apply(lambda x: pycountry.countries.get(alpha_2=x.iso2).name if x.iso2 in [n.alpha_2 for n in list(pycountry.countries)] else '', axis=1)
+        final_df['country'] = df.apply(lambda x: EUROPEAN_COUNTRIES_DICT[x.iso2] if x.iso2 in list(EUROPEAN_COUNTRIES_DICT.keys()) else "", axis=1)
+        # add EU membership status using countrygroups
+        final_df['is_eu'] = final_df['country'].apply(lambda x: x in countrygroups.EUROPEAN_UNION.names)
 
         # Reset index for the final DataFrame
         final_df = final_df.reset_index(drop=True)
         final_df = final_df.reset_index(drop=False)
 
         # Select columns for the output JSON
-        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'iso2', 'country', 'population', 'is_capital']]
+        output_data = final_df[['index', 'city', 'x', 'y', 'lng', 'lat', 'country', 'population', 'is_capital', 'is_eu']]
 
         # Convert DataFrame to a list of dictionaries
         locations_list = output_data.to_dict(orient='records')
