@@ -39,9 +39,14 @@ func _ready():
 		"NoCrossThree": {"func": _check_cross_three, "expected": false},
 		"OnlyObtuse": {"func": _check_path_angles, "expected": true, "args": ["obtuse"]},
 		"OnlyAcute": {"func": _check_path_angles, "expected": true, "args": ["acute"]},
+		"TrainsWE": {"func": _check_journey_direction, "expected": true, "args": [2, "WE"]},
+		"TrainsNS": {"func": _check_journey_direction, "expected": true, "args": [2, "NS"]},
+		"PlanesWE": {"func": _check_journey_direction, "expected": true, "args": [3, "WE"]},
+		"PlanesNS": {"func": _check_journey_direction, "expected": true, "args": [3, "NS"]},
 		# stats				
 		"NoCapitals": {"func": _check_no_capitals, "expected": true},
 		"SomeCapitals": {"func": _check_no_capitals, "expected": false},
+		"AllCapitals": {"func": _check_all_capitals, "expected": true},
 		"MinPopulation": {"func": _check_min_population, "expected": true},
 		"SomeSmallPopulation": {"func": _check_min_population, "expected": false},
 		"StayInEU": {"func": _check_stay_in_eu, "expected": true},
@@ -53,6 +58,8 @@ func _ready():
 		"StayAwayIT": {"func": _check_stay_away, "expected": true, "args": ["Italy"]},
 		"StayAwayPL": {"func": _check_stay_away, "expected": true, "args": ["Poland"]},
 		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia"]},
+		"StayAwayES": {"func": _check_stay_away, "expected": true, "args": ["Spain"]},
+		"StayAwayTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey"]},
 		# party_pooper
 		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},	
 		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [800.0, "max"]},
@@ -128,6 +135,13 @@ func _check_no_transport(transport_type: int, dropped_pin_data: Array, _all_loca
 		var pin1_data = dropped_pin_data[i]
 		var pin2_data = dropped_pin_data[i+1]
 		if pin_manager.get_travel_mode(pin1_data.index, pin2_data.index) == transport_type:
+			return false
+	return true
+
+func _check_all_capitals(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty(): return true
+	for pin_data in dropped_pin_data:
+		if not pin_data.get("is_capital", false):
 			return false
 	return true
 
@@ -263,6 +277,35 @@ func _check_cross_three(dropped_pin_data: Array, _all_locations_data: Array, _nu
 			crossings += 1
 	return crossings >= 3
 
+# Checks if all journeys of a specific transport type follow a WE or NS direction.
+func _check_journey_direction(transport_type: int, direction_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.size() < 2:
+		return true # No journey legs, so condition is met by default.
+
+	if not is_instance_valid(pin_manager): return false
+
+	for i in range(dropped_pin_data.size() - 1):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		
+		var travel_mode = pin_manager.get_travel_mode(p1.index, p2.index)
+		
+		# We only care about legs that match the required transport type.
+		if travel_mode == transport_type:
+			var travel_vector = p2.position - p1.position
+			
+			if direction_type == "WE":
+				# For a West-East journey, the horizontal movement must be greater than the vertical.
+				if abs(travel_vector.x) < abs(travel_vector.y):
+					return false # This leg fails the check.
+			elif direction_type == "NS":
+				# For a North-South journey, the vertical movement must be greater than the horizontal.
+				if abs(travel_vector.y) < abs(travel_vector.x):
+					return false # This leg fails the check.
+
+	# If we checked all relevant legs and none failed, the condition is met.
+	return true
+	
 # The signature for this function is now consistent with the others.
 func _check_stay_away(country: String, dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty():

@@ -53,7 +53,7 @@
 	"NoCapitals": {
 	  "text": "Plan a route that avoids all capital cities",
 	  "difficulty": 1,
-	  "incompatible": ["SomeCapitals"]
+	  "incompatible": ["SomeCapitals", "AllCapitals"]
 	},
 	"SomeCapitals": {
 	  "text": "Plan a route that goes to at least one capital city",
@@ -127,6 +127,16 @@
 	},	
 	"StayAwayRU": {
 	  "text": "Don't get within 200km of any Russian city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"StayAwayES": {
+	  "text": "Don't get within 200km of any Spanish city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"StayAwayTR": {
+	  "text": "Don't get within 200km of any Turkish city",
 	  "difficulty": 1,
 	  "incompatible": []
 	},
@@ -224,6 +234,31 @@
 	  "text": "Ensure the entire journey is beyond 10000km",
 	  "difficulty": 5,
 	  "incompatible": ["MaxJourneyDistance"]
-	},											
+	},
+	"AllCapitals": {
+	  "text": "Only visit capitals",
+	  "difficulty": 3,
+	  "incompatible": ["NoCapitals"]
+	},
+	"TrainsWE": {
+	  "text": "All trains should go more West-East than North-South",
+	  "difficulty": 3,
+	  "incompatible": ["TrainsNS"]
+	},
+	"TrainsNS": {
+	  "text": "All trains should go more North-South than West-East",
+	  "difficulty": 3,
+	  "incompatible": ["TrainsWE"]
+	},
+	"PlanesWE": {
+	  "text": "All planes should go more West-East than North-South",
+	  "difficulty": 3,
+	  "incompatible": ["PlanesNS"]
+	},
+	"PlanesNS": {
+	  "text": "All planes should go more North-South than West-East",
+	  "difficulty": 3,
+	  "incompatible": ["PlanesWE"]
+	},										
   }
 }

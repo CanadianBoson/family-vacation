@@ -32,6 +32,16 @@ signal data_updated
 @onready var score_value_label = $ScoreTracker/ScoreValueLabel
 @onready var vertical_menu = $VerticalMenu # <-- Make sure you have this reference
 
+@onready var detailed_info_box = $DetailedInfoBox
+@onready var info_city_name = $DetailedInfoBox/VBoxContainer/CityNameLabel
+@onready var info_country = $DetailedInfoBox/VBoxContainer/CountryLabel
+@onready var info_lat = $DetailedInfoBox/VBoxContainer/LatLabel
+@onready var info_lon = $DetailedInfoBox/VBoxContainer/LonLabel
+@onready var info_population = $DetailedInfoBox/VBoxContainer/PopulationLabel
+@onready var info_capital = $DetailedInfoBox/VBoxContainer/CapitalLabel
+@onready var info_eu = $DetailedInfoBox/VBoxContainer/EULabel
+@onready var hover_timer = $HoverTimer
+
 var CAR_COLOR = Color.GREEN  # Green
 var BOAT_COLOR = Color.BLUE  # Blue
 var TRAIN_COLOR = Color.DARK_ORCHID
@@ -39,6 +49,7 @@ var PLANE_COLOR = Color.FIREBRICK # Red
 
 # This defines how close (in pixels) the user must click to a valid spot.
 const CLICK_RADIUS = 3.0
+var currently_hovered_data = null
 
 # Store the currently hovered location data to display its city.
 var hovered_location_data = null
@@ -53,6 +64,12 @@ func _ready():
 	quest_manager.pin_manager = pin_manager
 	# Load pin locations via PinManager
 	pin_manager._load_pin_locations()
+	
+		# --- Configure the Hover Timer ---
+	hover_timer.wait_time = 1.0 # 1-second delay
+	hover_timer.one_shot = true
+	hover_timer.timeout.connect(_on_hover_timer_timeout)
+	# -------------------------------
 	
 	# Request a redraw after loading locations to show the circles.
 	queue_redraw()
@@ -88,38 +105,47 @@ func _print_tree_with_types(node, indent=""):
 		_print_tree_with_types(child, indent + "  ")
 
 # This function is called for every input event.
-func _unhandled_input(event):
-	var click_position = event.position
-	var data_changed : bool = false
-	# Handle mouse clicks for dropping/removing pins.
+func _unhandled_input(event: InputEvent):
 	if event is InputEventMouseButton and event.is_pressed():
+		var click_position = event.position
+		var data_changed = false
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			# Left-click to place a pin
-			var placed = pin_manager.place_pin_at_click(click_position, CLICK_RADIUS)
-			if placed:
+			if pin_manager.place_pin_at_click(click_position, CLICK_RADIUS):
 				data_changed = true
-					
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			# Right-click to remove a pin and its connecting lines
-			var removed = pin_manager.remove_pin_at_click(click_position, CLICK_RADIUS)
-			if removed:
+			if pin_manager.remove_pin_at_click(click_position, CLICK_RADIUS):
 				data_changed = true
-
 		if data_changed:
 			_update_game_state()
-	
-	# Handle mouse motion for hovering and displaying city names.
+
 	if event is InputEventMouseMotion:
-		var mouse_position = event.position
-		var hovered_data = pin_manager.get_hovered_location(mouse_position, CLICK_RADIUS)
-		
+		var mouse_pos = event.position
+		var hovered_data = pin_manager.get_hovered_location(mouse_pos, CLICK_RADIUS)
+
 		if hovered_data:
-			hover_label.text = hovered_data.city
-			hover_label.set("theme_override_colors/font_color", Color.DARK_ORCHID)
-			hover_label.position = mouse_position + Vector2(15, -10) # Offset label
-			hover_label.show()
+			# If we move over a NEW city
+			if hovered_data != currently_hovered_data:
+				currently_hovered_data = hovered_data
+				
+				# Immediately show the simple label
+				hover_label.text = hovered_data.city
+				hover_label.add_theme_color_override("font_color", Color.DARK_BLUE)
+				hover_label.position = mouse_pos + Vector2(15, -10)
+				hover_label.show()
+				
+				# Hide the detailed box and start the 1-second timer
+				detailed_info_box.hide()
+				hover_timer.start()
+			else:
+				# If we are still hovering the same city, just update UI positions
+				hover_label.position = mouse_pos + Vector2(15, -10)
+				_update_detailed_box_position()
 		else:
+			# If the mouse is not over any city, hide everything and stop the timer
+			currently_hovered_data = null
 			hover_label.hide()
+			detailed_info_box.hide()
+			hover_timer.stop()
 
 # This function is called when the node needs to be drawn.
 func _draw():
@@ -151,6 +177,52 @@ func _draw():
 					line_color = TRAIN_COLOR
 			
 			draw_line(start_point, end_point, line_color, 2)
+			
+# --- New function called when the HoverTimer finishes ---
+func _on_hover_timer_timeout():
+	# Check if we are still hovering over the same city when the timer ends
+	if currently_hovered_data:
+		# Hide the simple label
+		hover_label.hide()
+		
+		# Populate the detailed box with the stored data
+		_populate_detailed_info(currently_hovered_data)
+		_update_detailed_box_position()
+		detailed_info_box.show()
+
+# --- New helper function to fill the detailed info box labels ---
+func _populate_detailed_info(data):
+	info_city_name.text = data.get("city", "N/A")
+	info_country.text = "Country: " + data.get("country", "N/A")
+	
+	info_lat.text = "Latitude: " + str(data.get("lat"))
+	info_lon.text = "Longitude: " + str(data.get("lng"))
+	
+	var pop_val = data.get("population", 0)
+	info_population.text = "Population: " + str(int(pop_val / 1000)) + "k"
+	
+	var is_capital_text = "Yes" if data.get("is_capital", false) else "No"
+	info_capital.text = "Capital: " + is_capital_text
+	
+	var is_eu_text = "Yes" if data.get("is_eu", false) else "No"
+	info_eu.text = "EU: " + is_eu_text
+
+func _update_detailed_box_position():
+	var mouse_pos = get_global_mouse_position()
+	var screen_height = get_viewport_rect().size.y
+	var box_size = detailed_info_box.size
+	
+	var new_pos = Vector2()
+	
+	# If the mouse is in the bottom half of the screen
+	if mouse_pos.y > screen_height / 2:
+		# Position the box above the cursor
+		new_pos = mouse_pos + Vector2(15, -box_size.y - 15)
+	else:
+		# Position the box below the cursor (original behavior)
+		new_pos = mouse_pos + Vector2(15, 15)
+		
+	detailed_info_box.position = new_pos
 
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
