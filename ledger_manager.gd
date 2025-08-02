@@ -1,62 +1,73 @@
-# LedgerManager.gd
-# This script handles calculating distances and updating the ledger UI.
+# ledger_manager.gd
+# This script handles calculating distances and costs, and updating the ledger UI.
 extends Node
 
-# Reference to the VBoxContainer that holds ledger entries (inside the ScrollContainer)
-@onready var _ledger_entries_vbox: VBoxContainer = $"../LedgerScrollContainer/LedgerEntriesVBox" 
-# Reference to the Label that displays the overall distance
-@onready var _overall_distance_label: Label = $"../LedgerHeaderVBox/OverallDistanceLabel" # Adjust path if label name differs
+@onready var _ledger_entries_vbox: VBoxContainer = $"../LedgerScrollContainer/LedgerEntriesVBox"
+@onready var _overall_distance_label: Label = $"../LedgerHeaderVBox/OverallDistanceLabel"
+# --- New: Add a reference to the new cost label ---
+@onready var _overall_cost_label: Label = $"../LedgerHeaderVBox/OverallCostLabel"
 
-# Earth's radius in kilometers for Haversine formula
 const EARTH_RADIUS_KM = 6371.0
 
-# Calculates distance between two lat/lng points using Haversine formula
+# --- Updated: Cost calculation function now includes number of menu items ---
+# Calculates the cost of a single leg of the journey.
+func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
+	var base_cost = 0.0
+	var per_km_cost = 0.0
+	var family_multiplier = num_menu_items
+	
+	match transport_type:
+		0: # Land/Car
+			base_cost = 50.0
+			per_km_cost = 0.5
+			family_multiplier = 1.0
+		1: # Boat
+			base_cost = 50.0
+			per_km_cost = 0.2
+		2: # Train
+			base_cost = 50.0
+			per_km_cost = 0.4
+		3: # Plane
+			base_cost = 30.0
+			per_km_cost = 0.8
+	
+	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
+
+# ... (your _calculate_haversine_distance and _calculate_cumulative_distances_km functions remain the same) ...
 func _calculate_haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-	# Convert degrees to radians
 	var R = EARTH_RADIUS_KM
 	var phi1 = deg_to_rad(lat1)
 	var phi2 = deg_to_rad(lat2)
 	var delta_phi = deg_to_rad(lat2 - lat1)
 	var delta_lambda = deg_to_rad(lon2 - lon1)
-
 	var a = sin(delta_phi / 2) * sin(delta_phi / 2) + \
 			cos(phi1) * cos(phi2) * \
 			sin(delta_lambda / 2) * sin(delta_lambda / 2)
 	var c = 2 * atan2(sqrt(a), sqrt(1 - a))
-	var d = R * c
-	return d
+	return R * c
 
-# Calculates cumulative distances in kilometers between dropped pins
 func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 	var cumulative_distances_km = []
-	var current_total_dist_km = 0.0
 	if dropped_pin_data.size() > 0:
-		cumulative_distances_km.append(0.0) # The first pin has 0 distance from the start of the path
+		cumulative_distances_km.append(0.0)
 		for i in range(1, dropped_pin_data.size()):
 			var prev_pin_data = dropped_pin_data[i-1]
 			var current_pin_data = dropped_pin_data[i]
-			
-			var lat1 = prev_pin_data.lat
-			var lon1 = prev_pin_data.lng
-			var lat2 = current_pin_data.lat
-			var lon2 = current_pin_data.lng
-			
-			var segment_distance_km = _calculate_haversine_distance(lat1, lon1, lat2, lon2)
-			current_total_dist_km += segment_distance_km
-			cumulative_distances_km.append(current_total_dist_km)
+			var segment_distance_km = _calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
+			cumulative_distances_km.append(cumulative_distances_km[i-1] + segment_distance_km)
 	return cumulative_distances_km
 
-# Updates the ledger display on the right-hand side
-func update_ledger_display(pin_manager: Node):
-	# Get the dropped pin data from the manager
+# --- Updated: This function now requires the number of menu items ---
+func update_ledger_display(pin_manager: Node, num_menu_items: int):
 	var dropped_pin_data = pin_manager.dropped_pin_data
 
-	# Clear only the dynamically added entries
 	for child in _ledger_entries_vbox.get_children():
 		child.queue_free()
 
 	var cumulative_distances_km = _calculate_cumulative_distances_km(dropped_pin_data)
 	var overall_distance_km = cumulative_distances_km.back() if not cumulative_distances_km.is_empty() else 0.0
+	
+	var overall_cost = 0.0
 
 	_overall_distance_label.text = "Overall Distance: %.2f km" % overall_distance_km
 	_overall_distance_label.add_theme_color_override("font_color", Color.DARK_BLUE)
@@ -65,6 +76,8 @@ func update_ledger_display(pin_manager: Node):
 		var no_pins_label = Label.new()
 		no_pins_label.text = "No pins dropped yet."
 		_ledger_entries_vbox.add_child(no_pins_label)
+		_overall_cost_label.text = "Overall Cost: $0.00"
+		_overall_cost_label.add_theme_color_override("font_color", Color.DARK_GREEN)
 		return
 
 	# Add entries for each dropped pin
@@ -74,23 +87,25 @@ func update_ledger_display(pin_manager: Node):
 		var entry_text = ""
 
 		if i == 0:
-			# The first pin is the starting point
 			entry_text = "%d. %s (Start)" % [pin_number, city_name]
 		else:
-			# For subsequent pins, calculate segment distance and get travel mode
 			var prev_pin_data = dropped_pin_data[i-1]
 			var current_pin_data = dropped_pin_data[i]
 			var segment_distance_km = _calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
 			
-			# Get the travel mode from PinManager
 			var travel_mode_int = pin_manager.get_travel_mode(prev_pin_data.index, current_pin_data.index)
-			var travel_mode_str = "Plane" # Default
+			var travel_mode_str = "Plane"
 			match travel_mode_int:
 				0: travel_mode_str = "Car"
 				1: travel_mode_str = "Boat"
 				2: travel_mode_str = "Train"
 
-			entry_text = "%d. %s (%.1f km by %s)" % [pin_number, city_name, segment_distance_km, travel_mode_str]
+			# --- Updated: Pass the number of menu items to the cost function ---
+			var leg_cost = _calculate_leg_cost(travel_mode_int, segment_distance_km, num_menu_items)
+			overall_cost += leg_cost
+			# -----------------------------------------------------------------
+
+			entry_text = "%d. %s (%.1f km by %s, %.2f€" % [pin_number, city_name, segment_distance_km, travel_mode_str, leg_cost]
 
 		var entry_label = Label.new()
 		entry_label.text = entry_text
@@ -101,3 +116,6 @@ func update_ledger_display(pin_manager: Node):
 		var spacer_entry = Control.new()
 		spacer_entry.set_custom_minimum_size(Vector2(0, 5))
 		_ledger_entries_vbox.add_child(spacer_entry)
+
+	_overall_cost_label.text = "Overall Cost: %.2f€" % overall_cost
+	_overall_cost_label.add_theme_color_override("font_color", Color.DARK_GREEN)

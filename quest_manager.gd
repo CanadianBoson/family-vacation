@@ -40,13 +40,26 @@ func _ready():
 		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia"]},
 		"UniqueCityLetters": {"func": _check_unique_city_letters, "expected": true},
 		"UniqueCountryLetters": {"func": _check_unique_country_letters, "expected": true},
+		"AllTransport": {"func": _check_all_transport, "expected": true},
+		"OnlyObtuse": {"func": _check_path_angles, "expected": true, "args": ["obtuse"]},
+		"OnlyAcute": {"func": _check_path_angles, "expected": true, "args": ["acute"]},
+		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},
+		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [2000.0, "min"]},
+		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [800.0, "max"]},
+		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "min"]},
+		"MaxLettersCity": {"func": _check_city_name_length, "expected": true, "args": [10, "max"]},
+		"MinLettersCity": {"func": _check_city_name_length, "expected": true, "args": [5, "min"]},
+		"MaxLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [10, "max"]},
+		"MinLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [6, "min"]},
+		"MaxCities": {"func": _check_city_count, "expected": true, "args": [5, "max"]},
+		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]}
 	}
 	
 	for quest_key in quest_checkers.keys():
 		quest_statuses[quest_key] = false
 
 # This is the main function called when pin data changes.
-func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array):
+func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array, num_menu_items: int):
 	print("--- Checking Conditions ---")
 	for quest_key in quest_checkers.keys():
 		var info = quest_checkers[quest_key]
@@ -56,7 +69,7 @@ func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array):
 		var extra_args = info.get("args", [])
 		
 		# Build the full argument list for the function call.
-		var args_for_call = extra_args + [dropped_pin_data, all_locations_data]
+		var args_for_call = extra_args + [dropped_pin_data, all_locations_data, num_menu_items]
 		
 		# Use callv() to call the function with an array of arguments.
 		var result = checker_func.callv(args_for_call)
@@ -72,7 +85,18 @@ func is_quest_satisfied(quest_key: String) -> bool:
 
 # --- Condition Checking Functions (Signatures are now consistent) ---
 
-func _check_three_same_letter(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+# Checks if the total number of visited cities meets a requirement.
+func _check_city_count(limit: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	var city_count = dropped_pin_data.size()
+	
+	if check_type == "max":
+		return city_count <= limit
+	elif check_type == "min":
+		return city_count >= limit
+		
+	return false # Should not be reached if check_type is valid.
+	
+func _check_three_same_letter(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 3: return false
 	var letter_counts = {}
 	for pin_data in dropped_pin_data:
@@ -85,7 +109,7 @@ func _check_three_same_letter(dropped_pin_data: Array, _all_locations_data: Arra
 		if letter_counts[letter] >= 3: return true
 	return false
 
-func _check_no_transport(transport_type: int, dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_no_transport(transport_type: int, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2: return false
 	if not is_instance_valid(pin_manager): return false
 	for i in range(dropped_pin_data.size() - 1):
@@ -95,14 +119,14 @@ func _check_no_transport(transport_type: int, dropped_pin_data: Array, _all_loca
 			return false
 	return true
 
-func _check_no_capitals(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_no_capitals(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty(): return true
 	for pin_data in dropped_pin_data:
 		if pin_data.get("is_capital", false):
 			return false
 	return true
 
-func _check_min_population(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_min_population(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty(): return true
 	for pin_data in dropped_pin_data:
 		var population = pin_data.get("population", 0)
@@ -110,7 +134,7 @@ func _check_min_population(dropped_pin_data: Array, _all_locations_data: Array) 
 			return false
 	return true
 
-func _check_paths_crossing(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_paths_crossing(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 4: return false
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i].position
@@ -123,7 +147,7 @@ func _check_paths_crossing(dropped_pin_data: Array, _all_locations_data: Array) 
 	return false
 
 # --- New function to check if all cities are in the EU ---
-func _check_stay_in_eu(dropped_pin_data: Array, all_locations_data: Array) -> bool:
+func _check_stay_in_eu(dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
 	# If no pins are dropped, the condition is met by default.
 	if dropped_pin_data.is_empty():
 		return true
@@ -136,7 +160,7 @@ func _check_stay_in_eu(dropped_pin_data: Array, all_locations_data: Array) -> bo
 	return true
 	
 # Checks if the first letter of every city in the path is unique.
-func _check_unique_city_letters(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_unique_city_letters(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2:
 		return true # A single city or no cities have unique letters by default.
 
@@ -155,7 +179,7 @@ func _check_unique_city_letters(dropped_pin_data: Array, _all_locations_data: Ar
 	return true # All letters were unique.
 
 # Checks if the first letter of every country code in the path is unique.
-func _check_unique_country_letters(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_unique_country_letters(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2:
 		return true
 
@@ -173,7 +197,7 @@ func _check_unique_country_letters(dropped_pin_data: Array, _all_locations_data:
 			
 	return true # All letters were unique.	
 
-func _check_cross_three(dropped_pin_data: Array, _all_locations_data: Array) -> bool:
+func _check_cross_three(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2: return false
 	var crossings = 0
 	for i in range(dropped_pin_data.size() - 1):
@@ -184,7 +208,7 @@ func _check_cross_three(dropped_pin_data: Array, _all_locations_data: Array) -> 
 	return crossings >= 3
 
 # The signature for this function is now consistent with the others.
-func _check_stay_away(country: String, dropped_pin_data: Array, all_locations_data: Array) -> bool:
+func _check_stay_away(country: String, dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty():
 		return true
 
@@ -211,7 +235,171 @@ func _check_stay_away(country: String, dropped_pin_data: Array, all_locations_da
 					return false
 
 	return true
+	
+func _check_all_transport(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	# A path needs at least 3 segments to potentially use all 4 transport types.
+	if dropped_pin_data.size() < 4:
+		return false
 
+	if not is_instance_valid(pin_manager): return false
+
+	# A dictionary to track which transport modes have been seen.
+	var seen_transport_modes = {
+		0: false, # Land/Car
+		1: false, # Boat
+		2: false, # Train
+		3: false  # Plane
+	}
+
+	# Iterate through each segment of the journey.
+	for i in range(dropped_pin_data.size() - 1):
+		var pin1_data = dropped_pin_data[i]
+		var pin2_data = dropped_pin_data[i+1]
+		
+		var travel_mode = pin_manager.get_travel_mode(pin1_data.index, pin2_data.index)
+		
+		# Mark this transport mode as seen.
+		if seen_transport_modes.has(travel_mode):
+			seen_transport_modes[travel_mode] = true
+			
+	# Check if all values in the dictionary are true.
+	for mode in seen_transport_modes.keys():
+		if not seen_transport_modes[mode]:
+			return false # A transport mode was missed.
+			
+	return true # All transport modes were used.
+	
+# Checks if all angles in the path are of a specific type.
+# Obtuse is defined as 90-270 degrees. Acute is all other angles.
+func _check_path_angles(angle_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	# A path needs at least 3 pins to form an angle.
+	if dropped_pin_data.size() < 3:
+		return true # Condition is met by default if no angles exist.
+
+	# Iterate through each vertex of the path.
+	for i in range(1, dropped_pin_data.size() - 1):
+		var p_prev = dropped_pin_data[i-1].position
+		var p_current = dropped_pin_data[i].position
+		var p_next = dropped_pin_data[i+1].position
+		
+		# Create vectors pointing away from the current vertex.
+		var vec1 = p_prev - p_current
+		var vec2 = p_next - p_current
+		
+		# --- New logic to calculate the full 0-360 degree angle ---
+		# Get the base angle (0-180 degrees).
+		var angle_deg = rad_to_deg(vec1.angle_to(vec2))
+		
+		# -----------------------------------------------------------
+		
+		# Check the angle against the required type.
+		if angle_type == "obtuse":
+			# If we need obtuse angles (90-270), and this one is outside that range...
+			if abs(angle_deg) < 90.0:
+				return false # ...the condition fails.
+		elif angle_type == "acute":
+			# If we need acute angles, and this one is in the obtuse range...
+			if abs(angle_deg) > 90.0:
+				return false # ...the condition fails.
+				
+	# If the loop completes, all angles met the criteria.
+	return true
+	
+# Checks if every visited city name meets a length requirement.
+func _check_city_name_length(limit: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty():
+		return true # Condition is met by default if no pins are dropped.
+
+	for pin_data in dropped_pin_data:
+		var city_name_length = pin_data.get("city", "").length()
+		
+		if check_type == "max":
+			if city_name_length > limit:
+				return false # Found a city name that is too long.
+		elif check_type == "min":
+			if city_name_length < limit:
+				return false # Found a city name that is too short.
+				
+	return true # All city names passed the check.
+
+# Checks if every visited country code meets a length requirement.
+func _check_country_code_length(limit: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty():
+		return true
+
+	for pin_data in dropped_pin_data:
+		var country_code_length = pin_data.get("country", "").length()
+		
+		if check_type == "max":
+			if country_code_length > limit:
+				return false
+		elif check_type == "min":
+			if country_code_length < limit:
+				return false
+				
+	return true	
+
+func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
+	var base_cost = 0.0
+	var per_km_cost = 0.0
+	
+	match transport_type:
+		0: # Land/Car
+			base_cost = 50.0
+			per_km_cost = 0.5
+		1: # Boat
+			base_cost = 200.0
+			per_km_cost = 0.2
+		2: # Train
+			base_cost = 100.0
+			per_km_cost = 0.4
+		3: # Plane
+			base_cost = 500.0
+			per_km_cost = 0.8
+	
+	var quest_bonus_cost = num_menu_items * 10.0
+	return base_cost + (distance_km * per_km_cost) + quest_bonus_cost
+
+func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, num_menu_items: int) -> bool:
+	var overall_cost = 0.0
+	if dropped_pin_data.size() < 2:
+		# If there's no path, cost is 0. This satisfies a "max" check but not a "min" check.
+		return check_type == "max"
+
+	for i in range(dropped_pin_data.size() - 1):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		var distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
+		overall_cost += _calculate_leg_cost(transport_mode, distance, num_menu_items)
+	
+	if check_type == "max":
+		return overall_cost <= limit
+	elif check_type == "min":
+		return overall_cost >= limit
+	
+	return false
+
+func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, num_menu_items: int) -> bool:
+	if dropped_pin_data.size() < 2:
+		return true # No legs exist, so the condition is met by default.
+
+	for i in range(dropped_pin_data.size() - 1):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		var distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
+		var leg_cost = _calculate_leg_cost(transport_mode, distance, num_menu_items)
+		
+		if check_type == "max":
+			if leg_cost > limit:
+				return false # Found a leg that is too expensive.
+		elif check_type == "min":
+			if leg_cost < limit:
+				return false # Found a leg that is too cheap.
+				
+	return true # All legs passed the check.
+	
 # --- Helper functions ---
 
 func _haversine_distance(lat1, lon1, lat2, lon2) -> float:

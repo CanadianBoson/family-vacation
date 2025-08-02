@@ -127,13 +127,78 @@
 	},
 	"UniqueCityLetters": {
 	  "text": "Every city must start with a different letter",
-	  "difficulty": 5,
+	  "difficulty": 4,
 	  "incompatible": ["ThreeLetter"]
 	},
 	"UniqueCountryLetters": {
 	  "text": "Every country must start with a different letter",
+	  "difficulty": 5,
+	  "incompatible": []
+	},
+	"AllTransport": {
+	  "text": "Use every possible method of transport",
+	  "difficulty": 5,
+	  "incompatible": ["CarFree", "BoatFree", "TrainFree", "PlaneFree"]
+	},
+	"OnlyObtuse": {
+	  "text": "Ensure the route only has obtuse angles",
+	  "difficulty": 5,
+	  "incompatible": ["OnlyAcute"]
+	},
+	"OnlyAcute": {
+	  "text": "Ensure the route only has acute angles",
+	  "difficulty": 5,
+	  "incompatible": ["OnlyObtuse"]
+	},
+	"MaxOverallCost": {
+	  "text": "The trip must cost under 5000 Euros",
 	  "difficulty": 4,
 	  "incompatible": []
-	},			
+	},
+	"MinOverallCost": {
+	  "text": "The trip must cost over 2000 Euros",
+	  "difficulty": 1,
+	  "incompatible": []
+	},
+	"MaxLegCost": {
+	  "text": "Every leg of the trip must cost under 800 Euros",
+	  "difficulty": 5,
+	  "incompatible": []
+	},
+	"MinLegCost": {
+	  "text": "Every leg of the trip must cost at least 300 Euros",
+	  "difficulty": 3,
+	  "incompatible": []
+	},
+	"MaxLettersCity": {
+	  "text": "Every city must be under 10 letters long",
+	  "difficulty": 3,
+	  "incompatible": []
+	},	
+	"MinLettersCity": {
+	  "text": "Every city must be at least 5 letters long",
+	  "difficulty": 3,
+	  "incompatible": []
+	},	
+	"MaxLettersCountry": {
+	  "text": "Every country must be under 10 letters long",
+	  "difficulty": 3,
+	  "incompatible": []
+	},	
+	"MinLettersCountry": {
+	  "text": "Every country must be at least 6 letters long",
+	  "difficulty": 3,
+	  "incompatible": []
+	},
+	"MaxCities": {
+	  "text": "Visit at most 5 cities",
+	  "difficulty": 3,
+	  "incompatible": ["MinCities"]
+	},
+	"MinCities": {
+	  "text": "Visit at least 10 cities",
+	  "difficulty": 5,
+	  "incompatible": ["MaxCities"]
+	},													
   }
 }
