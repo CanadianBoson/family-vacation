@@ -120,6 +120,11 @@
 	  "difficulty": 1,
 	  "incompatible": []
 	},
+	"StayAwayPL": {
+	  "text": "Don't get within 200km of any Polish city",
+	  "difficulty": 1,
+	  "incompatible": []
+	},	
 	"StayAwayRU": {
 	  "text": "Don't get within 200km of any Russian city",
 	  "difficulty": 1,
@@ -153,12 +158,12 @@
 	"MaxOverallCost": {
 	  "text": "The trip must cost under 5000 Euros",
 	  "difficulty": 4,
-	  "incompatible": []
+	  "incompatible": ["MinOverallCost"]
 	},
 	"MinOverallCost": {
-	  "text": "The trip must cost over 2000 Euros",
+	  "text": "The trip must cost over 10000 Euros",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["MaxOverallCost"]
 	},
 	"MaxLegCost": {
 	  "text": "Every leg of the trip must cost under 800 Euros",
@@ -199,6 +204,26 @@
 	  "text": "Visit at least 10 cities",
 	  "difficulty": 5,
 	  "incompatible": ["MaxCities"]
-	},													
+	},
+	"MaxLegDistance": {
+	  "text": "Ensure no leg exceeds 500km",
+	  "difficulty": 3,
+	  "incompatible": []
+	},
+	"MinLegDistance": {
+	  "text": "Ensure every leg is at least 200km",
+	  "difficulty": 3,
+	  "incompatible": []
+	},
+	"MaxJourneyDistance": {
+	  "text": "Ensure the entire journey is less than 5000km",
+	  "difficulty": 2,
+	  "incompatible": ["MinJourneyDistance"]
+	},
+	"MinJourneyDistance": {
+	  "text": "Ensure the entire journey is beyond 10000km",
+	  "difficulty": 5,
+	  "incompatible": ["MaxJourneyDistance"]
+	},											
   }
 }

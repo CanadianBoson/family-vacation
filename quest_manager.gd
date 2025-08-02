@@ -13,8 +13,16 @@ func _ready():
 	# Populate the dictionary in _ready() using a more robust structure.
 	# Each value is a dictionary containing the function, expected result, and extra args.
 	quest_checkers = {
+		# linguistic
 		"ThreeLetter": {"func": _check_three_same_letter, "expected": true},
 		"NoThreeLetter": {"func": _check_three_same_letter, "expected": false},
+		"UniqueCityLetters": {"func": _check_unique_city_letters, "expected": true},
+		"UniqueCountryLetters": {"func": _check_unique_country_letters, "expected": true},
+		"MaxLettersCity": {"func": _check_city_name_length, "expected": true, "args": [10, "max"]},
+		"MinLettersCity": {"func": _check_city_name_length, "expected": true, "args": [5, "min"]},
+		"MaxLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [10, "max"]},
+		"MinLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [6, "min"]},
+		# transport		
 		"CarFree": {"func": _check_no_transport, "expected": true, "args": [0]},
 		"NoCarFree": {"func": _check_no_transport, "expected": false, "args": [0]},
 		"SailFree": {"func": _check_no_transport, "expected": true, "args": [1]},
@@ -23,36 +31,40 @@ func _ready():
 		"NoTrainFree": {"func": _check_no_transport, "expected": false, "args": [2]},
 		"PlaneFree": {"func": _check_no_transport, "expected": true, "args": [3]},
 		"NoPlaneFree": {"func": _check_no_transport, "expected": false, "args": [3]},
-		"NoCapitals": {"func": _check_no_capitals, "expected": true},
-		"SomeCapitals": {"func": _check_no_capitals, "expected": false},
+		"AllTransport": {"func": _check_all_transport, "expected": true},
+		# geometry
 		"PathsCrossing": {"func": _check_paths_crossing, "expected": true},
 		"NoPathsCrossing": {"func": _check_paths_crossing, "expected": false},
+		"CrossThree": {"func": _check_cross_three, "expected": true},
+		"NoCrossThree": {"func": _check_cross_three, "expected": false},
+		"OnlyObtuse": {"func": _check_path_angles, "expected": true, "args": ["obtuse"]},
+		"OnlyAcute": {"func": _check_path_angles, "expected": true, "args": ["acute"]},
+		# stats				
+		"NoCapitals": {"func": _check_no_capitals, "expected": true},
+		"SomeCapitals": {"func": _check_no_capitals, "expected": false},
 		"MinPopulation": {"func": _check_min_population, "expected": true},
 		"SomeSmallPopulation": {"func": _check_min_population, "expected": false},
 		"StayInEU": {"func": _check_stay_in_eu, "expected": true},
 		"LeaveEU": {"func": _check_stay_in_eu, "expected": false},
-		"CrossThree": {"func": _check_cross_three, "expected": true},
-		"NoCrossThree": {"func": _check_cross_three, "expected": false},
+		# avoider
 		"StayAwayDE": {"func": _check_stay_away, "expected": true, "args": ["Germany"]},
 		"StayAwayFR": {"func": _check_stay_away, "expected": true, "args": ["France"]},
 		"StayAwayUK": {"func": _check_stay_away, "expected": true, "args": ["United Kingdom"]},
 		"StayAwayIT": {"func": _check_stay_away, "expected": true, "args": ["Italy"]},
+		"StayAwayPL": {"func": _check_stay_away, "expected": true, "args": ["Poland"]},
 		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia"]},
-		"UniqueCityLetters": {"func": _check_unique_city_letters, "expected": true},
-		"UniqueCountryLetters": {"func": _check_unique_country_letters, "expected": true},
-		"AllTransport": {"func": _check_all_transport, "expected": true},
-		"OnlyObtuse": {"func": _check_path_angles, "expected": true, "args": ["obtuse"]},
-		"OnlyAcute": {"func": _check_path_angles, "expected": true, "args": ["acute"]},
-		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},
-		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [2000.0, "min"]},
+		# party_pooper
+		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},	
 		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [800.0, "max"]},
-		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "min"]},
-		"MaxLettersCity": {"func": _check_city_name_length, "expected": true, "args": [10, "max"]},
-		"MinLettersCity": {"func": _check_city_name_length, "expected": true, "args": [5, "min"]},
-		"MaxLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [10, "max"]},
-		"MinLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [6, "min"]},
 		"MaxCities": {"func": _check_city_count, "expected": true, "args": [5, "max"]},
-		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]}
+		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
+		"MaxJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [5000.0, "max"]},
+		# spoiled
+		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [10000.0, "min"]},
+		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "min"]},
+		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]},
+		"MinLegDistance": {"func": _check_leg_distance, "expected": true, "args": [200.0, "min"]},
+		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]}
 	}
 	
 	for quest_key in quest_checkers.keys():
@@ -146,6 +158,44 @@ func _check_paths_crossing(dropped_pin_data: Array, _all_locations_data: Array, 
 				return true
 	return false
 
+# Checks if every individual leg of the journey meets a distance requirement.
+func _check_leg_distance(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.size() < 2:
+		return true # No legs exist, so the condition is met by default.
+
+	for i in range(dropped_pin_data.size() - 1):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		var leg_distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		
+		if check_type == "max":
+			if leg_distance > limit:
+				return false # Found a leg that is too long.
+		elif check_type == "min":
+			if leg_distance < limit:
+				return false # Found a leg that is too short.
+				
+	return true # All legs passed the check.
+
+# Checks if the total distance of the journey meets a requirement.
+func _check_journey_distance(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	var total_distance = 0.0
+	if dropped_pin_data.size() < 2:
+		# If there's no path, distance is 0. This satisfies a "max" check but not a "min" check.
+		return check_type == "max"
+
+	for i in range(dropped_pin_data.size() - 1):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		total_distance += _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+	
+	if check_type == "max":
+		return total_distance <= limit
+	elif check_type == "min":
+		return total_distance >= limit
+	
+	return false
+	
 # --- New function to check if all cities are in the EU ---
 func _check_stay_in_eu(dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
 	# If no pins are dropped, the condition is met by default.
@@ -178,24 +228,30 @@ func _check_unique_city_letters(dropped_pin_data: Array, _all_locations_data: Ar
 			
 	return true # All letters were unique.
 
-# Checks if the first letter of every country code in the path is unique.
+# Checks if the first letter of every unique country in the path is unique.
 func _check_unique_country_letters(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2:
 		return true
 
-	var seen_letters = []
+	# --- FIX: First, get a list of unique countries visited ---
+	var unique_countries = []
 	for pin_data in dropped_pin_data:
 		var country_code = pin_data.get("country", "")
-		if country_code.is_empty(): continue
-		
+		if not country_code.is_empty() and not unique_countries.has(country_code):
+			unique_countries.append(country_code)
+	# ---------------------------------------------------------
+
+	# Now, check the first letters of the unique countries
+	var seen_letters = []
+	for country_code in unique_countries:
 		var first_letter = country_code[0].to_upper()
 		
 		if seen_letters.has(first_letter):
-			return false # Found a duplicate letter.
+			return false # Found a duplicate letter among unique countries.
 			
 		seen_letters.append(first_letter)
 			
-	return true # All letters were unique.	
+	return true # All unique countries had unique first letters.
 
 func _check_cross_three(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2: return false
@@ -342,23 +398,24 @@ func _check_country_code_length(limit: int, check_type: String, dropped_pin_data
 func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
 	var base_cost = 0.0
 	var per_km_cost = 0.0
+	var family_multiplier = num_menu_items
 	
 	match transport_type:
 		0: # Land/Car
 			base_cost = 50.0
 			per_km_cost = 0.5
+			family_multiplier = 1.0
 		1: # Boat
-			base_cost = 200.0
+			base_cost = 50.0
 			per_km_cost = 0.2
 		2: # Train
-			base_cost = 100.0
+			base_cost = 50.0
 			per_km_cost = 0.4
 		3: # Plane
-			base_cost = 500.0
+			base_cost = 30.0
 			per_km_cost = 0.8
 	
-	var quest_bonus_cost = num_menu_items * 10.0
-	return base_cost + (distance_km * per_km_cost) + quest_bonus_cost
+	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
 
 func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, num_menu_items: int) -> bool:
 	var overall_cost = 0.0
