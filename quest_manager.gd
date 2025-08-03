@@ -63,6 +63,14 @@ func _ready():
 		"SomeSmallPopulation": {"func": _check_min_population, "expected": false},
 		"StayInEU": {"func": _check_stay_in_eu, "expected": true},
 		"LeaveEU": {"func": _check_stay_in_eu, "expected": false},
+		"MaxLat": {"func": _check_coordinate_spread, "expected": true, "args": ["lat", "all", 10.0, "max"]},
+		"MinLat": {"func": _check_coordinate_spread, "expected": true, "args": ["lat", "all", 20.0, "min"]},
+		"StartEndMaxLat": {"func": _check_coordinate_spread, "expected": true, "args": ["lat", "start_end", 10.0, "max"]},
+		"StartEndMinLat": {"func": _check_coordinate_spread, "expected": true, "args": ["lat", "start_end", 20.0, "min"]},
+		"MaxLon": {"func": _check_coordinate_spread, "expected": true, "args": ["lon", "all", 15.0, "max"]},
+		"MinLon": {"func": _check_coordinate_spread, "expected": true, "args": ["lon", "all", 25.0, "min"]},
+		"StartEndMaxLon": {"func": _check_coordinate_spread, "expected": true, "args": ["lon", "start_end", 15.0, "max"]},
+		"StartEndMinLon": {"func": _check_coordinate_spread, "expected": true, "args": ["lon", "start_end", 25.0, "min"]},
 		# avoider
 		"StayAwayDE": {"func": _check_stay_away, "expected": true, "args": ["Germany", "avoid"]},
 		"StayAwayFR": {"func": _check_stay_away, "expected": true, "args": ["France", "avoid"]},
@@ -410,7 +418,43 @@ func _check_stay_away(country_code: String, check_type: String, dropped_pin_data
 		return true
 
 	return false
+
+# Checks the spread of latitude or longitude for all or just start/end points.
+func _check_coordinate_spread(coord_type: String, check_mode: String, limit: float, comparison: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.size() < 2:
+		# If there aren't enough points for a spread, it satisfies a "max" check
+		# but fails a "min" check.
+		return comparison == "max"
+
+	var points_to_check = []
+	if check_mode == "all":
+		points_to_check = dropped_pin_data
+	elif check_mode == "start_end":
+		points_to_check.append(dropped_pin_data.front())
+		points_to_check.append(dropped_pin_data.back())
+
+	# Extract the relevant coordinate (lat or lon) from the points.
+	var coords = []
+	var key = "lat" if coord_type == "lat" else "lng"
+	for point in points_to_check:
+		coords.append(point.get(key, 0.0))
+		
+	if coords.is_empty():
+		return comparison == "max"
+
+	# Calculate the spread.
+	var min_coord = coords.min()
+	var max_coord = coords.max()
+	var spread = max_coord - min_coord
 	
+	# Compare the spread to the limit.
+	if comparison == "max":
+		return spread <= limit
+	elif comparison == "min":
+		return spread >= limit
+		
+	return false
+
 func _check_all_transport(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	# A path needs at least 3 segments to potentially use all 4 transport types.
 	if dropped_pin_data.size() < 4:

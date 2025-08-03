@@ -369,6 +369,46 @@
 	  "text": "Visit a country that starts with P",
 	  "difficulty": 2,
 	  "incompatible": []
-	},										
+	},
+	"MaxLat": {
+	  "text": "The route should not exceed 10 degrees latitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["MinLat"]
+	},
+	"MinLat": {
+	  "text": "The route should exceed 20 degrees latitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["MaxLat"]
+	},
+	"StartEndMaxLat": {
+	  "text": "The route endpoints should not exceed 10 degrees latitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["StartEndMinLat"]
+	},
+	"StartEndMinLat": {
+	  "text": "The route endpoints should exceed 20 degrees latitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["StartEndMaxLat"]
+	},
+	"MaxLon": {
+	  "text": "The route should not exceed 15 degrees longitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["MinLat"]
+	},
+	"MinLon": {
+	  "text": "The route should exceed 25 degrees longitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["MaxLat"]
+	},
+	"StartEndMaxLon": {
+	  "text": "The route endpoints should not exceed 15 degrees longitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["StartEndMinLat"]
+	},
+	"StartEndMinLon": {
+	  "text": "The route endpoints should exceed 25 degrees longitude in spread",
+	  "difficulty": 2,
+	  "incompatible": ["StartEndMaxLat"]
+	},					
   }
 }
