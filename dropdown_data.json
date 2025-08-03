@@ -393,22 +393,22 @@
 	"MaxLon": {
 	  "text": "The route should not exceed 15 degrees longitude in spread",
 	  "difficulty": 2,
-	  "incompatible": ["MinLat"]
+	  "incompatible": ["MinLon"]
 	},
 	"MinLon": {
 	  "text": "The route should exceed 25 degrees longitude in spread",
 	  "difficulty": 2,
-	  "incompatible": ["MaxLat"]
+	  "incompatible": ["MaxLon"]
 	},
 	"StartEndMaxLon": {
 	  "text": "The route endpoints should not exceed 15 degrees longitude in spread",
 	  "difficulty": 2,
-	  "incompatible": ["StartEndMinLat"]
+	  "incompatible": ["StartEndMinLon"]
 	},
 	"StartEndMinLon": {
 	  "text": "The route endpoints should exceed 25 degrees longitude in spread",
 	  "difficulty": 2,
-	  "incompatible": ["StartEndMaxLat"]
+	  "incompatible": ["StartEndMaxLon"]
 	},					
   }
 }
