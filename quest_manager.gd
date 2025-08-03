@@ -35,14 +35,14 @@ func _ready():
 		"CountryStartsWithN": {"func": _check_country_starting_with, "expected": true, "args": ["N"]},
 		"CountryStartsWithP": {"func": _check_country_starting_with, "expected": true, "args": ["P"]},
 		# transport		
-		"CarFree": {"func": _check_no_transport, "expected": true, "args": [0]},
-		"NoCarFree": {"func": _check_no_transport, "expected": false, "args": [0]},
-		"SailFree": {"func": _check_no_transport, "expected": true, "args": [1]},
-		"NoSailFree": {"func": _check_no_transport, "expected": false, "args": [1]},
-		"TrainFree": {"func": _check_no_transport, "expected": true, "args": [2]},
-		"NoTrainFree": {"func": _check_no_transport, "expected": false, "args": [2]},
-		"PlaneFree": {"func": _check_no_transport, "expected": true, "args": [3]},
-		"NoPlaneFree": {"func": _check_no_transport, "expected": false, "args": [3]},
+		"CarFree":    {"func": _check_transport_usage, "expected": true, "args": [0, "avoid"]},
+		"MustUseCar": {"func": _check_transport_usage, "expected": true, "args": [0, "require"]},
+		"SailFree":   {"func": _check_transport_usage, "expected": true, "args": [1, "avoid"]},
+		"MustUseSail":{"func": _check_transport_usage, "expected": true, "args": [1, "require"]},
+		"TrainFree":  {"func": _check_transport_usage, "expected": true, "args": [2, "avoid"]},
+		"MustUseTrain":{"func": _check_transport_usage, "expected": true, "args": [2, "require"]},
+		"PlaneFree":  {"func": _check_transport_usage, "expected": true, "args": [3, "avoid"]},
+		"MustUsePlane":{"func": _check_transport_usage, "expected": true, "args": [3, "require"]},
 		"AllTransport": {"func": _check_all_transport, "expected": true},
 		# geometry
 		"PathsCrossing": {"func": _check_paths_crossing, "expected": true},
@@ -122,7 +122,7 @@ func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array, nu
 		
 		# Use callv() to call the function with an array of arguments.
 		var result = checker_func.callv(args_for_call)
-		var is_satisfied = (result == expected_result)
+		var is_satisfied = (result == expected_result) and not dropped_pin_data.is_empty()
 		
 		if quest_statuses.get(quest_key) != is_satisfied:
 			quest_statuses[quest_key] = is_satisfied
@@ -181,15 +181,30 @@ func _check_three_same_letter(dropped_pin_data: Array, _all_locations_data: Arra
 		if letter_counts[letter] >= 3: return true
 	return false
 
-func _check_no_transport(transport_type: int, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
-	if dropped_pin_data.size() < 2: return false
+# Checks if a specific transport type is avoided or required in the path.
+func _check_transport_usage(transport_type: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.size() < 2:
+		# If there are no legs, an "avoid" quest is met, but a "require" quest is not.
+		return check_type == "avoid"
+
 	if not is_instance_valid(pin_manager): return false
+
+	var found_transport = false
 	for i in range(dropped_pin_data.size() - 1):
 		var pin1_data = dropped_pin_data[i]
 		var pin2_data = dropped_pin_data[i+1]
 		if pin_manager.get_travel_mode(pin1_data.index, pin2_data.index) == transport_type:
-			return false
-	return true
+			found_transport = true
+			break # No need to check further if we found it.
+	
+	if check_type == "avoid":
+		# The condition is met if we did NOT find the transport.
+		return not found_transport
+	elif check_type == "require":
+		# The condition is met if we DID find the transport.
+		return found_transport
+		
+	return false
 
 func _check_all_capitals(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty(): return true

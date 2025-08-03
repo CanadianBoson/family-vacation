@@ -13,9 +13,9 @@
 	"CarFree": {
 	  "text": "Chart a course that uses no cars",
 	  "difficulty": 4,
-	  "incompatible": ["NoCarFree"]
+	  "incompatible": ["MustUseCar"]
 	},
-	"NoCarFree": {
+	"MustUseCar": {
 	  "text": "Chart a course that uses cars",
 	  "difficulty": 1,
 	  "incompatible": ["CarFree"]
@@ -23,9 +23,9 @@
 	"SailFree": {
 	  "text": "Chart a course that uses no boats",
 	  "difficulty": 1,
-	  "incompatible": ["NoSailFree"]
+	  "incompatible": ["MustUseSail"]
 	},
-	"NoSailFree": {
+	"MustUseSail": {
 	  "text": "Chart a course that uses boats",
 	  "difficulty": 2,
 	  "incompatible": ["SailFree"]
@@ -33,9 +33,9 @@
 	"TrainFree": {
 	  "text": "Chart a course that uses no trains",
 	  "difficulty": 1,
-	  "incompatible": ["NoTrainFree"]
+	  "incompatible": ["MustUseTrain"]
 	},
-	"NoTrainFree": {
+	"MustUseTrain": {
 	  "text": "Chart a course that uses trains",
 	  "difficulty": 2,
 	  "incompatible": ["TrainFree"]
@@ -43,9 +43,9 @@
 	"PlaneFree": {
 	  "text": "Chart a course that uses no planes",
 	  "difficulty": 1,
-	  "incompatible": ["NoPlaneFree"]
+	  "incompatible": ["MustUsePlane"]
 	},
-	"NoPlaneFree": {
+	"MustUsePlane": {
 	  "text": "Chart a course that uses planes",
 	  "difficulty": 2,
 	  "incompatible": ["PlaneFree"]
