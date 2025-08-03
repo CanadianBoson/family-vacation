@@ -8,8 +8,17 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_hbco0")
 
-[node name="MenuVBox" type="VBoxContainer" parent="."]
+[node name="ColumnsContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 40.0
+offset_right = 80.0
 offset_bottom = 40.0
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="LeftColumn" type="VBoxContainer" parent="ColumnsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RightColumn" type="VBoxContainer" parent="ColumnsContainer"]
+layout_mode = 2
 theme_override_constants/separation = 10

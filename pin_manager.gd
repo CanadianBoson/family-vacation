@@ -74,6 +74,12 @@ func _load_travel_matrix():
 	else:
 		print("Error: Invalid JSON format in travel matrix file.")
 
+# Reverses the order of the currently dropped pins.
+func reverse_path():
+	if dropped_pin_data.size() >= 2:
+		dropped_pin_data.reverse()
+		print("Path has been reversed.")
+		
 # Places a pin if the click is within a valid, unplaced location.
 # Returns true if a pin was placed, false otherwise.
 func place_pin_at_click(click_position: Vector2, click_radius: float) -> bool:

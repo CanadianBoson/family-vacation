@@ -675,8 +675,8 @@ func _is_path_near_country(dropped_pin_data: Array, target_cities: Array) -> boo
 		var p2_data = dropped_pin_data[i+1]
 		
 		# Interpolate points along the path segment for accuracy.
-		for k in range(11):
-			var t = float(k) / 10.0
+		for k in range(21):
+			var t = float(k) / 20.0
 			var current_lat = lerp(p1_data.lat, p2_data.lat, t)
 			var current_lng = lerp(p1_data.lng, p2_data.lng, t)
 			

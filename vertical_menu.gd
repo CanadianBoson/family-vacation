@@ -1,11 +1,14 @@
 # vertical_menu.gd
-# This script now handles scoring, including bonuses.
+# This script dynamically builds a two-column vertical menu.
 extends Control
 
 const MenuItemScene = preload("res://menu_item.tscn")
 
-@onready var vbox: VBoxContainer = $MenuVBox
-# --- New: Reference to the QuestManager ---
+# --- Updated: References to the two new column containers ---
+@onready var left_column: VBoxContainer = $ColumnsContainer/LeftColumn
+@onready var right_column: VBoxContainer = $ColumnsContainer/RightColumn
+# -----------------------------------------------------------
+
 @onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
 
 var ITEM_COLORS = [
@@ -15,13 +18,12 @@ var ITEM_COLORS = [
 const IMAGE_FOLDER_PATH = "res://menu_images/"
 var image_paths = []
 
-# --- New: Store menu item instances and quest data ---
 var menu_item_instances = []
 var all_quest_data = {}
 
 func _ready():
 	_load_image_paths()
-	all_quest_data = _load_all_dropdown_options() # Load quest data
+	all_quest_data = _load_all_dropdown_options()
 	_build_menu()
 
 func _load_image_paths():
@@ -62,10 +64,18 @@ func _build_menu():
 	var available_dropdown_keys = all_quest_data.keys()
 	available_dropdown_keys.shuffle()
 
-	for text in item_texts:
+	# --- Updated: Loop with an index to distribute items into columns ---
+	for i in range(item_texts.size()):
+		var text = item_texts[i]
 		var menu_item = MenuItemScene.instantiate()
-		vbox.add_child(menu_item)
-		menu_item_instances.append(menu_item) # Store the instance
+		
+		# Decide which column to add the item to based on the index.
+		if i % 2 == 0: # Even numbers (0, 2, 4...) go to the left column.
+			left_column.add_child(menu_item)
+		else: # Odd numbers (1, 3, 5...) go to the right column.
+			right_column.add_child(menu_item)
+		
+		menu_item_instances.append(menu_item)
 
 		if available_colors.is_empty():
 			available_colors = ITEM_COLORS.duplicate()
@@ -79,9 +89,8 @@ func _build_menu():
 				available_images.shuffle()
 			unique_image_path = available_images.pop_front()
 		
-		# --- FIX: Re-integrated incompatibility check logic ---
 		var bullet_points_for_item = []
-		var num_to_show = randi_range(1, 3)
+		var num_to_show = randi_range(2, 3)
 		
 		if available_dropdown_keys.size() >= num_to_show:
 			var selected_keys = available_dropdown_keys.slice(0, num_to_show)
@@ -97,58 +106,49 @@ func _build_menu():
 					break
 			
 			if is_compatible:
-				for i in range(num_to_show):
+				for j in range(num_to_show):
 					var key = available_dropdown_keys.pop_front()
 					var item_data = all_quest_data[key]
 					item_data["key"] = key
 					bullet_points_for_item.append(item_data)
 			else:
-				# Fallback if the random set was incompatible
 				var key = available_dropdown_keys.pop_front()
 				var item_data = all_quest_data[key]
 				item_data["key"] = key
 				bullet_points_for_item.append(item_data)
 		elif not available_dropdown_keys.is_empty():
-			# Fallback if not enough keys are left for a full set
 			var key = available_dropdown_keys.pop_front()
 			var item_data = all_quest_data[key]
 			item_data["key"] = key
 			bullet_points_for_item.append(item_data)
-		# --------------------------------------------------------
 		
-		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item)
+		# --- Updated: Pass the quest_manager reference to the menu item ---
+		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item, quest_manager)
 
-# --- New function to calculate the total score with bonuses ---
 func calculate_scores() -> Dictionary:
 	var quest_score = 0
-	var family_score = 0 # The bonus score
+	var family_score = 0
 	
-	# Iterate through each menu item we've created.
 	for item in menu_item_instances:
 		var all_quests_in_item_satisfied = true
 		
-		# Check if the item has any quests assigned.
 		if item.bullet_points_to_display.is_empty():
 			all_quests_in_item_satisfied = false
 		
-		# Check each quest within this menu item.
 		for quest_data in item.bullet_points_to_display:
 			var quest_key = quest_data.get("key")
 			if quest_manager.is_quest_satisfied(quest_key):
-				# Add difficulty to the main quest score.
 				quest_score += quest_data.get("difficulty", 0)
 			else:
-				# If even one quest is not satisfied, no bonus.
 				all_quests_in_item_satisfied = false
 		
-		# If all quests in this item were satisfied, add the bonus.
 		if all_quests_in_item_satisfied:
 			family_score += 5
 			
 	var total_score = quest_score + family_score
 	
 	return {
-		"quest_score": int(quest_score),
-		"family_score": int(family_score),
-		"total_score": int(total_score)
+		"quest_score": quest_score,
+		"family_score": family_score,
+		"total_score": total_score
 	}

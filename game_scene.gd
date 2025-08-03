@@ -246,3 +246,9 @@ func _on_grid_toggle_button_toggled(button_pressed: bool):
 	# Pass the button's state (true for on, false for off)
 	# to the GridOverlay script.
 	grid_overlay.set_visibility(button_pressed)
+
+# This function is called when the "Reverse" button is pressed.
+func _on_reverse_button_pressed():
+	pin_manager.reverse_path()
+	# After reversing, update all UI and game state.
+	_update_game_state()

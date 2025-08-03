@@ -1,5 +1,5 @@
 # menu_item.gd
-# This script controls a single item in our vertical menu, including a dropdown.
+# This script now handles dynamic font sizing for its label.
 extends VBoxContainer
 
 @onready var header: PanelContainer = $Header
@@ -8,26 +8,43 @@ extends VBoxContainer
 @onready var dropdown_container: VBoxContainer = $DropdownContainer
 @onready var dropdown_animator: AnimationPlayer = $DropdownAnimator
 
-# --- New: Reference to the QuestManager ---
-@onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
-
 var is_open = false
 var is_animating = false
 var bullet_points_to_display = []
+
+var _quest_manager: Node
+var _background_color: Color
 
 func _ready():
 	header.gui_input.connect(_on_header_gui_input)
 	dropdown_container.hide()
 	
-	# --- New: Connect to the global data update signal ---
-	# Assumes your root scene node is named "GameScene"
 	var game_scene = get_tree().get_root().get_node("GameScene")
 	if game_scene:
-		game_scene.data_updated.connect(refresh_dropdown_if_open)
+		game_scene.data_updated.connect(_on_game_data_updated)
 
-func setup(item_text: String, background_color: Color, image_path: String, bullet_points: Array):
+# The setup function now includes the font size logic.
+func setup(item_text: String, background_color: Color, image_path: String, bullet_points: Array, quest_manager_ref: Node):
 	label.text = item_text
 	bullet_points_to_display = bullet_points
+	_quest_manager = quest_manager_ref
+	_background_color = background_color
+	
+	# --- New: Dynamic Font Size Logic ---
+	var text_length = item_text.length()
+	var new_font_size = 18 # Default font size
+	
+	# Define thresholds for when to shrink the font.
+	if text_length > 8:
+		new_font_size = 10
+	elif text_length > 6:
+		new_font_size = 12
+	else:
+		new_font_size = 14
+		
+	# Apply the calculated font size as an override.
+	label.add_theme_font_size_override("font_size", new_font_size)
+	# ------------------------------------
 	
 	if not image_path.is_empty():
 		circle_image.texture = load(image_path)
@@ -35,6 +52,44 @@ func setup(item_text: String, background_color: Color, image_path: String, bulle
 	var new_stylebox = header.get("theme_override_styles/panel").duplicate()
 	new_stylebox.bg_color = background_color
 	header.add_theme_stylebox_override("panel", new_stylebox)
+	
+	_update_completion_border()
+
+func _on_game_data_updated():
+	_update_completion_border()
+	if is_open:
+		_populate_dropdown()
+
+func _update_completion_border():
+	if not is_instance_valid(_quest_manager): return
+
+	var all_satisfied = true
+	if bullet_points_to_display.is_empty():
+		all_satisfied = false
+	
+	for quest_data in bullet_points_to_display:
+		var quest_key = quest_data.get("key")
+		if not _quest_manager.is_quest_satisfied(quest_key):
+			all_satisfied = false
+			break
+	
+	var stylebox: StyleBoxFlat = header.get("theme_override_styles/panel").duplicate()
+	
+	if all_satisfied:
+		stylebox.border_width_left = 4
+		stylebox.border_width_right = 4
+		stylebox.border_width_top = 4
+		stylebox.border_width_bottom = 4
+		stylebox.border_color = _background_color.darkened(0.3)
+	else:
+		stylebox.border_width_left = 0
+		stylebox.border_width_right = 0
+		stylebox.border_width_top = 0
+		stylebox.border_width_bottom = 0
+	
+	header.add_theme_stylebox_override("panel", stylebox)
+
+# --- (The rest of your script remains unchanged) ---
 
 func _on_header_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -58,38 +113,20 @@ func toggle_dropdown():
 	
 	is_animating = false
 
-# This function now checks the status of each quest.
 func _populate_dropdown():
 	_clear_dropdown_nodes()
-
 	for item_data in bullet_points_to_display:
 		var bullet_point = Label.new()
-		
-		var quest_key = item_data.get("key", "") # Assumes the key is passed from vertical_menu
-		var item_text = item_data.get("text", "N/A")
-		var difficulty = item_data.get("difficulty", 0)
-		
-		# --- FIX: Check quest status and set the icon ---
-		var icon = "✗" # Default to 'X'
-		if quest_manager.is_quest_satisfied(quest_key):
-			icon = "✓" # Change to checkmark if satisfied
-		
-		bullet_point.text = "%s %s (%s)" % [icon, item_text, int(difficulty)]
-		# -------------------------------------------------
-		
+		var icon = "✗"
+		if _quest_manager.is_quest_satisfied(item_data.get("key")):
+			icon = "✓"
+		bullet_point.text = "%s %s" % [icon, item_data.get("text", "N/A")]
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bullet_point.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		
-		bullet_point.add_theme_font_size_override("font_size", 12)
+		bullet_point.add_theme_font_size_override("font_size", 10)
 		bullet_point.set("theme_override_colors/font_color", Color.DARK_ORCHID)
 		dropdown_container.add_child(bullet_point)
 
 func _clear_dropdown_nodes():
 	for child in dropdown_container.get_children():
 		child.queue_free()
-
-# --- New: This function is called by the signal ---
-func refresh_dropdown_if_open():
-	# If this item's dropdown is currently open, redraw its contents.
-	if is_open:
-		_populate_dropdown()

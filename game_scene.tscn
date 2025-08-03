@@ -144,7 +144,7 @@ texture = ExtResource("2_po0ka")
 [node name="SidePanel" type="TextureRect" parent="GameScene/CanvasLayer"]
 modulate = Color(0.960865, 0.937108, 0.968803, 1)
 material = SubResource("ShaderMaterial_kdryc")
-offset_left = 979.0
+offset_left = 940.0
 offset_top = 1.0
 offset_right = 1152.0
 offset_bottom = 705.0
@@ -204,9 +204,9 @@ offset_bottom = 40.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuButtons"]
 layout_mode = 0
-offset_left = 998.0
+offset_left = 962.0
 offset_top = 6.0
-offset_right = 1134.0
+offset_right = 1136.0
 offset_bottom = 142.0
 
 [node name="BackButton" type="Button" parent="MenuButtons/VBoxContainer"]
@@ -220,6 +220,10 @@ text = "Clear All"
 [node name="InfoButton" type="Button" parent="MenuButtons/VBoxContainer"]
 layout_mode = 2
 text = "Info"
+
+[node name="ReverseButton" type="Button" parent="MenuButtons/VBoxContainer"]
+layout_mode = 2
+text = "Reverse"
 
 [node name="GridToggleButton" type="CheckButton" parent="MenuButtons/VBoxContainer"]
 layout_mode = 2
@@ -268,10 +272,10 @@ script = ExtResource("7_6e45b")
 
 [node name="VerticalMenu" parent="." instance=ExtResource("8_e35lh")]
 custom_minimum_size = Vector2(80, 50)
-offset_left = 1000.0
-offset_top = 166.0
-offset_right = 1080.0
-offset_bottom = 216.0
+offset_left = 952.0
+offset_top = 191.0
+offset_right = 1141.0
+offset_bottom = 249.0
 
 [node name="QuestManager" type="Node" parent="."]
 script = ExtResource("9_udeyl")
@@ -337,5 +341,6 @@ layout_mode = 2
 [connection signal="pressed" from="MenuButtons/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
 [connection signal="pressed" from="MenuButtons/VBoxContainer/InfoButton" to="." method="_on_info_button_pressed"]
+[connection signal="pressed" from="MenuButtons/VBoxContainer/ReverseButton" to="." method="_on_reverse_button_pressed"]
 [connection signal="toggled" from="MenuButtons/VBoxContainer/GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="pressed" from="InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
