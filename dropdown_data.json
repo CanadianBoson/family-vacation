@@ -140,6 +140,46 @@
 	  "difficulty": 1,
 	  "incompatible": []
 	},
+	"PassThroughDE": {
+	  "text": "Get within 200km of any German city without stopping",
+	  "difficulty": 2,
+	  "incompatible": ["StayAwayDE"]
+	},
+	"PassThroughFR": {
+	  "text": "Get within 200km of any French city without stopping",
+	  "difficulty": 2,
+	  "incompatible": ["StayAwayFR"]
+	},
+	"PassThroughUK": {
+	  "text": "Get within 200km of any British city without stopping",
+	  "difficulty": 4,
+	  "incompatible": ["StayAwayUK"]
+	},
+	"PassThroughIT": {
+	  "text": "Get within 200km of any Italian city without stopping",
+	  "difficulty": 2,
+	  "incompatible": ["StayAwayIT"]
+	},
+	"PassThroughPL": {
+	  "text": "Get within 200km of any Polish city without stopping",
+	  "difficulty": 3,
+	  "incompatible": ["StayAwayPL"]
+	},	
+	"PassThroughRU": {
+	  "text": "Get within 200km of any Russian city without stopping",
+	  "difficulty": 5,
+	  "incompatible": ["StayAwayRU"]
+	},
+	"PassThroughES": {
+	  "text": "Get within 200km of any Spanish city without stopping",
+	  "difficulty": 4,
+	  "incompatible": ["StayAwayES"]
+	},
+	"PassThroughTR": {
+	  "text": "Get within 200km of any Turkish city without stopping",
+	  "difficulty": 3,
+	  "incompatible": ["StayAwayTR"]
+	},	
 	"UniqueCityLetters": {
 	  "text": "Every city must start with a different letter",
 	  "difficulty": 4,
@@ -215,6 +255,16 @@
 	  "difficulty": 5,
 	  "incompatible": ["MaxCities"]
 	},
+	"MaxCountries": {
+	  "text": "Visit at most 5 cities",
+	  "difficulty": 3,
+	  "incompatible": ["MinCountries"]
+	},
+	"MinCountries": {
+	  "text": "Visit at least 10 cities",
+	  "difficulty": 3,
+	  "incompatible": ["MaxCountries"]
+	},	
 	"MaxLegDistance": {
 	  "text": "Ensure no leg exceeds 500km",
 	  "difficulty": 3,
@@ -259,6 +309,66 @@
 	  "text": "All planes should go more North-South than West-East",
 	  "difficulty": 3,
 	  "incompatible": ["PlanesWE"]
+	},
+	"CityStartsWithB": {
+	  "text": "Visit a city that starts with B",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CityStartsWithF": {
+	  "text": "Visit a city that starts with F",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CityStartsWithI": {
+	  "text": "Visit a city that starts with I",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CityStartsWithL": {
+	  "text": "Visit a city that starts with L",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CityStartsWithN": {
+	  "text": "Visit a city that starts with N",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CityStartsWithP": {
+	  "text": "Visit a city that starts with P",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithB": {
+	  "text": "Visit a country that starts with B",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithF": {
+	  "text": "Visit a country that starts with F",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithI": {
+	  "text": "Visit a country that starts with I",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithL": {
+	  "text": "Visit a country that starts with L",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithN": {
+	  "text": "Visit a country that starts with N",
+	  "difficulty": 2,
+	  "incompatible": []
+	},
+	"CountryStartsWithP": {
+	  "text": "Visit a country that starts with P",
+	  "difficulty": 2,
+	  "incompatible": []
 	},										
   }
 }

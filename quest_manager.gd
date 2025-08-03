@@ -22,6 +22,18 @@ func _ready():
 		"MinLettersCity": {"func": _check_city_name_length, "expected": true, "args": [5, "min"]},
 		"MaxLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [10, "max"]},
 		"MinLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [6, "min"]},
+		"CityStartsWithB": {"func": _check_city_starting_with, "expected": true, "args": ["B"]},
+		"CityStartsWithF": {"func": _check_city_starting_with, "expected": true, "args": ["F"]},
+		"CityStartsWithI": {"func": _check_city_starting_with, "expected": true, "args": ["I"]},
+		"CityStartsWithL": {"func": _check_city_starting_with, "expected": true, "args": ["L"]},
+		"CityStartsWithN": {"func": _check_city_starting_with, "expected": true, "args": ["N"]},
+		"CityStartsWithP": {"func": _check_city_starting_with, "expected": true, "args": ["P"]},
+		"CountryStartsWithB": {"func": _check_country_starting_with, "expected": true, "args": ["B"]},
+		"CountryStartsWithF": {"func": _check_country_starting_with, "expected": true, "args": ["F"]},
+		"CountryStartsWithI": {"func": _check_country_starting_with, "expected": true, "args": ["I"]},
+		"CountryStartsWithL": {"func": _check_country_starting_with, "expected": true, "args": ["L"]},
+		"CountryStartsWithN": {"func": _check_country_starting_with, "expected": true, "args": ["N"]},
+		"CountryStartsWithP": {"func": _check_country_starting_with, "expected": true, "args": ["P"]},
 		# transport		
 		"CarFree": {"func": _check_no_transport, "expected": true, "args": [0]},
 		"NoCarFree": {"func": _check_no_transport, "expected": false, "args": [0]},
@@ -52,26 +64,36 @@ func _ready():
 		"StayInEU": {"func": _check_stay_in_eu, "expected": true},
 		"LeaveEU": {"func": _check_stay_in_eu, "expected": false},
 		# avoider
-		"StayAwayDE": {"func": _check_stay_away, "expected": true, "args": ["Germany"]},
-		"StayAwayFR": {"func": _check_stay_away, "expected": true, "args": ["France"]},
-		"StayAwayUK": {"func": _check_stay_away, "expected": true, "args": ["United Kingdom"]},
-		"StayAwayIT": {"func": _check_stay_away, "expected": true, "args": ["Italy"]},
-		"StayAwayPL": {"func": _check_stay_away, "expected": true, "args": ["Poland"]},
-		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia"]},
-		"StayAwayES": {"func": _check_stay_away, "expected": true, "args": ["Spain"]},
-		"StayAwayTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey"]},
+		"StayAwayDE": {"func": _check_stay_away, "expected": true, "args": ["Germany", "avoid"]},
+		"StayAwayFR": {"func": _check_stay_away, "expected": true, "args": ["France", "avoid"]},
+		"StayAwayUK": {"func": _check_stay_away, "expected": true, "args": ["United Kingdom", "avoid"]},
+		"StayAwayIT": {"func": _check_stay_away, "expected": true, "args": ["Italy", "avoid"]},
+		"StayAwayPL": {"func": _check_stay_away, "expected": true, "args": ["Poland", "avoid"]},
+		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia", "avoid"]},
+		"StayAwayES": {"func": _check_stay_away, "expected": true, "args": ["Spain", "avoid"]},
+		"StayAwayTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey", "avoid"]},
+		"PassThroughDE": {"func": _check_stay_away, "expected": true, "args": ["Germany", "pass"]},
+		"PassThroughFR": {"func": _check_stay_away, "expected": true, "args": ["France", "pass"]},
+		"PassThroughUK": {"func": _check_stay_away, "expected": true, "args": ["United Kingdom", "pass"]},
+		"PassThroughIT": {"func": _check_stay_away, "expected": true, "args": ["Italy", "pass"]},
+		"PassThroughPL": {"func": _check_stay_away, "expected": true, "args": ["Poland", "pass"]},
+		"PassThroughRU": {"func": _check_stay_away, "expected": true, "args": ["Russia", "pass"]},
+		"PassThroughES": {"func": _check_stay_away, "expected": true, "args": ["Spain", "pass"]},
+		"PassThroughTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey", "pass"]},
 		# party_pooper
 		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},	
 		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [800.0, "max"]},
 		"MaxCities": {"func": _check_city_count, "expected": true, "args": [5, "max"]},
 		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
 		"MaxJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [5000.0, "max"]},
+		"MaxCountries": {"func": _check_country_count, "expected": true, "args": [3, "max"]},
 		# spoiled
 		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [10000.0, "min"]},
 		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "min"]},
 		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]},
 		"MinLegDistance": {"func": _check_leg_distance, "expected": true, "args": [200.0, "min"]},
-		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]}
+		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]},
+		"MinCountries": {"func": _check_country_count, "expected": true, "args": [5, "min"]},
 	}
 	
 	for quest_key in quest_checkers.keys():
@@ -114,7 +136,30 @@ func _check_city_count(limit: int, check_type: String, dropped_pin_data: Array, 
 		return city_count >= limit
 		
 	return false # Should not be reached if check_type is valid.
+
+# Checks if the total number of unique countries visited meets a requirement.
+func _check_country_count(limit: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty():
+		# If no pins are dropped, the count is 0.
+		# This satisfies a "max" check but not a "min" check (unless min is 0).
+		return check_type == "max" or limit == 0
+
+	# First, get a list of unique countries visited.
+	var unique_countries = []
+	for pin_data in dropped_pin_data:
+		var country_code = pin_data.get("country", "")
+		if not country_code.is_empty() and not unique_countries.has(country_code):
+			unique_countries.append(country_code)
+			
+	var country_count = unique_countries.size()
 	
+	if check_type == "max":
+		return country_count <= limit
+	elif check_type == "min":
+		return country_count >= limit
+		
+	return false # Should not be reached if check_type is valid.
+
 func _check_three_same_letter(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 3: return false
 	var letter_counts = {}
@@ -145,6 +190,30 @@ func _check_all_capitals(dropped_pin_data: Array, _all_locations_data: Array, _n
 			return false
 	return true
 
+# Checks if any visited city starts with a specific letter.
+func _check_city_starting_with(letter: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty():
+		return false
+
+	for pin_data in dropped_pin_data:
+		var city_name = pin_data.get("city", "")
+		if not city_name.is_empty() and city_name[0].to_upper() == letter:
+			return true # Found a matching city.
+			
+	return false # No city started with the required letter.
+
+# Checks if any visited country starts with a specific letter.
+func _check_country_starting_with(letter: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	if dropped_pin_data.is_empty():
+		return false
+
+	for pin_data in dropped_pin_data:
+		var country_code = pin_data.get("country", "")
+		if not country_code.is_empty() and country_code[0].to_upper() == letter:
+			return true # Found a matching country.
+			
+	return false # No country started with the required letter.
+	
 func _check_no_capitals(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty(): return true
 	for pin_data in dropped_pin_data:
@@ -306,34 +375,41 @@ func _check_journey_direction(transport_type: int, direction_type: String, dropp
 	# If we checked all relevant legs and none failed, the condition is met.
 	return true
 	
-# The signature for this function is now consistent with the others.
-func _check_stay_away(country: String, dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
+# Checks if the path avoids or passes through a country.
+func _check_stay_away(country_code: String, check_type: String, dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
 	if dropped_pin_data.is_empty():
-		return true
+		return true # Condition is met by default if no path exists.
 
+	# Step 1: Get a list of all cities in the target country.
 	var target_cities = []
 	for location in all_locations_data:
-		if location.get("country") == country:
+		if location.get("country") == country_code:
 			target_cities.append(location)
 
 	if target_cities.is_empty():
+		return true # No cities to interact with.
+
+	# Step 2: Use the helper function to determine if the path gets close.
+	var path_is_near = _is_path_near_country(dropped_pin_data, target_cities)
+
+	# Step 3: Apply the specific quest logic.
+	if check_type == "avoid":
+		# For "avoid", the path must NOT be near.
+		return not path_is_near
+		
+	elif check_type == "pass":
+		# For "pass", the path MUST be near...
+		if not path_is_near:
+			return false
+		
+		# ...and must NOT have any stops in the country.
+		for pin_data in dropped_pin_data:
+			if pin_data.get("country") == country_code:
+				return false
+		
 		return true
 
-	for i in range(dropped_pin_data.size() - 1):
-		var p1_data = dropped_pin_data[i]
-		var p2_data = dropped_pin_data[i+1]
-		
-		for k in range(11):
-			var t = float(k) / 10.0
-			var current_lat = lerp(p1_data.lat, p2_data.lat, t)
-			var current_lng = lerp(p1_data.lng, p2_data.lng, t)
-			
-			for target_city in target_cities:
-				var distance = _haversine_distance(current_lat, current_lng, target_city.lat, target_city.lng)
-				if distance < 200.0:
-					return false
-
-	return true
+	return false
 	
 func _check_all_transport(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	# A path needs at least 3 segments to potentially use all 4 transport types.
@@ -532,3 +608,22 @@ func _segments_intersect(p1: Vector2, q1: Vector2, p2: Vector2, q2: Vector2) -> 
 	if (o3 == 0 and _on_segment(p2, p1, q2)): return true
 	if (o4 == 0 and _on_segment(p2, q1, q2)): return true
 	return false
+
+# Returns true if any segment of the path is within 100km of any target city.
+func _is_path_near_country(dropped_pin_data: Array, target_cities: Array) -> bool:
+	for i in range(dropped_pin_data.size() - 1):
+		var p1_data = dropped_pin_data[i]
+		var p2_data = dropped_pin_data[i+1]
+		
+		# Interpolate points along the path segment for accuracy.
+		for k in range(11):
+			var t = float(k) / 10.0
+			var current_lat = lerp(p1_data.lat, p2_data.lat, t)
+			var current_lng = lerp(p1_data.lng, p2_data.lng, t)
+			
+			# Check distance from the interpolated point to all target cities.
+			for target_city in target_cities:
+				if _haversine_distance(current_lat, current_lng, target_city.lat, target_city.lng) < 100.0:
+					return true # Path is too close, so we can stop checking.
+
+	return false # The entire path was checked and was never too close.
