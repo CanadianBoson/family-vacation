@@ -1,37 +1,24 @@
 # GameScene.gd
-# ... (all your existing code at the top remains the same) ...
-
+# This script now handles the full drag-and-drop logic for moving pins.
 extends Node2D
 
-# Preload the Pin scene so we can create instances of it.
 var pin_scene = preload("res://pin.tscn")
 
 signal data_updated
 
-# This node will hold all the pins that are dropped on the map.
 @onready var pins_container = $PinsContainer
-# This node will be used to display the city name on hover.
 @onready var hover_label = $HoverLabel
-
-# Grid overlay
 @onready var grid_overlay = $GridOverlay
-
-# References to our manager scripts
 @onready var pin_manager = $PinManager
 @onready var ledger_manager = $LedgerPanel/LedgerManager
-
-# --- New Node References ---
 @onready var info_popup = $InfoPopup
 @onready var animation_player = $AnimationPlayer
-# -------------------------
-
-@onready var quest_manager = $QuestManager # <-- Add this reference
-# score label
+@onready var quest_manager = $QuestManager
 @onready var quest_score_label = $ScoreTracker/QuestScoreLabel
 @onready var family_score_label = $ScoreTracker/FamilyScoreLabel
 @onready var score_value_label = $ScoreTracker/ScoreValueLabel
-@onready var vertical_menu = $VerticalMenu # <-- Make sure you have this reference
-
+@onready var max_value_label = $ScoreTracker/MaxValueLabel
+@onready var vertical_menu = $VerticalMenu
 @onready var detailed_info_box = $DetailedInfoBox
 @onready var info_city_name = $DetailedInfoBox/VBoxContainer/CityNameLabel
 @onready var info_country = $DetailedInfoBox/VBoxContainer/CountryLabel
@@ -42,118 +29,160 @@ signal data_updated
 @onready var info_eu = $DetailedInfoBox/VBoxContainer/EULabel
 @onready var hover_timer = $HoverTimer
 
-var CAR_COLOR = Color.GREEN  # Green
-var BOAT_COLOR = Color.BLUE  # Blue
-var TRAIN_COLOR = Color.DARK_ORCHID
-var PLANE_COLOR = Color.FIREBRICK # Red
 
-# This defines how close (in pixels) the user must click to a valid spot.
-const CLICK_RADIUS = 3.0
+var CAR_COLOR = Color.GREEN
+var BOAT_COLOR = Color.BLUE
+var TRAIN_COLOR = Color.DARK_ORCHID
+var PLANE_COLOR = Color.FIREBRICK
+
+const CLICK_RADIUS = 3.0 # Increased radius for easier drag interaction
 var currently_hovered_data = null
 
-# Store the currently hovered location data to display its city.
-var hovered_location_data = null
+# --- New: Variables to manage the drag-and-drop state ---
+var is_dragging = false
+var dragged_pin_index = -1
+var dragged_pin_node: Node2D = null
+var dragged_pin_mouse_pos = Vector2.ZERO
+# --------------------------------------------------------
+var max_score = 0
+var best_path_data = []
+var best_path_distance = INF # Initialize to infinity for easy comparison
 
-# The _ready function is called once when the node enters the scene tree.
 func _ready():
-	# print the scene tree for Gemini
-	# _print_tree_with_types(self)
-	# Initialize PinManager with the pins_container reference
 	pin_manager.initialize(pins_container, pin_scene)
-	# link the managers
 	quest_manager.pin_manager = pin_manager
-	# Load pin locations via PinManager
-	pin_manager._load_pin_locations()
-	
-		# --- Configure the Hover Timer ---
-	hover_timer.wait_time = 1.0 # 1-second delay
+	hover_timer.wait_time = 1.0
 	hover_timer.one_shot = true
 	hover_timer.timeout.connect(_on_hover_timer_timeout)
-	# -------------------------------
-	
-	# Request a redraw after loading locations to show the circles.
-	queue_redraw()
-	
-	# Ensure the hover label is hidden initially.
+	_update_game_state()
 	hover_label.hide()
-	
-	# Update the ledger display initially
-	var num_items = vertical_menu.menu_item_instances.size()
-	ledger_manager.update_ledger_display(pin_manager, num_items)
+	detailed_info_box.hide()
 
 func _update_game_state():
-	# Update the ledger, map, quests, and score
 	var num_items = vertical_menu.menu_item_instances.size()
 	ledger_manager.update_ledger_display(pin_manager, num_items)
-	queue_redraw() # Redraw to show new line
+	queue_redraw()
 	quest_manager.check_all_conditions(pin_manager.dropped_pin_data, pin_manager.valid_pin_locations, num_items)
+	var scores = vertical_menu.calculate_scores()
+	quest_score_label.text = "Quest Score: " + str(scores["quest_score"])
+	family_score_label.text = "Family Score: " + str(scores["family_score"])
+	score_value_label.text = "Total Score: " + str(scores["total_score"])
 	
-	# Get the new score and update the label
-	var current_scores = vertical_menu.calculate_scores()
-	quest_score_label.text = "Quest Score: " + str(current_scores["quest_score"])
-	family_score_label.text = "Family Score: " + str(current_scores["family_score"])
-	score_value_label.text = "Total Score: " + str(current_scores["total_score"])
+	# --- New: Check if the current path is the new best path ---
+	var current_path = pin_manager.dropped_pin_data
 	
-	# Notify other UI elements like the menu items
+	# If the current score is higher, it's the new best.
+	if scores.total_score > max_score:
+		max_score = scores.total_score
+		best_path_data = current_path.duplicate(true)
+		best_path_distance = ledger_manager.calculate_total_distance(best_path_data)
+		max_value_label.text = "Max Score: " + str(max_score)
+	# If scores are tied, check if the new path is shorter.
+	elif scores.total_score == max_score and scores.total_score > 0:
+		var current_distance = ledger_manager.calculate_total_distance(current_path)
+		if current_distance < best_path_distance:
+			best_path_data = current_path.duplicate(true)
+			best_path_distance = current_distance
+			print("New best path found with same score but shorter distance.")
+	# -----------------------------------------------------------
+	
 	data_updated.emit()
-
-func _print_tree_with_types(node, indent=""):
-	# Print the node's name and its class/type
-	print(indent + "- " + node.name + " (" + node.get_class() + ")")
-	# Recursively call for each child
-	for child in node.get_children():
-		_print_tree_with_types(child, indent + "  ")
 
 # This function is called for every input event.
 func _unhandled_input(event: InputEvent):
-	if event is InputEventMouseButton and event.is_pressed():
-		var click_position = event.position
-		var data_changed = false
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if pin_manager.place_pin_at_click(click_position, CLICK_RADIUS):
-				data_changed = true
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			if pin_manager.remove_pin_at_click(click_position, CLICK_RADIUS):
-				data_changed = true
-		if data_changed:
+	var mouse_pos = get_global_mouse_position()
+
+	# --- Drag-and-Drop Logic ---
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.is_pressed():
+			# Check if the click is on an existing pin to start a drag.
+			for i in range(pin_manager.dropped_pin_data.size()):
+				var pin_data = pin_manager.dropped_pin_data[i]
+				if mouse_pos.distance_to(pin_data.position) <= CLICK_RADIUS:
+					is_dragging = true
+					dragged_pin_index = i
+					# Find the actual pin node in the scene.
+					for child in pins_container.get_children():
+						if child.position == pin_data.position:
+							dragged_pin_node = child
+							break
+					if dragged_pin_node:
+						dragged_pin_node.hide() # Hide the real pin during drag.
+					return # Stop further input processing.
+			
+			# If not dragging, try to place a new pin.
+			if pin_manager.place_pin_at_click(mouse_pos, CLICK_RADIUS):
+				_update_game_state()
+
+		else: # Mouse button was released.
+			if is_dragging:
+				# Check for a valid drop target.
+				var drop_target_data = pin_manager.get_hovered_location(mouse_pos, CLICK_RADIUS)
+				var successful_drop = false
+				
+				if drop_target_data and not drop_target_data.placed:
+					# If we dropped on a valid, unoccupied spot, update the pin.
+					if pin_manager.update_pin_at_index(dragged_pin_index, drop_target_data):
+						dragged_pin_node.position = drop_target_data.position
+						successful_drop = true
+				
+				if not successful_drop:
+					# If the drop was invalid, snap the pin back to its original position.
+					var original_pos = pin_manager.dropped_pin_data[dragged_pin_index].position
+					dragged_pin_node.position = original_pos
+				
+				dragged_pin_node.show() # Show the pin again.
+				
+				# Reset all drag state variables.
+				is_dragging = false
+				dragged_pin_index = -1
+				dragged_pin_node = null
+				
+				# Update the entire game state after the drop.
+				_update_game_state()
+
+	# Handle right-click to remove pins (no change here).
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
+		if pin_manager.remove_pin_at_click(mouse_pos, CLICK_RADIUS):
 			_update_game_state()
 
-	if event is InputEventMouseMotion:
-		var mouse_pos = event.position
-		var hovered_data = pin_manager.get_hovered_location(mouse_pos, CLICK_RADIUS)
-
-		if hovered_data:
-			# If we move over a NEW city
+	# Handle mouse motion for dragging and hovering.
+	elif event is InputEventMouseMotion:
+		if is_dragging:
+			# If dragging, update the mouse position for the drawer and redraw.
+			dragged_pin_mouse_pos = mouse_pos
+			queue_redraw()
+		else:
+			# Standard hover logic.
+			var hovered_data = pin_manager.get_hovered_location(mouse_pos, CLICK_RADIUS)
 			if hovered_data != currently_hovered_data:
 				currently_hovered_data = hovered_data
-				
-				# Immediately show the simple label
-				hover_label.text = hovered_data.city
-				hover_label.add_theme_color_override("font_color", Color.DARK_BLUE)
-				hover_label.position = mouse_pos + Vector2(15, -10)
-				hover_label.show()
-				
-				# Hide the detailed box and start the 1-second timer
-				detailed_info_box.hide()
-				hover_timer.start()
-			else:
-				# If we are still hovering the same city, just update UI positions
+				if hovered_data:
+					hover_label.text = hovered_data.city
+					hover_label.add_theme_color_override("font_color", Color.DARK_BLUE)
+					hover_label.show()
+					detailed_info_box.hide()
+					hover_timer.start()
+				else:
+					hover_label.hide()
+					detailed_info_box.hide()
+					hover_timer.stop()
+			
+			if hovered_data:
 				hover_label.position = mouse_pos + Vector2(15, -10)
 				_update_detailed_box_position()
-		else:
-			# If the mouse is not over any city, hide everything and stop the timer
-			currently_hovered_data = null
-			hover_label.hide()
-			detailed_info_box.hide()
-			hover_timer.stop()
 
 # This function is called when the node needs to be drawn.
 func _draw():
 	# Draw circles for valid pin locations
 	for location_data in pin_manager.valid_pin_locations:
+		# Don't draw a circle for the pin being dragged from its original spot.
+		if is_dragging and pin_manager.dropped_pin_data[dragged_pin_index].position == location_data.position:
+			continue
+			
 		var circle_color = Color.BLACK
 		if location_data.placed:
-			circle_color = Color.DARK_GRAY # Example: Make it darker when a pin is there
+			circle_color = Color.DARK_GRAY
 		
 		draw_circle(location_data.position, CLICK_RADIUS, circle_color)
 
@@ -162,48 +191,43 @@ func _draw():
 		for i in range(pin_manager.dropped_pin_data.size() - 1):
 			var pin1_data = pin_manager.dropped_pin_data[i]
 			var pin2_data = pin_manager.dropped_pin_data[i+1]
+			
 			var start_point = pin1_data.position
 			var end_point = pin2_data.position
-			# Get the travel mode using the cities' indices
+			
+			# If dragging, update the line endpoints dynamically
+			if is_dragging:
+				if i == dragged_pin_index:
+					end_point = dragged_pin_mouse_pos
+				elif i + 1 == dragged_pin_index:
+					start_point = dragged_pin_mouse_pos
+			
 			var travel_mode = pin_manager.get_travel_mode(pin1_data.index, pin2_data.index)
-			# Select the line color based on the travel mode
-			var line_color = PLANE_COLOR # Default color
+			var line_color = PLANE_COLOR
 			match travel_mode:
-				0: # Car
-					line_color = CAR_COLOR
-				1: # Boat
-					line_color = BOAT_COLOR
-				2: # Train
-					line_color = TRAIN_COLOR
+				0: line_color = CAR_COLOR
+				1: line_color = BOAT_COLOR
+				2: line_color = TRAIN_COLOR
 			
 			draw_line(start_point, end_point, line_color, 2)
-			
-# --- New function called when the HoverTimer finishes ---
+
+# --- (The rest of your script, including hover logic, is unchanged) ---
 func _on_hover_timer_timeout():
-	# Check if we are still hovering over the same city when the timer ends
 	if currently_hovered_data:
-		# Hide the simple label
 		hover_label.hide()
-		
-		# Populate the detailed box with the stored data
 		_populate_detailed_info(currently_hovered_data)
 		_update_detailed_box_position()
 		detailed_info_box.show()
 
-# --- New helper function to fill the detailed info box labels ---
 func _populate_detailed_info(data):
 	info_city_name.text = data.get("city", "N/A")
 	info_country.text = "Country: " + data.get("country", "N/A")
-	
 	info_lat.text = "Latitude: " + str(data.get("lat"))
 	info_lon.text = "Longitude: " + str(data.get("lng"))
-	
 	var pop_val = data.get("population", 0)
 	info_population.text = "Population: " + str(int(pop_val / 1000)) + "k"
-	
 	var is_capital_text = "Yes" if data.get("is_capital", false) else "No"
 	info_capital.text = "Capital: " + is_capital_text
-	
 	var is_eu_text = "Yes" if data.get("is_eu", false) else "No"
 	info_eu.text = "EU: " + is_eu_text
 
@@ -211,44 +235,33 @@ func _update_detailed_box_position():
 	var mouse_pos = get_global_mouse_position()
 	var screen_height = get_viewport_rect().size.y
 	var box_size = detailed_info_box.size
-	
 	var new_pos = Vector2()
-	
-	# If the mouse is in the bottom half of the screen
 	if mouse_pos.y > screen_height / 2:
-		# Position the box above the cursor
 		new_pos = mouse_pos + Vector2(15, -box_size.y - 15)
 	else:
-		# Position the box below the cursor (original behavior)
 		new_pos = mouse_pos + Vector2(15, 15)
-		
 	detailed_info_box.position = new_pos
 
-# This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
-	# We pass all the valid location data from PinManager to the popup.
 	info_popup.show_popup(pin_manager.valid_pin_locations, pin_manager.dropped_pin_data)
 
-# --- Existing Signal Handlers (Make sure they are still there) ---
-
 func _on_clear_all_button_pressed():
-	print("Clear All button pressed!")
 	pin_manager.clear_all_pins()
 	_update_game_state()
 
 func _on_back_button_pressed():
-	var result = get_tree().change_scene_to_file("res://main_menu.tscn")
-	if result != OK:
-		print("Error: Could not load the main menu scene.")
+	get_tree().change_scene_to_file("res://main_menu.tscn")
 
-# This function is called when the GridToggleButton's state changes.
 func _on_grid_toggle_button_toggled(button_pressed: bool):
-	# Pass the button's state (true for on, false for off)
-	# to the GridOverlay script.
 	grid_overlay.set_visibility(button_pressed)
 
-# This function is called when the "Reverse" button is pressed.
 func _on_reverse_button_pressed():
 	pin_manager.reverse_path()
-	# After reversing, update all UI and game state.
 	_update_game_state()
+	
+# This function is called when the "Load Best Path" button is pressed.
+func _on_load_max_path_button_pressed():
+	if not best_path_data.is_empty():
+		pin_manager.load_path(best_path_data)
+		# After loading the path, update the entire game state.
+		_update_game_state()

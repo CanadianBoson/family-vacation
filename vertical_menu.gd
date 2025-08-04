@@ -126,8 +126,8 @@ func _build_menu():
 		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item, quest_manager)
 
 func calculate_scores() -> Dictionary:
-	var quest_score = 0
-	var family_score = 0
+	var quest_score : int = 0
+	var family_score : int = 0
 	
 	for item in menu_item_instances:
 		var all_quests_in_item_satisfied = true
@@ -145,7 +145,7 @@ func calculate_scores() -> Dictionary:
 		if all_quests_in_item_satisfied:
 			family_score += 5
 			
-	var total_score = quest_score + family_score
+	var total_score : int = quest_score + family_score
 	
 	return {
 		"quest_score": quest_score,

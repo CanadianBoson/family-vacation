@@ -9,6 +9,13 @@ extends Node
 
 const EARTH_RADIUS_KM = 6371.0
 
+# A public function to calculate the total distance of a given path array.
+func calculate_total_distance(path_data: Array) -> float:
+	var cumulative_distances = _calculate_cumulative_distances_km(path_data)
+	if cumulative_distances.is_empty():
+		return 0.0
+	return cumulative_distances.back()
+
 # --- Updated: Cost calculation function now includes number of menu items ---
 # Calculates the cost of a single leg of the journey.
 func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
