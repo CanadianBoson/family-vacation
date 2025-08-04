@@ -28,6 +28,8 @@ signal data_updated
 @onready var info_capital = $DetailedInfoBox/VBoxContainer/CapitalLabel
 @onready var info_eu = $DetailedInfoBox/VBoxContainer/EULabel
 @onready var hover_timer = $HoverTimer
+@onready var instructions_button = $MenuButtons/VBoxContainer/InstructionsButton
+@onready var instructions_popup = $InstructionsPopup
 
 
 var CAR_COLOR = Color.GREEN
@@ -242,9 +244,6 @@ func _update_detailed_box_position():
 		new_pos = mouse_pos + Vector2(15, 15)
 	detailed_info_box.position = new_pos
 
-func _on_info_button_pressed():
-	info_popup.show_popup(pin_manager.valid_pin_locations, pin_manager.dropped_pin_data)
-
 func _on_clear_all_button_pressed():
 	pin_manager.clear_all_pins()
 	_update_game_state()
@@ -269,3 +268,19 @@ func _on_load_max_path_button_pressed():
 # This function is called when the "Family" button is pressed.
 func _on_family_button_pressed():
 	get_tree().change_scene_to_file("res://family_scene.tscn")
+
+# This function is called when the "Info" button is pressed.
+func _on_info_button_pressed():
+	# --- New: Close the instructions popup first ---
+	instructions_popup.hide()
+	# ---------------------------------------------
+	info_popup.show_popup(pin_manager.valid_pin_locations, pin_manager.dropped_pin_data)
+
+# ... (rest of your script)
+
+# This function is called when the "Instructions" button is pressed.
+func _on_instructions_button_pressed():
+	# --- New: Close the info popup first ---
+	info_popup.hide()
+	# -------------------------------------
+	instructions_popup.show_popup()

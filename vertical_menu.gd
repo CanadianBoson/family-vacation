@@ -12,26 +12,18 @@ var ITEM_COLORS = [
 	Color.html("#4A90E2"), Color.html("#50E3C2"), Color.html("#F5A623"),
 	Color.html("#BD10E0"), Color.html("#7ED321"), Color.html("#D0021B")
 ]
-const IMAGE_FOLDER_PATH = "res://menu_images/"
+
 var image_paths = []
 
 var menu_item_instances = []
 var all_quest_data = {}
+var all_family_data = {}
 
 func _ready():
-	_load_image_paths()
+	# Remove the _load_image_paths() call
+	all_family_data = _load_family_data() # Load the family data
 	all_quest_data = _load_all_dropdown_options()
 	_build_menu()
-
-func _load_image_paths():
-	var dir = DirAccess.open(IMAGE_FOLDER_PATH)
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".png"):
-				image_paths.append(IMAGE_FOLDER_PATH + file_name)
-			file_name = dir.get_next()
 
 func _load_all_dropdown_options() -> Dictionary:
 	var file_path = "res://data/dropdown_data.json"
@@ -44,12 +36,11 @@ func _load_all_dropdown_options() -> Dictionary:
 	return {}
 
 func _build_menu():
-	# --- Updated: Get the list of confirmed family members from the global state ---
 	var confirmed_family = GlobalState.confirmed_family
 	if confirmed_family.is_empty():
 		print("Warning: No confirmed family members found in GlobalState to build menu.")
 		return
-
+	
 	var available_colors = ITEM_COLORS.duplicate()
 	available_colors.shuffle()
 	var available_images = image_paths.duplicate()
@@ -57,12 +48,10 @@ func _build_menu():
 	var available_dropdown_keys = all_quest_data.keys()
 	available_dropdown_keys.shuffle()
 
-	# Loop through the confirmed family members to create a menu item for each.
 	for i in range(confirmed_family.size()):
 		var member_data = confirmed_family[i]
 		var menu_item = MenuItemScene.instantiate()
 		
-		# Decide which column to add the item to.
 		if i % 2 == 0:
 			left_column.add_child(menu_item)
 		else:
@@ -75,45 +64,78 @@ func _build_menu():
 			available_colors.shuffle()
 		var unique_color = available_colors.pop_front()
 
-		var unique_image_path = ""
-		if not image_paths.is_empty():
-			if available_images.is_empty():
-				available_images = image_paths.duplicate()
-				available_images.shuffle()
-			unique_image_path = available_images.pop_front()
+		var specific_image_path = ""
+		var family_key = member_data.get("family_key")
+		var gender = member_data.get("gender")
+		if all_family_data.has(family_key):
+			var family_info = all_family_data[family_key]
+			specific_image_path = family_info.get("image_path_" + gender, "")
 		
+		# --- New Weighted and Compatible Quest Selection Logic ---
 		var bullet_points_for_item = []
+		var selected_quest_keys = []
 		var num_to_show = randi_range(2, 3)
+
+		# Separate available quests into matching and other pools.
+		var matching_quests = []
+		var other_quests = []
 		
-		if available_dropdown_keys.size() >= num_to_show:
-			var selected_keys = available_dropdown_keys.slice(0, num_to_show)
-			var is_compatible = true
-			for key1 in selected_keys:
-				var incompatible_list = all_quest_data[key1].get("incompatible", [])
-				for key2 in selected_keys:
-					if key1 != key2 and incompatible_list.has(key2):
+		if family_key == "Rando":
+			other_quests = available_dropdown_keys.duplicate()
+		else:
+			for key in available_dropdown_keys:
+				if all_quest_data[key].get("family") == family_key:
+					matching_quests.append(key)
+				else:
+					other_quests.append(key)
+
+		# Select quests one by one, checking for compatibility.
+		for _j in range(num_to_show):
+			var quest_pool = []
+			# 75% chance to pick from matching quests, 25% from others.
+			if randf() < 0.75 and not matching_quests.is_empty():
+				quest_pool = matching_quests
+			else:
+				quest_pool = other_quests
+
+			# Fallback if the preferred pool is empty.
+			if quest_pool.is_empty():
+				quest_pool = other_quests if quest_pool == matching_quests else matching_quests
+			
+			if quest_pool.is_empty():
+				break # No more quests to assign.
+
+			# Attempt to find a compatible quest from the chosen pool.
+			var found_compatible_quest = false
+			for quest_key in quest_pool:
+				var is_compatible = true
+				var incompatible_list = all_quest_data[quest_key].get("incompatible", [])
+				# Check against quests already selected for this item.
+				for existing_key in selected_quest_keys:
+					if incompatible_list.has(existing_key):
 						is_compatible = false
 						break
-				if not is_compatible: break
-			if is_compatible:
-				for j in range(num_to_show):
-					var key = available_dropdown_keys.pop_front()
-					var item_data = all_quest_data[key]
-					item_data["key"] = key
-					bullet_points_for_item.append(item_data)
-			else:
-				var key = available_dropdown_keys.pop_front()
-				var item_data = all_quest_data[key]
-				item_data["key"] = key
-				bullet_points_for_item.append(item_data)
-		elif not available_dropdown_keys.is_empty():
-			var key = available_dropdown_keys.pop_front()
+				
+				if is_compatible:
+					selected_quest_keys.append(quest_key)
+					# Remove from all pools to ensure uniqueness.
+					available_dropdown_keys.erase(quest_key)
+					matching_quests.erase(quest_key)
+					other_quests.erase(quest_key)
+					found_compatible_quest = true
+					break # Move to the next quest slot.
+			
+			if not found_compatible_quest:
+				print("Could not find a compatible quest for this slot.")
+
+		# Build the final data list from the selected keys.
+		for key in selected_quest_keys:
 			var item_data = all_quest_data[key]
 			item_data["key"] = key
 			bullet_points_for_item.append(item_data)
+		# -----------------------------------------------------------
 		
-		# Use the confirmed member's name for the menu item's text.
-		menu_item.setup(member_data.name, unique_color, unique_image_path, bullet_points_for_item, quest_manager)
+		menu_item.setup(member_data.name, unique_color, specific_image_path, bullet_points_for_item, quest_manager)
 
 func calculate_scores() -> Dictionary:
 	var quest_score : int = 0
@@ -139,3 +161,13 @@ func calculate_scores() -> Dictionary:
 		"family_score": family_score,
 		"total_score": total_score
 	}
+	
+func _load_family_data() -> Dictionary:
+	var file_path = "res://data/families.json"
+	if not FileAccess.file_exists(file_path): return {}
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	var content = file.get_as_text()
+	var json_data = JSON.parse_string(content)
+	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
+		return json_data.families
+	return {}

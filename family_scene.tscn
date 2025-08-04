@@ -9,10 +9,10 @@ script = ExtResource("1_lafal")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 264.0
-offset_top = 186.0
-offset_right = 932.0
-offset_bottom = 555.0
+offset_left = 243.0
+offset_top = 147.0
+offset_right = 911.0
+offset_bottom = 529.0
 theme_override_constants/separation = 20
 
 [node name="LeftPanel" type="PanelContainer" parent="HBoxContainer"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=22 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://blank_map.png" id="2_po0ka"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://dguaa8uarvjss" path="res://grid_overlay.gd" id="7_6e45b"]
 [ext_resource type="PackedScene" uid="uid://fy5xvtergi3a" path="res://vertical_menu.tscn" id="8_e35lh"]
 [ext_resource type="Script" uid="uid://bqpydbv16hqws" path="res://quest_manager.gd" id="9_udeyl"]
+[ext_resource type="Script" uid="uid://cwc3qlcvdaouq" path="res://instructions_popup.gd" id="10_miq82"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
@@ -41,6 +42,18 @@ tracks/1/path = NodePath("InfoPopup:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("InstructionsPopup:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -101,11 +114,43 @@ tracks/1/keys = {
 "values": [Color(0.50097, 0.683024, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_miq82"]
+resource_name = "popup_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("InstructionsPopup:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_j5hk1"]
+resource_name = "popup_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("InstructionsPopup:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6e45b"]
 _data = {
 &"RESET": SubResource("Animation_kdryc"),
 &"popout_info": SubResource("Animation_6e45b"),
-&"popup_info": SubResource("Animation_mj2jn")
+&"popup_in": SubResource("Animation_miq82"),
+&"popup_info": SubResource("Animation_mj2jn"),
+&"popup_out": SubResource("Animation_j5hk1")
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_udeyl"]
@@ -118,6 +163,9 @@ expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_miq82"]
+bg_color = Color(0.441095, 0.630238, 0.7289, 1)
 
 [node name="GameScene" type="Node2D"]
 script = ExtResource("1_po0ka")
@@ -242,6 +290,10 @@ text = "Reverse"
 layout_mode = 2
 text = "Load Max"
 
+[node name="InstructionsButton" type="Button" parent="MenuButtons/HBoxContainer/RightColumn"]
+layout_mode = 2
+text = "Instructions"
+
 [node name="GridToggleButton" type="CheckButton" parent="MenuButtons/HBoxContainer/RightColumn"]
 layout_mode = 2
 text = "Grid"
@@ -365,11 +417,40 @@ layout_mode = 2
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="InstructionsPopup" type="PanelContainer" parent="."]
+offset_left = 178.0
+offset_top = 261.0
+offset_right = 940.0
+offset_bottom = 565.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_miq82")
+script = ExtResource("10_miq82")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InstructionsPopup"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="InstructionsPopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="InstructionsPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Instructions"
+
+[node name="CloseButton" type="Button" parent="InstructionsPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Close"
+
+[node name="InstructionsText" type="RichTextLabel" parent="InstructionsPopup/VBoxContainer"]
+z_index = 10
+clip_contents = false
+custom_minimum_size = Vector2(160, 250)
+layout_mode = 2
+
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/InfoButton" to="." method="_on_info_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/ReverseButton" to="." method="_on_reverse_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/LoadMaxPathButton" to="." method="_on_load_max_path_button_pressed"]
+[connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/InstructionsButton" to="." method="_on_instructions_button_pressed"]
 [connection signal="toggled" from="MenuButtons/HBoxContainer/RightColumn/GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="pressed" from="InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
