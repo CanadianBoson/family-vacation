@@ -44,7 +44,7 @@ expand_mode = 3
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-text = "Options"
+text = "Gender"
 
 [node name="NameInput" type="LineEdit" parent="HBoxContainer/MiddlePanel/VBoxContainer"]
 layout_mode = 2

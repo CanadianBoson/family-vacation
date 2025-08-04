@@ -2,413 +2,495 @@
   "details": {
 	"ThreeLetter": {
 	  "text": "Go to at least three cities starting with the same letter",
-	  "difficulty": 2,
-	  "incompatible": ["NoThreeLetter"]
+	  "difficulty": 3,
+	  "incompatible": ["NoThreeLetter"],
+	  "family": "Linguist"
 	},
 	"NoThreeLetter": {
 	  "text": "Ensure no three cities start with the same letter",
 	  "difficulty": 2,
-	  "incompatible": ["ThreeLetter"]
+	  "incompatible": ["ThreeLetter"],
+	  "family": "Linguist"
 	},
 	"CarFree": {
 	  "text": "Chart a course that uses no cars",
-	  "difficulty": 4,
-	  "incompatible": ["MustUseCar"]
+	  "difficulty": 3,
+	  "incompatible": ["MustUseCar"],
+	  "family": "Transporter"
 	},
 	"MustUseCar": {
 	  "text": "Chart a course that uses cars",
 	  "difficulty": 1,
-	  "incompatible": ["CarFree"]
+	  "incompatible": ["CarFree"],
+	  "family": "Transporter"
 	},	
 	"SailFree": {
 	  "text": "Chart a course that uses no boats",
 	  "difficulty": 1,
-	  "incompatible": ["MustUseSail"]
+	  "incompatible": ["MustUseSail"],
+	  "family": "Transporter"
 	},
 	"MustUseSail": {
 	  "text": "Chart a course that uses boats",
-	  "difficulty": 2,
-	  "incompatible": ["SailFree"]
+	  "difficulty": 3,
+	  "incompatible": ["SailFree"],
+	  "family": "Transporter"
 	},
 	"TrainFree": {
 	  "text": "Chart a course that uses no trains",
-	  "difficulty": 1,
-	  "incompatible": ["MustUseTrain"]
+	  "difficulty": 3,
+	  "incompatible": ["MustUseTrain"],
+	  "family": "Transporter"
 	},
 	"MustUseTrain": {
 	  "text": "Chart a course that uses trains",
 	  "difficulty": 2,
-	  "incompatible": ["TrainFree"]
+	  "incompatible": ["TrainFree"],
+	  "family": "Transporter"
 	},
 	"PlaneFree": {
 	  "text": "Chart a course that uses no planes",
-	  "difficulty": 1,
-	  "incompatible": ["MustUsePlane"]
+	  "difficulty": 3,
+	  "incompatible": ["MustUsePlane"],
+	  "family": "Transporter"
 	},
 	"MustUsePlane": {
 	  "text": "Chart a course that uses planes",
 	  "difficulty": 2,
-	  "incompatible": ["PlaneFree"]
+	  "incompatible": ["PlaneFree"],
+	  "family": "Transporter"
 	},		
 	"NoCapitals": {
 	  "text": "Plan a route that avoids all capital cities",
-	  "difficulty": 1,
-	  "incompatible": ["SomeCapitals", "AllCapitals"]
+	  "difficulty": 2,
+	  "incompatible": ["SomeCapitals", "AllCapitals"],
+	  "family": "Numerator"
 	},
 	"SomeCapitals": {
 	  "text": "Plan a route that goes to at least one capital city",
 	  "difficulty": 1,
-	  "incompatible": ["NoCapitals"]
+	  "incompatible": ["NoCapitals"],
+	  "family": "Numerator"
 	},
 	"PathsCrossing": {
 	  "text": "Create a route that crosses over itself",
 	  "difficulty": 3,
-	  "incompatible": ["NoPathsCrossing"]
+	  "incompatible": ["NoPathsCrossing"],
+	  "family": "Geometer"
 	},
 	"NoPathsCrossing": {
 	  "text": "Create a route that never crosses over itself",
 	  "difficulty": 2,
-	  "incompatible": ["PathsCrossing"]
+	  "incompatible": ["PathsCrossing"],
+	  "family": "Geometer"
 	},
 	"MinPopulation": {
 	  "text": "Ensure every city visited has at least 500k people",
 	  "difficulty": 4,
-	  "incompatible": ["SomeSmallPopulation"]
+	  "incompatible": ["SomeSmallPopulation"],
+	  "family": "Numerator"
 	},
 	"SomeSmallPopulation": {
 	  "text": "Visit at least one city with under 500k population",
 	  "difficulty": 2,
-	  "incompatible": ["MinPopulation"]
+	  "incompatible": ["MinPopulation"],
+	  "family": "Numerator"
 	},
 	"StayInEU": {
 	  "text": "Don't visit any city outside the EU",
 	  "difficulty": 2,
-	  "incompatible": ["LeaveEU"]
+	  "incompatible": ["LeaveEU"],
+	  "family": "Numerator"
 	},
 	"LeaveEU": {
 	  "text": "Visit at least one city outside the EU",
-	  "difficulty": 2,
-	  "incompatible": ["StayInEU"]
+	  "difficulty": 3,
+	  "incompatible": ["StayInEU"],
+	  "family": "Numerator"
 	},
 	"CrossThree": {
 	  "text": "Cross the EU / non-EU border at least three times",
-	  "difficulty": 3,
-	  "incompatible": ["NoCrossThree", "LeaveEU"]
+	  "difficulty": 4,
+	  "incompatible": ["NoCrossThree", "LeaveEU"],
+	  "family": "Numerator"
 	},
 	"NoCrossThree": {
 	  "text": "Don't cross the EU / non-EU border more than twice",
 	  "difficulty": 2,
-	  "incompatible": ["CrossThree"]
+	  "incompatible": ["CrossThree"],
+	  "family": "Numerator"
 	},
 	"StayAwayDE": {
 	  "text": "Don't get within 200km of any German city",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": ["PassThroughDE"],
+	  "family": "Avoider"
 	},
 	"StayAwayFR": {
 	  "text": "Don't get within 200km of any French city",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": ["PassThroughFR"],
+	  "family": "Avoider"
 	},
 	"StayAwayUK": {
 	  "text": "Don't get within 200km of any British city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughUK"],
+	  "family": "Avoider"
 	},
 	"StayAwayIT": {
 	  "text": "Don't get within 200km of any Italian city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughIT"],
+	  "family": "Avoider"
 	},
 	"StayAwayPL": {
 	  "text": "Don't get within 200km of any Polish city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughPL"],
+	  "family": "Avoider"
 	},	
 	"StayAwayRU": {
 	  "text": "Don't get within 200km of any Russian city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughRU"],
+	  "family": "Avoider"
 	},
 	"StayAwayES": {
 	  "text": "Don't get within 200km of any Spanish city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughES"],
+	  "family": "Avoider"
 	},
 	"StayAwayTR": {
 	  "text": "Don't get within 200km of any Turkish city",
 	  "difficulty": 1,
-	  "incompatible": []
+	  "incompatible": ["PassThroughTR"],
+	  "family": "Avoider"
 	},
 	"PassThroughDE": {
 	  "text": "Get within 200km of any German city without stopping",
 	  "difficulty": 2,
-	  "incompatible": ["StayAwayDE"]
+	  "incompatible": ["StayAwayDE"],
+	  "family": "Avoider"
 	},
 	"PassThroughFR": {
 	  "text": "Get within 200km of any French city without stopping",
 	  "difficulty": 2,
-	  "incompatible": ["StayAwayFR"]
+	  "incompatible": ["StayAwayFR"],
+	  "family": "Avoider"
 	},
 	"PassThroughUK": {
 	  "text": "Get within 200km of any British city without stopping",
 	  "difficulty": 4,
-	  "incompatible": ["StayAwayUK"]
+	  "incompatible": ["StayAwayUK"],
+	  "family": "Avoider"
 	},
 	"PassThroughIT": {
 	  "text": "Get within 200km of any Italian city without stopping",
-	  "difficulty": 2,
-	  "incompatible": ["StayAwayIT"]
+	  "difficulty": 3,
+	  "incompatible": ["StayAwayIT"],
+	  "family": "Avoider"
 	},
 	"PassThroughPL": {
 	  "text": "Get within 200km of any Polish city without stopping",
 	  "difficulty": 3,
-	  "incompatible": ["StayAwayPL"]
+	  "incompatible": ["StayAwayPL"],
+	  "family": "Avoider"
 	},	
 	"PassThroughRU": {
 	  "text": "Get within 200km of any Russian city without stopping",
 	  "difficulty": 5,
-	  "incompatible": ["StayAwayRU"]
+	  "incompatible": ["StayAwayRU"],
+	  "family": "Avoider"
 	},
 	"PassThroughES": {
 	  "text": "Get within 200km of any Spanish city without stopping",
 	  "difficulty": 4,
-	  "incompatible": ["StayAwayES"]
+	  "incompatible": ["StayAwayES"],
+	  "family": "Avoider"
 	},
 	"PassThroughTR": {
 	  "text": "Get within 200km of any Turkish city without stopping",
 	  "difficulty": 3,
-	  "incompatible": ["StayAwayTR"]
+	  "incompatible": ["StayAwayTR"],
+	  "family": "Avoider"
 	},	
 	"UniqueCityLetters": {
 	  "text": "Every city must start with a different letter",
 	  "difficulty": 4,
-	  "incompatible": ["ThreeLetter"]
+	  "incompatible": ["ThreeLetter"],
+	  "family": "Linguist"
 	},
 	"UniqueCountryLetters": {
 	  "text": "Every country must start with a different letter",
-	  "difficulty": 5,
-	  "incompatible": []
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"AllTransport": {
 	  "text": "Use every possible method of transport",
 	  "difficulty": 5,
-	  "incompatible": ["CarFree", "BoatFree", "TrainFree", "PlaneFree"]
+	  "incompatible": ["CarFree", "BoatFree", "TrainFree", "PlaneFree"],
+	  "family": "Transporter"
 	},
 	"OnlyObtuse": {
 	  "text": "Ensure the route only has obtuse angles",
 	  "difficulty": 5,
-	  "incompatible": ["OnlyAcute"]
+	  "incompatible": ["OnlyAcute"],
+	  "family": "Geometer"
 	},
 	"OnlyAcute": {
 	  "text": "Ensure the route only has acute angles",
 	  "difficulty": 5,
-	  "incompatible": ["OnlyObtuse"]
+	  "incompatible": ["OnlyObtuse"],
+	  "family": "Geometer"
 	},
 	"MaxOverallCost": {
 	  "text": "The trip must cost under 2000 Euros per person",
 	  "difficulty": 4,
-	  "incompatible": ["MinOverallCost"]
+	  "incompatible": ["MinOverallCost"],
+	  "family": "Killjoy"
 	},
 	"MinOverallCost": {
 	  "text": "The trip must cost over 3000 Euros per person",
-	  "difficulty": 1,
-	  "incompatible": ["MaxOverallCost"]
+	  "difficulty": 2,
+	  "incompatible": ["MaxOverallCost"],
+	  "family": "Spender"
 	},
 	"MaxLegCost": {
 	  "text": "Every leg of the trip must cost under 300 Euros per person",
 	  "difficulty": 5,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Killjoy"
 	},
 	"MinLegCost": {
 	  "text": "Every leg of the trip must cost at least 100 Euros per person",
-	  "difficulty": 3,
-	  "incompatible": []
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Spender"
 	},
 	"MaxLettersCity": {
 	  "text": "Every city must be under 10 letters long",
 	  "difficulty": 3,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},	
 	"MinLettersCity": {
 	  "text": "Every city must be at least 5 letters long",
 	  "difficulty": 3,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},	
 	"MaxLettersCountry": {
 	  "text": "Every country must be under 10 letters long",
 	  "difficulty": 3,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},	
 	"MinLettersCountry": {
 	  "text": "Every country must be at least 6 letters long",
 	  "difficulty": 3,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"MaxCities": {
 	  "text": "Visit at most 5 cities",
 	  "difficulty": 3,
-	  "incompatible": ["MinCities"]
+	  "incompatible": ["MinCities"],
+	  "family": "Killjoy"
 	},
 	"MinCities": {
 	  "text": "Visit at least 10 cities",
 	  "difficulty": 5,
-	  "incompatible": ["MaxCities"]
+	  "incompatible": ["MaxCities"],
+	  "family": "Spender"
 	},
 	"MaxCountries": {
-	  "text": "Visit at most 5 cities",
-	  "difficulty": 3,
-	  "incompatible": ["MinCountries"]
+	  "text": "Visit at most 5 countries",
+	  "difficulty": 2,
+	  "incompatible": ["MinCountries"],
+	  "family": "Killjoy"
 	},
 	"MinCountries": {
-	  "text": "Visit at least 10 cities",
-	  "difficulty": 3,
-	  "incompatible": ["MaxCountries"]
+	  "text": "Visit at least 10 countries",
+	  "difficulty": 5,
+	  "incompatible": ["MaxCountries"],
+	  "family": "Spender"
 	},	
 	"MaxLegDistance": {
 	  "text": "Ensure no leg exceeds 500km",
-	  "difficulty": 3,
-	  "incompatible": []
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Killjoy"
 	},
 	"MinLegDistance": {
 	  "text": "Ensure every leg is at least 200km",
 	  "difficulty": 3,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Spender"
 	},
 	"MaxJourneyDistance": {
 	  "text": "Ensure the entire journey is less than 5000km",
-	  "difficulty": 2,
-	  "incompatible": ["MinJourneyDistance"]
+	  "difficulty": 4,
+	  "incompatible": ["MinJourneyDistance"],
+	  "family": "Killjoy"
 	},
 	"MinJourneyDistance": {
 	  "text": "Ensure the entire journey is beyond 10000km",
 	  "difficulty": 5,
-	  "incompatible": ["MaxJourneyDistance"]
+	  "incompatible": ["MaxJourneyDistance"],
+	  "family": "Spender"
 	},
 	"AllCapitals": {
 	  "text": "Only visit capitals",
 	  "difficulty": 3,
-	  "incompatible": ["NoCapitals"]
+	  "incompatible": ["NoCapitals"],
+	  "family": "Numerator"
 	},
 	"TrainsWE": {
 	  "text": "All trains should go more West-East than North-South",
 	  "difficulty": 3,
-	  "incompatible": ["TrainsNS"]
+	  "incompatible": ["TrainsNS"],
+	  "family": "Geometer"
 	},
 	"TrainsNS": {
 	  "text": "All trains should go more North-South than West-East",
 	  "difficulty": 3,
-	  "incompatible": ["TrainsWE"]
+	  "incompatible": ["TrainsWE"],
+	  "family": "Geometer"
 	},
 	"PlanesWE": {
 	  "text": "All planes should go more West-East than North-South",
 	  "difficulty": 3,
-	  "incompatible": ["PlanesNS"]
+	  "incompatible": ["PlanesNS"],
+	  "family": "Geometer"
 	},
 	"PlanesNS": {
 	  "text": "All planes should go more North-South than West-East",
 	  "difficulty": 3,
-	  "incompatible": ["PlanesWE"]
+	  "incompatible": ["PlanesWE"],
+	  "family": "Geometer"
 	},
 	"CityStartsWithB": {
 	  "text": "Visit a city that starts with B",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CityStartsWithF": {
 	  "text": "Visit a city that starts with F",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CityStartsWithI": {
 	  "text": "Visit a city that starts with I",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CityStartsWithL": {
 	  "text": "Visit a city that starts with L",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CityStartsWithN": {
 	  "text": "Visit a city that starts with N",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CityStartsWithP": {
 	  "text": "Visit a city that starts with P",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithB": {
 	  "text": "Visit a country that starts with B",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithF": {
 	  "text": "Visit a country that starts with F",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithI": {
 	  "text": "Visit a country that starts with I",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithL": {
 	  "text": "Visit a country that starts with L",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithN": {
 	  "text": "Visit a country that starts with N",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"CountryStartsWithP": {
 	  "text": "Visit a country that starts with P",
 	  "difficulty": 2,
-	  "incompatible": []
+	  "incompatible": [],
+	  "family": "Linguist"
 	},
 	"MaxLat": {
 	  "text": "The route should not exceed 10 degrees latitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["MinLat"]
+	  "difficulty": 3,
+	  "incompatible": ["MinLat"],
+	  "family": "Numerator"
 	},
 	"MinLat": {
 	  "text": "The route should exceed 20 degrees latitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["MaxLat"]
+	  "difficulty": 4,
+	  "incompatible": ["MaxLat"],
+	  "family": "Numerator"
 	},
 	"StartEndMaxLat": {
 	  "text": "The route endpoints should not exceed 10 degrees latitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["StartEndMinLat"]
+	  "difficulty": 4,
+	  "incompatible": ["StartEndMinLat"],
+	  "family": "Numerator"
 	},
 	"StartEndMinLat": {
 	  "text": "The route endpoints should exceed 20 degrees latitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["StartEndMaxLat"]
+	  "difficulty": 5,
+	  "incompatible": ["StartEndMaxLat"],
+	  "family": "Numerator"
 	},
 	"MaxLon": {
 	  "text": "The route should not exceed 15 degrees longitude in spread",
 	  "difficulty": 2,
-	  "incompatible": ["MinLon"]
+	  "incompatible": ["MinLon"],
+	  "family": "Numerator"
 	},
 	"MinLon": {
 	  "text": "The route should exceed 25 degrees longitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["MaxLon"]
+	  "difficulty": 3,
+	  "incompatible": ["MaxLon"],
+	  "family": "Numerator"
 	},
 	"StartEndMaxLon": {
 	  "text": "The route endpoints should not exceed 15 degrees longitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["StartEndMinLon"]
+	  "difficulty": 3,
+	  "incompatible": ["StartEndMinLon"],
+	  "family": "Numerator"
 	},
 	"StartEndMinLon": {
 	  "text": "The route endpoints should exceed 25 degrees longitude in spread",
-	  "difficulty": 2,
-	  "incompatible": ["StartEndMaxLon"]
-	},					
+	  "difficulty": 4,
+	  "incompatible": ["StartEndMaxLon"],
+	  "family": "Numerator"
+	}					
   }
 }

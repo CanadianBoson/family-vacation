@@ -48,6 +48,13 @@
 	  "image_path_male": "res://family_images/spender_scorpion.png",
 	  "image_path_female": "res://family_images/spender_sloth.png",
 	  "description": "The opposite of killjoys, costly family members want it all and they want it now."
+	},
+	"Rando": {
+	  "default_name_male": "Ronald",
+	  "default_name_female": "Rebecca",
+	  "image_path_male": "res://family_images/rando_raccoon.png",
+	  "image_path_female": "res://family_images/rando_rabbit.png",
+	  "description": "Doing what they please, your family's randos tend to have oddball or strange requests."
 	}
   }
 }
