@@ -21,12 +21,12 @@
 	  "image_path_female": "res://family_images/geometer_giraffe.png",
 	  "description": "In love with the shape of paths, geometers care about how the route twists and turns."
 	},
-	"Numbers": {
+	"Numerator": {
 	  "default_name_male": "Nicholas",
 	  "default_name_female": "Nikita",
 	  "image_path_male": "res://family_images/numbers_narwhal.png",
 	  "image_path_female": "res://family_images/numbers_newt.png",
-	  "description": "Tables are their best friends, and numbers people care about populations, capitals, and lat/lon."
+	  "description": "Tables are their best friends, and numerators care about populations, capitals, and lat/lon."
 	},
 	"Avoider": {
 	  "default_name_male": "Adam",
