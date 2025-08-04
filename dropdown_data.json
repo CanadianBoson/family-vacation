@@ -206,22 +206,22 @@
 	  "incompatible": ["OnlyObtuse"]
 	},
 	"MaxOverallCost": {
-	  "text": "The trip must cost under 5000 Euros",
+	  "text": "The trip must cost under 2000 Euros per person",
 	  "difficulty": 4,
 	  "incompatible": ["MinOverallCost"]
 	},
 	"MinOverallCost": {
-	  "text": "The trip must cost over 10000 Euros",
+	  "text": "The trip must cost over 3000 Euros per person",
 	  "difficulty": 1,
 	  "incompatible": ["MaxOverallCost"]
 	},
 	"MaxLegCost": {
-	  "text": "Every leg of the trip must cost under 800 Euros",
+	  "text": "Every leg of the trip must cost under 300 Euros per person",
 	  "difficulty": 5,
 	  "incompatible": []
 	},
 	"MinLegCost": {
-	  "text": "Every leg of the trip must cost at least 300 Euros",
+	  "text": "Every leg of the trip must cost at least 100 Euros per person",
 	  "difficulty": 3,
 	  "incompatible": []
 	},

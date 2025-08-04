@@ -120,7 +120,7 @@ func _populate_dropdown():
 		var icon = "✗"
 		if _quest_manager.is_quest_satisfied(item_data.get("key")):
 			icon = "✓"
-		bullet_point.text = "%s %s" % [icon, item_data.get("text", "N/A")]
+		bullet_point.text = "%s %s (%d)" % [icon, item_data.get("text", "N/A"), item_data.get("difficulty", "N/A")]
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bullet_point.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		bullet_point.add_theme_font_size_override("font_size", 10)

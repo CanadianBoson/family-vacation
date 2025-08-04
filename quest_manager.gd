@@ -89,15 +89,15 @@ func _ready():
 		"PassThroughES": {"func": _check_stay_away, "expected": true, "args": ["Spain", "pass"]},
 		"PassThroughTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey", "pass"]},
 		# party_pooper
-		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [5000.0, "max"]},	
-		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [800.0, "max"]},
+		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [2000.0, "max"]},	
+		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "max"]},
 		"MaxCities": {"func": _check_city_count, "expected": true, "args": [5, "max"]},
 		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
 		"MaxJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [5000.0, "max"]},
 		"MaxCountries": {"func": _check_country_count, "expected": true, "args": [3, "max"]},
 		# spoiled
-		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [10000.0, "min"]},
-		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "min"]},
+		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [3000.0, "min"]},
+		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [100.0, "min"]},
 		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]},
 		"MinLegDistance": {"func": _check_leg_distance, "expected": true, "args": [200.0, "min"]},
 		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]},
@@ -609,9 +609,9 @@ func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Arr
 		overall_cost += _calculate_leg_cost(transport_mode, distance, num_menu_items)
 	
 	if check_type == "max":
-		return overall_cost <= limit
+		return overall_cost <= limit * num_menu_items
 	elif check_type == "min":
-		return overall_cost >= limit
+		return overall_cost >= limit * num_menu_items
 	
 	return false
 
@@ -627,10 +627,10 @@ func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, 
 		var leg_cost = _calculate_leg_cost(transport_mode, distance, num_menu_items)
 		
 		if check_type == "max":
-			if leg_cost > limit:
+			if leg_cost > limit * num_menu_items:
 				return false # Found a leg that is too expensive.
 		elif check_type == "min":
-			if leg_cost < limit:
+			if leg_cost < limit * num_menu_items:
 				return false # Found a leg that is too cheap.
 				
 	return true # All legs passed the check.
