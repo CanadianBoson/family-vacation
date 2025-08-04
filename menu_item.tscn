@@ -71,6 +71,7 @@ _data = {
 [node name="MenuItem" type="VBoxContainer"]
 offset_right = 80.0
 offset_bottom = 34.0
+size_flags_horizontal = 3
 script = ExtResource("1_lg34y")
 
 [node name="Header" type="PanelContainer" parent="."]
@@ -89,7 +90,7 @@ expand_mode = 2
 
 [node name="ItemLabel" type="Label" parent="Header/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 horizontal_alignment = 1
 
 [node name="DropdownContainer" type="VBoxContainer" parent="."]

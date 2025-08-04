@@ -1,14 +1,11 @@
 # vertical_menu.gd
-# This script dynamically builds a two-column vertical menu.
+# This script dynamically builds a two-column menu from the global game state.
 extends Control
 
 const MenuItemScene = preload("res://menu_item.tscn")
 
-# --- Updated: References to the two new column containers ---
 @onready var left_column: VBoxContainer = $ColumnsContainer/LeftColumn
 @onready var right_column: VBoxContainer = $ColumnsContainer/RightColumn
-# -----------------------------------------------------------
-
 @onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
 
 var ITEM_COLORS = [
@@ -37,7 +34,7 @@ func _load_image_paths():
 			file_name = dir.get_next()
 
 func _load_all_dropdown_options() -> Dictionary:
-	var file_path = "res://dropdown_data.json"
+	var file_path = "res://data/dropdown_data.json"
 	if not FileAccess.file_exists(file_path): return {}
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var content = file.get_as_text()
@@ -47,15 +44,11 @@ func _load_all_dropdown_options() -> Dictionary:
 	return {}
 
 func _build_menu():
-	var file_path = "res://menu_items.json"
-	if not FileAccess.file_exists(file_path): return
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var content = file.get_as_text()
-	var json_data = JSON.parse_string(content)
-	if typeof(json_data) != TYPE_DICTIONARY or not json_data.has("items"): return
-	
-	var item_texts = json_data.items
-	item_texts.shuffle()
+	# --- Updated: Get the list of confirmed family members from the global state ---
+	var confirmed_family = GlobalState.confirmed_family
+	if confirmed_family.is_empty():
+		print("Warning: No confirmed family members found in GlobalState to build menu.")
+		return
 
 	var available_colors = ITEM_COLORS.duplicate()
 	available_colors.shuffle()
@@ -64,15 +57,15 @@ func _build_menu():
 	var available_dropdown_keys = all_quest_data.keys()
 	available_dropdown_keys.shuffle()
 
-	# --- Updated: Loop with an index to distribute items into columns ---
-	for i in range(item_texts.size()):
-		var text = item_texts[i]
+	# Loop through the confirmed family members to create a menu item for each.
+	for i in range(confirmed_family.size()):
+		var member_data = confirmed_family[i]
 		var menu_item = MenuItemScene.instantiate()
 		
-		# Decide which column to add the item to based on the index.
-		if i % 2 == 0: # Even numbers (0, 2, 4...) go to the left column.
+		# Decide which column to add the item to.
+		if i % 2 == 0:
 			left_column.add_child(menu_item)
-		else: # Odd numbers (1, 3, 5...) go to the right column.
+		else:
 			right_column.add_child(menu_item)
 		
 		menu_item_instances.append(menu_item)
@@ -95,16 +88,13 @@ func _build_menu():
 		if available_dropdown_keys.size() >= num_to_show:
 			var selected_keys = available_dropdown_keys.slice(0, num_to_show)
 			var is_compatible = true
-			
 			for key1 in selected_keys:
 				var incompatible_list = all_quest_data[key1].get("incompatible", [])
 				for key2 in selected_keys:
 					if key1 != key2 and incompatible_list.has(key2):
 						is_compatible = false
 						break
-				if not is_compatible:
-					break
-			
+				if not is_compatible: break
 			if is_compatible:
 				for j in range(num_to_show):
 					var key = available_dropdown_keys.pop_front()
@@ -122,8 +112,8 @@ func _build_menu():
 			item_data["key"] = key
 			bullet_points_for_item.append(item_data)
 		
-		# --- Updated: Pass the quest_manager reference to the menu item ---
-		menu_item.setup(text, unique_color, unique_image_path, bullet_points_for_item, quest_manager)
+		# Use the confirmed member's name for the menu item's text.
+		menu_item.setup(member_data.name, unique_color, unique_image_path, bullet_points_for_item, quest_manager)
 
 func calculate_scores() -> Dictionary:
 	var quest_score : int = 0
@@ -131,21 +121,18 @@ func calculate_scores() -> Dictionary:
 	
 	for item in menu_item_instances:
 		var all_quests_in_item_satisfied = true
-		
 		if item.bullet_points_to_display.is_empty():
 			all_quests_in_item_satisfied = false
-		
 		for quest_data in item.bullet_points_to_display:
 			var quest_key = quest_data.get("key")
 			if quest_manager.is_quest_satisfied(quest_key):
 				quest_score += quest_data.get("difficulty", 0)
 			else:
 				all_quests_in_item_satisfied = false
-		
 		if all_quests_in_item_satisfied:
 			family_score += 5
 			
-	var total_score : int = quest_score + family_score
+	var total_score = quest_score + family_score
 	
 	return {
 		"quest_score": quest_score,

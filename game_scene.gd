@@ -265,3 +265,7 @@ func _on_load_max_path_button_pressed():
 		pin_manager.load_path(best_path_data)
 		# After loading the path, update the entire game state.
 		_update_game_state()
+
+# This function is called when the "Family" button is pressed.
+func _on_family_button_pressed():
+	get_tree().change_scene_to_file("res://family_scene.tscn")

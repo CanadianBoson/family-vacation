@@ -6,19 +6,22 @@
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 3
 anchors_preset = 0
+size_flags_horizontal = 3
 script = ExtResource("1_hbco0")
 
 [node name="ColumnsContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 0
-offset_right = 80.0
-offset_bottom = 40.0
+offset_right = 180.0
 theme_override_constants/separation = 10
 alignment = 1
 
 [node name="LeftColumn" type="VBoxContainer" parent="ColumnsContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="RightColumn" type="VBoxContainer" parent="ColumnsContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10

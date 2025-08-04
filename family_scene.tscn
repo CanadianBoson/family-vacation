@@ -36,15 +36,15 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="FamilyImage" type="TextureRect" parent="HBoxContainer/MiddlePanel/VBoxContainer"]
-custom_minimum_size = Vector2(200, 200)
+custom_minimum_size = Vector2(150, 250)
 layout_mode = 2
-expand_mode = 2
+expand_mode = 3
 
 [node name="GenderToggle" type="CheckButton" parent="HBoxContainer/MiddlePanel/VBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-text = "Gender  "
+text = "Options"
 
 [node name="NameInput" type="LineEdit" parent="HBoxContainer/MiddlePanel/VBoxContainer"]
 layout_mode = 2
@@ -67,6 +67,12 @@ layout_mode = 2
 
 [node name="ConfirmedListVBox" type="VBoxContainer" parent="HBoxContainer/RightPanel/ScrollContainer"]
 layout_mode = 2
+
+[node name="StartGameButton" type="Button" parent="HBoxContainer/RightPanel"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Start Game"
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
