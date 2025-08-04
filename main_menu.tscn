@@ -31,6 +31,10 @@ alignment = 1
 layout_mode = 2
 text = "Instructions"
 
+[node name="Button_Family" type="Button" parent="MainMenu/VBoxContainer"]
+layout_mode = 2
+text = "Family Settings"
+
 [node name="Button_Start" type="Button" parent="MainMenu/VBoxContainer"]
 layout_mode = 2
 text = "Start"
@@ -40,5 +44,6 @@ layout_mode = 2
 text = "Exit"
 
 [connection signal="pressed" from="MainMenu/VBoxContainer/Button_Instructions" to="MainMenu" method="_on_instructions_button_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/Button_Family" to="MainMenu" method="_on_button_family_pressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/Button_Start" to="MainMenu" method="_on_start_button_pressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/Button_Exit" to="MainMenu" method="_on_exit_button_pressed"]

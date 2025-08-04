@@ -19,3 +19,6 @@ func _on_instructions_button_pressed():
 func _on_exit_button_pressed():
 	# This line quits the application.
 	get_tree().quit()
+	
+func _on_button_family_pressed():
+	get_tree().change_scene_to_file("res://family_scene.tscn")	
