@@ -49,7 +49,7 @@ func _build_menu():
 	if num_members == 0: return
 
 	# --- New: Calculate the target difficulty for each family member ---
-	var game_difficulty = GlobalState.initial_difficulty * 10
+	var game_difficulty = GlobalState.initial_difficulty * 5
 	var difficulty_per_member = int(game_difficulty / num_members)
 	print("Total Difficulty: %d | Members: %d | Target Per Member: %d" % [game_difficulty, num_members, difficulty_per_member])
 	# -----------------------------------------------------------------

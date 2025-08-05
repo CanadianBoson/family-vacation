@@ -28,7 +28,7 @@ signal data_updated
 @onready var info_capital = $DetailedInfoBox/VBoxContainer/CapitalLabel
 @onready var info_eu = $DetailedInfoBox/VBoxContainer/EULabel
 @onready var hover_timer = $HoverTimer
-@onready var instructions_button = $MenuButtons/VBoxContainer/InstructionsButton
+@onready var instructions_button = $MenuButtons/HBoxContainer/RightColumn/InstructionsButton
 @onready var instructions_popup = $InstructionsPopup
 
 

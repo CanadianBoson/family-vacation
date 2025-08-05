@@ -8,25 +8,36 @@ extends PanelContainer
 
 # --- You can edit the instructions text here ---
 const INSTRUCTIONS = """
-[center][b]Welcome to the Journey Planner![/b][/center]
+[center][b]Welcome to Family Vacation![/b][/center]
 
 [b]Objective:[/b]
-Plan routes by clicking on the black circles on the map. Each route will be assigned quests, shown in the dropdown menus on the left.
+Design a route which satisfies as many family members as possible. Every family member has demands of various difficulties, and your score is the sum of these values along with bonuses for satisfying every demand.
 
-[b]Scoring:[/b]
-Completing a quest adds its difficulty to your score. Completing all quests for a single traveler grants a bonus.
+[b]Family Controls:[/b]
+Click on a name to expand or contract the demands of family members. Demands that are met appear with a checkmark. Family members with all demands met show up with a border.
 
-[b]Controls:[/b]
+[b]Map Controls:[/b]
 [ul]
 [b]Left-Click:[/b] Place a pin on an available city.
 [b]Right-Click:[/b] Remove a pin from the map.
 [b]Drag-and-Drop:[/b] Move an existing pin to a new, unoccupied city.
-[b]Middle-Click:[/b] In the Family scene, middle-click a confirmed member to remove them.
+[b]Hover:[/b] Hover over a city briefly to see the name, and for one second to get more details.
 [/ul]
-[b]UI:[/b]
+
+[b]Buttons:[/b]
 [ul]
-Use the [b]Info[/b] button to see a sortable list of all available cities.
-Use the [b]Ledger[/b] on the right to track your current path's distance and cost.
+[b]Back[/b] gets you back to the main menu.
+[b]Family[/b] gets you back to the family menu.
+[b]Clear All[/b] clears the route and all pins.
+[b]Stats[/b] gives tabular data for cities and dropped pins.
+[b]Reverse[/b] switches the direction of the trip.
+[b]Load Max[/b] reloads the route that had the highest score so far.
+[b]Info[/b] loads this tooltip.
+[b]Grid[/b] toggles a grid for aesthetic purposes.
+[/ul]
+
+[ul]
+Use the [b]Ledger[/b] on the left to track your current path's distance and cost.
 [/ul]
 """
 

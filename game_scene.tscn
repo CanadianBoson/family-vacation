@@ -276,7 +276,7 @@ text = "Clear All"
 
 [node name="InfoButton" type="Button" parent="MenuButtons/HBoxContainer/LeftColumn"]
 layout_mode = 2
-text = "Info"
+text = "Stats"
 
 [node name="RightColumn" type="VBoxContainer" parent="MenuButtons/HBoxContainer"]
 layout_mode = 2
@@ -292,11 +292,7 @@ text = "Load Max"
 
 [node name="InstructionsButton" type="Button" parent="MenuButtons/HBoxContainer/RightColumn"]
 layout_mode = 2
-text = "How To"
-
-[node name="GridToggleButton" type="CheckButton" parent="MenuButtons/HBoxContainer/RightColumn"]
-layout_mode = 2
-text = "Grid"
+text = "Info"
 
 [node name="InfoPopup" type="PanelContainer" parent="."]
 z_index = 8
@@ -431,10 +427,6 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="InstructionsPopup/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="InstructionsPopup/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Instructions"
-
 [node name="CloseButton" type="Button" parent="InstructionsPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Close"
@@ -446,6 +438,14 @@ custom_minimum_size = Vector2(160, 250)
 layout_mode = 2
 bbcode_enabled = true
 
+[node name="GridToggleButton" type="CheckButton" parent="."]
+modulate = Color(0, 0, 0, 1)
+offset_left = 8.0
+offset_top = 12.0
+offset_right = 89.0
+offset_bottom = 43.0
+text = "Grid"
+
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/ClearAllButton" to="." method="_on_clear_all_button_pressed"]
@@ -453,5 +453,5 @@ bbcode_enabled = true
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/ReverseButton" to="." method="_on_reverse_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/LoadMaxPathButton" to="." method="_on_load_max_path_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/InstructionsButton" to="." method="_on_instructions_button_pressed"]
-[connection signal="toggled" from="MenuButtons/HBoxContainer/RightColumn/GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="pressed" from="InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="toggled" from="GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]

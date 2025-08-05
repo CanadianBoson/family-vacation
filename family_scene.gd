@@ -17,6 +17,8 @@ const ConfirmedItemScene = preload("res://family_item.tscn")
 @onready var difficulty_slider: HSlider = $VBoxContainer/DifficultySlider
 @onready var info_button: Button = $InfoButton
 @onready var instructions_popup: PanelContainer = $InstructionsPopupFamily
+@onready var warning_label: Label = $WarningLabel
+@onready var warning_timer: Timer = $WarningTimer
 
 var _family_data = {}
 var _selected_family_key = ""
@@ -32,6 +34,7 @@ func _ready():
 	back_button.pressed.connect(_on_back_button_pressed)
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
 	difficulty_slider.value_changed.connect(_on_difficulty_slider_value_changed)
+	warning_timer.timeout.connect(warning_label.hide)
 	
 	name_input.max_length = 10
 	
@@ -84,44 +87,34 @@ func _update_middle_panel():
 		family_image.texture = load(data.get("image_path_female", ""))
 
 func _on_confirm_button_pressed():
-	if confirmed_list_vbox.get_child_count() >= 6:
-		print("Cannot add more than 6 family members.")
-		return
-		
+	if confirmed_list_vbox.get_child_count() >= 6: return
 	var final_name = name_input.text
-	
 	for member in _confirmed_family_data:
-		if member.name == final_name:
-			print("Error: Name '%s' is already in use." % final_name)
-			return
+		if member.name == final_name: return
 		
 	var new_member_data = {
-		"name": final_name,
-		"family_key": _selected_family_key,
-		"gender": _selected_gender
+		"name": final_name, "family_key": _selected_family_key, "gender": _selected_gender
 	}
-	# Use the new helper function to add the member.
 	_add_confirmed_member(new_member_data)
+	# --- New: Validate the slider after adding a member ---
+	_validate_slider_value()
 
 # --- New: Refactored helper function to add a confirmed member ---
 func _add_confirmed_member(member_data: Dictionary):
 	var new_item = ConfirmedItemScene.instantiate()
 	var info_text = "%s (%s)" % [member_data.name, member_data.family_key]
-	
 	new_item.set_info(info_text)
 	confirmed_list_vbox.add_child(new_item)
-	
 	_confirmed_family_data.append(member_data)
 	new_item.delete_requested.connect(_on_confirmed_item_deleted.bind(new_item, member_data))
-	
 	_update_start_button_visibility()
 
 func _on_confirmed_item_deleted(item_node: Node, data_to_remove: Dictionary):
 	_confirmed_family_data.erase(data_to_remove)
 	item_node.queue_free()
-	print("Removed '%s' from the confirmed list." % data_to_remove.name)
-	
 	_update_start_button_visibility()
+	# --- New: Validate the slider after removing a member ---
+	_validate_slider_value()
 
 # --- New: Helper function to manage the Start Game button's visibility ---
 func _update_start_button_visibility():
@@ -139,16 +132,38 @@ func _on_back_button_pressed():
 	get_tree().change_scene_to_file("res://main_menu.tscn")
 
 func _on_difficulty_slider_value_changed(new_value: float):
-	# Round the value to the nearest whole number to ensure it snaps.
 	var snapped_value = round(new_value)
+	var num_members = _confirmed_family_data.size()
+	var limit = 10
+	var limit_reason = ""
 	
-	# Update the slider's value itself to reflect the snap.
-	# This prevents the visual knob from sitting between ticks.
+	if num_members < 2:
+		limit = 1
+		limit_reason = " (Max 1 for < 2 members)"
+	if num_members == 2:
+		limit = 6
+		limit_reason = " (Max 6 for 2 members)"
+	elif num_members == 3:
+		limit = 8
+		limit_reason = " (Max 8 for 3 members)"
+	
+	if snapped_value > limit:
+		snapped_value = limit
+		_flash_warning_text("Difficulty limited to %d for %d members." % [limit, num_members])
+	
 	difficulty_slider.value = snapped_value
-	
-	# Update the label's text.
 	difficulty_label.text = "Initial Difficulty: %d" % snapped_value
 
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
 	instructions_popup.show_popup()
+
+func _validate_slider_value():
+	# Trigger the value_changed logic with the slider's current value.
+	_on_difficulty_slider_value_changed(difficulty_slider.value)
+
+# --- New: Helper function to show the warning text ---
+func _flash_warning_text(text: String):
+	warning_label.text = text
+	warning_label.show()
+	warning_timer.start()
