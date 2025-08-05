@@ -87,6 +87,21 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_miq82"]
+resource_name = "popup_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("InstructionsPopup:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_mj2jn"]
 resource_name = "popup_info"
 tracks/0/type = "value"
@@ -112,21 +127,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(-2),
 "update": 0,
 "values": [Color(0.50097, 0.683024, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_miq82"]
-resource_name = "popup_in"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("InstructionsPopup:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_j5hk1"]
@@ -292,7 +292,7 @@ text = "Load Max"
 
 [node name="InstructionsButton" type="Button" parent="MenuButtons/HBoxContainer/RightColumn"]
 layout_mode = 2
-text = "Instructions"
+text = "How To"
 
 [node name="GridToggleButton" type="CheckButton" parent="MenuButtons/HBoxContainer/RightColumn"]
 layout_mode = 2
@@ -444,6 +444,7 @@ z_index = 10
 clip_contents = false
 custom_minimum_size = Vector2(160, 250)
 layout_mode = 2
+bbcode_enabled = true
 
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]

@@ -4,15 +4,19 @@ extends Control
 
 const ConfirmedItemScene = preload("res://family_item.tscn")
 
-@onready var family_list_vbox: VBoxContainer = $HBoxContainer/LeftPanel/FamilyListVBox
-@onready var family_image: TextureRect = $HBoxContainer/MiddlePanel/VBoxContainer/FamilyImage
-@onready var gender_toggle_button: CheckButton = $HBoxContainer/MiddlePanel/VBoxContainer/GenderToggle
-@onready var name_input: LineEdit = $HBoxContainer/MiddlePanel/VBoxContainer/NameInput
-@onready var description_label: Label = $HBoxContainer/MiddlePanel/VBoxContainer/DescriptionLabel
-@onready var confirm_button: Button = $HBoxContainer/MiddlePanel/VBoxContainer/ConfirmButton
-@onready var confirmed_list_vbox: VBoxContainer = $HBoxContainer/RightPanel/ScrollContainer/ConfirmedListVBox
-@onready var start_game_button: Button = $HBoxContainer/RightPanel/StartGameButton
+@onready var family_list_vbox: VBoxContainer = $VBoxContainer/HBoxContainer/LeftPanel/FamilyListVBox
+@onready var family_image: TextureRect = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/FamilyImage
+@onready var gender_toggle_button: CheckButton = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/GenderToggle
+@onready var name_input: LineEdit = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/NameInput
+@onready var description_label: Label = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/DescriptionLabel
+@onready var confirm_button: Button = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/ConfirmButton
+@onready var confirmed_list_vbox: VBoxContainer = $VBoxContainer/HBoxContainer/RightPanel/ScrollContainer/ConfirmedListVBox
+@onready var start_game_button: Button = $VBoxContainer/HBoxContainer/RightPanel/StartGameButton
 @onready var back_button: Button = $BackButton
+@onready var difficulty_label: Label = $VBoxContainer/DifficultyLabel
+@onready var difficulty_slider: HSlider = $VBoxContainer/DifficultySlider
+@onready var info_button: Button = $InfoButton
+@onready var instructions_popup: PanelContainer = $InstructionsPopupFamily
 
 var _family_data = {}
 var _selected_family_key = ""
@@ -27,6 +31,7 @@ func _ready():
 	confirm_button.pressed.connect(_on_confirm_button_pressed)
 	back_button.pressed.connect(_on_back_button_pressed)
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
+	difficulty_slider.value_changed.connect(_on_difficulty_slider_value_changed)
 	
 	name_input.max_length = 10
 	
@@ -131,3 +136,18 @@ func _on_start_game_button_pressed():
 
 func _on_back_button_pressed():
 	get_tree().change_scene_to_file("res://main_menu.tscn")
+
+func _on_difficulty_slider_value_changed(new_value: float):
+	# Round the value to the nearest whole number to ensure it snaps.
+	var snapped_value = round(new_value)
+	
+	# Update the slider's value itself to reflect the snap.
+	# This prevents the visual knob from sitting between ticks.
+	difficulty_slider.value = snapped_value
+	
+	# Update the label's text.
+	difficulty_label.text = "Initial Difficulty: %d" % snapped_value
+
+# This function is called when the "Info" button is pressed.
+func _on_info_button_pressed():
+	instructions_popup.show_popup()

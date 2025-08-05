@@ -4,29 +4,25 @@ extends PanelContainer
 
 @onready var close_button: Button = $VBoxContainer/HBoxContainer/CloseButton
 @onready var instructions_text: RichTextLabel = $VBoxContainer/InstructionsText
-@onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("GameScene/AnimationPlayer")
+@onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("FamilyScene/AnimationPlayer")
 
 # --- You can edit the instructions text here ---
 const INSTRUCTIONS = """
-[center][b]Welcome to the Journey Planner![/b][/center]
+[center][b]Welcome to Family Vacation![/b][/center]
 
-[b]Objective:[/b]
-Plan routes by clicking on the black circles on the map. Each route will be assigned quests, shown in the dropdown menus on the left.
+[b]Info:[/b]
+Start by choosing some members to join your family. You can choose between two
+pictures and personalize their names, and when ready click 'Add to Family'. You can remove
+family members by middle clicking them in the right panel. Once you've added at least
+two family members (maximum of six) you can start the game.
 
-[b]Scoring:[/b]
-Completing a quest adds its difficulty to your score. Completing all quests for a single traveler grants a bonus.
+[b]Initial Difficulty:[/b]
+Adjust the slider to set the initial difficulty in the game. Note that having more
+family members tends to make the game more difficult due to competing demands.
 
-[b]Controls:[/b]
-[ul]
-[b]Left-Click:[/b] Place a pin on an available city.
-[b]Right-Click:[/b] Remove a pin from the map.
-[b]Drag-and-Drop:[/b] Move an existing pin to a new, unoccupied city.
-[b]Middle-Click:[/b] In the Family scene, middle-click a confirmed member to remove them.
-[/ul]
 [b]UI:[/b]
 [ul]
-Use the [b]Info[/b] button to see a sortable list of all available cities.
-Use the [b]Ledger[/b] on the right to track your current path's distance and cost.
+Use the [b]Back[/b] button to return to the main screen.
 [/ul]
 """
 
