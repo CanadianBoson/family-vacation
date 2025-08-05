@@ -36,19 +36,30 @@ func _load_all_dropdown_options() -> Dictionary:
 	return {}
 
 func _build_menu():
+	if GlobalState.confirmed_family.is_empty():
+		print("DEBUG: GlobalState is empty. Populating with default data for testing.")
+		GlobalState.confirmed_family = [
+			{"name": "Erik", "family_key": "Merchants", "gender": "male"},
+			{"name": "Astrid", "family_key": "Explorers", "gender": "female"}
+		]
+		GlobalState.initial_difficulty = 5
+
 	var confirmed_family = GlobalState.confirmed_family
-	if confirmed_family.is_empty():
-		print("Warning: No confirmed family members found in GlobalState to build menu.")
-		return
-	
+	var num_members = confirmed_family.size()
+	if num_members == 0: return
+
+	# --- New: Calculate the target difficulty for each family member ---
+	var game_difficulty = GlobalState.initial_difficulty * 10
+	var difficulty_per_member = int(game_difficulty / num_members)
+	print("Total Difficulty: %d | Members: %d | Target Per Member: %d" % [game_difficulty, num_members, difficulty_per_member])
+	# -----------------------------------------------------------------
+
 	var available_colors = ITEM_COLORS.duplicate()
 	available_colors.shuffle()
-	var available_images = image_paths.duplicate()
-	available_images.shuffle()
 	var available_dropdown_keys = all_quest_data.keys()
 	available_dropdown_keys.shuffle()
 
-	for i in range(confirmed_family.size()):
+	for i in range(num_members):
 		var member_data = confirmed_family[i]
 		var menu_item = MenuItemScene.instantiate()
 		
@@ -68,74 +79,74 @@ func _build_menu():
 		var family_key = member_data.get("family_key")
 		var gender = member_data.get("gender")
 		if all_family_data.has(family_key):
-			var family_info = all_family_data[family_key]
-			specific_image_path = family_info.get("image_path_" + gender, "")
+			specific_image_path = all_family_data[family_key].get("image_path_" + gender, "")
 		
-		# --- New Weighted and Compatible Quest Selection Logic ---
-		var bullet_points_for_item = []
-		var selected_quest_keys = []
-		var num_to_show = randi_range(2, 3)
-
-		# Separate available quests into matching and other pools.
-		var matching_quests = []
-		var other_quests = []
+		# --- New: Select quests based on target difficulty ---
+		var bullet_points_for_item = _select_quests_for_member(family_key, difficulty_per_member, available_dropdown_keys)
+		# ----------------------------------------------------
 		
-		if family_key == "Rando":
-			other_quests = available_dropdown_keys.duplicate()
-		else:
-			for key in available_dropdown_keys:
-				if all_quest_data[key].get("family") == family_key:
-					matching_quests.append(key)
-				else:
-					other_quests.append(key)
+		menu_item.setup(member_data.name, unique_color, specific_image_path, bullet_points_for_item, quest_manager)
 
-		# Select quests one by one, checking for compatibility.
-		for _j in range(num_to_show):
-			var quest_pool = []
-			# 75% chance to pick from matching quests, 25% from others.
-			if randf() < 0.75 and not matching_quests.is_empty():
-				quest_pool = matching_quests
+# --- New: Advanced quest selection algorithm ---
+func _select_quests_for_member(family_key: String, target_difficulty: int, available_keys: Array) -> Array:
+	var selected_quests = []
+	var selected_keys = []
+	var current_difficulty = 0
+
+	var matching_quests = []
+	var other_quests = []
+	
+	if family_key == "Rando":
+		other_quests = available_keys.duplicate()
+	else:
+		for key in available_keys:
+			if all_quest_data[key].get("family") == family_key:
+				matching_quests.append(key)
 			else:
-				quest_pool = other_quests
+				other_quests.append(key)
 
-			# Fallback if the preferred pool is empty.
-			if quest_pool.is_empty():
-				quest_pool = other_quests if quest_pool == matching_quests else matching_quests
+	# Try to fill the difficulty target
+	while current_difficulty < target_difficulty:
+		var pool_to_use = other_quests
+		# 75% chance to pick from matching quests if available
+		if randf() < 0.75 and not matching_quests.is_empty():
+			pool_to_use = matching_quests
+		
+		var found_quest = false
+		# Iterate through the chosen pool to find a compatible quest
+		for quest_key in pool_to_use:
+			var quest_data = all_quest_data[quest_key]
+			var quest_diff = quest_data.get("difficulty", 0)
 			
-			if quest_pool.is_empty():
-				break # No more quests to assign.
-
-			# Attempt to find a compatible quest from the chosen pool.
-			var found_compatible_quest = false
-			for quest_key in quest_pool:
+			# Check if adding this quest would be a good fit
+			if current_difficulty + quest_diff <= target_difficulty + 2: # Allow a small overshoot
 				var is_compatible = true
-				var incompatible_list = all_quest_data[quest_key].get("incompatible", [])
-				# Check against quests already selected for this item.
-				for existing_key in selected_quest_keys:
+				var incompatible_list = quest_data.get("incompatible", [])
+				for existing_key in selected_keys:
 					if incompatible_list.has(existing_key):
 						is_compatible = false
 						break
 				
 				if is_compatible:
-					selected_quest_keys.append(quest_key)
-					# Remove from all pools to ensure uniqueness.
-					available_dropdown_keys.erase(quest_key)
+					# Add the quest
+					quest_data["key"] = quest_key
+					selected_quests.append(quest_data)
+					selected_keys.append(quest_key)
+					current_difficulty += quest_diff
+					
+					# Remove from all pools to ensure it's not picked again
+					available_keys.erase(quest_key)
 					matching_quests.erase(quest_key)
 					other_quests.erase(quest_key)
-					found_compatible_quest = true
-					break # Move to the next quest slot.
-			
-			if not found_compatible_quest:
-				print("Could not find a compatible quest for this slot.")
-
-		# Build the final data list from the selected keys.
-		for key in selected_quest_keys:
-			var item_data = all_quest_data[key]
-			item_data["key"] = key
-			bullet_points_for_item.append(item_data)
-		# -----------------------------------------------------------
+					
+					found_quest = true
+					break # Found a quest for this iteration, break to restart the while loop
 		
-		menu_item.setup(member_data.name, unique_color, specific_image_path, bullet_points_for_item, quest_manager)
+		# If no suitable quest was found in any pool, we have to stop.
+		if not found_quest:
+			break
+
+	return selected_quests
 
 func calculate_scores() -> Dictionary:
 	var quest_score : int = 0
