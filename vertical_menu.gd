@@ -35,25 +35,27 @@ func _load_all_dropdown_options() -> Dictionary:
 		return json_data.details
 	return {}
 
+# --- New: Public function to allow the game scene to force a refresh ---
+func rebuild_menu():
+	# Clear old menu items before rebuilding.
+	for item in menu_item_instances:
+		item.queue_free()
+	menu_item_instances.clear()
+	_build_menu()
+	
 func _build_menu():
-	if GlobalState.confirmed_family.is_empty():
-		print("DEBUG: GlobalState is empty. Populating with default data for testing.")
-		GlobalState.confirmed_family = [
-			{"name": "Erik", "family_key": "Merchants", "gender": "male"},
-			{"name": "Astrid", "family_key": "Explorers", "gender": "female"}
-		]
-		GlobalState.initial_difficulty = 5
+	# If quests have already been generated for this trip, load them.
+	if not GlobalState.current_trip_quests.is_empty():
+		_load_menu_from_global_state()
+		return
 
 	var confirmed_family = GlobalState.confirmed_family
 	var num_members = confirmed_family.size()
 	if num_members == 0: return
 
-	# --- New: Calculate the target difficulty for each family member ---
-	var game_difficulty = GlobalState.initial_difficulty * 5
+	var game_difficulty = GlobalState.initial_difficulty * 8
 	var difficulty_per_member = int(game_difficulty / num_members)
-	print("Total Difficulty: %d | Members: %d | Target Per Member: %d" % [game_difficulty, num_members, difficulty_per_member])
-	# -----------------------------------------------------------------
-
+	
 	var available_colors = ITEM_COLORS.duplicate()
 	available_colors.shuffle()
 	var available_dropdown_keys = all_quest_data.keys()
@@ -61,31 +63,20 @@ func _build_menu():
 
 	for i in range(num_members):
 		var member_data = confirmed_family[i]
-		var menu_item = MenuItemScene.instantiate()
-		
-		if i % 2 == 0:
-			left_column.add_child(menu_item)
-		else:
-			right_column.add_child(menu_item)
-		
-		menu_item_instances.append(menu_item)
-
-		if available_colors.is_empty():
-			available_colors = ITEM_COLORS.duplicate()
-			available_colors.shuffle()
-		var unique_color = available_colors.pop_front()
-
-		var specific_image_path = ""
 		var family_key = member_data.get("family_key")
-		var gender = member_data.get("gender")
-		if all_family_data.has(family_key):
-			specific_image_path = all_family_data[family_key].get("image_path_" + gender, "")
 		
-		# --- New: Select quests based on target difficulty ---
+		# Generate the quests for this member.
 		var bullet_points_for_item = _select_quests_for_member(family_key, difficulty_per_member, available_dropdown_keys)
+		
+		# --- New: Store the generated data in GlobalState ---
+		GlobalState.current_trip_quests.append({
+			"member_data": member_data,
+			"quests": bullet_points_for_item
+		})
 		# ----------------------------------------------------
 		
-		menu_item.setup(member_data.name, unique_color, specific_image_path, bullet_points_for_item, quest_manager)
+		# Create the UI for the menu item.
+		_create_menu_item_ui(i, member_data, bullet_points_for_item, available_colors)
 
 # --- New: Advanced quest selection algorithm ---
 func _select_quests_for_member(family_key: String, target_difficulty: int, available_keys: Array) -> Array:
@@ -106,7 +97,7 @@ func _select_quests_for_member(family_key: String, target_difficulty: int, avail
 				other_quests.append(key)
 
 	# Try to fill the difficulty target
-	while current_difficulty < target_difficulty:
+	while current_difficulty < target_difficulty and selected_quests.size() < 6:
 		var pool_to_use = other_quests
 		# 75% chance to pick from matching quests if available
 		if randf() < 0.75 and not matching_quests.is_empty():
@@ -182,3 +173,44 @@ func _load_family_data() -> Dictionary:
 	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
 		return json_data.families
 	return {}
+
+func _load_menu_from_global_state():
+	var available_colors = ITEM_COLORS.duplicate()
+	available_colors.shuffle()
+	
+	for i in range(GlobalState.current_trip_quests.size()):
+		var trip_data = GlobalState.current_trip_quests[i]
+		_create_menu_item_ui(i, trip_data.member_data, trip_data.quests, available_colors)
+
+func _create_menu_item_ui(index: int, member_data: Dictionary, quests: Array, available_colors: Array):
+	var menu_item = MenuItemScene.instantiate()
+	if index % 2 == 0:
+		left_column.add_child(menu_item)
+	else:
+		right_column.add_child(menu_item)
+	menu_item_instances.append(menu_item)
+
+	if available_colors.is_empty():
+		available_colors = ITEM_COLORS.duplicate()
+		available_colors.shuffle()
+	var unique_color = available_colors.pop_front()
+
+	var specific_image_path = ""
+	var family_key = member_data.get("family_key")
+	var gender = member_data.get("gender")
+	if all_family_data.has(family_key):
+		specific_image_path = all_family_data[family_key].get("image_path_" + gender, "")
+		
+	menu_item.setup(member_data.name, unique_color, specific_image_path, quests, quest_manager)
+
+func get_max_possible_score() -> int:
+	var max_score = 0
+	for item in menu_item_instances:
+		var all_quests_in_item_satisfied = true
+		if item.bullet_points_to_display.is_empty():
+			all_quests_in_item_satisfied = false
+		for quest_data in item.bullet_points_to_display:
+			max_score += quest_data.get("difficulty", 0)
+		if all_quests_in_item_satisfied:
+			max_score += 5
+	return max_score

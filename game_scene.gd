@@ -11,7 +11,6 @@ signal data_updated
 @onready var grid_overlay = $GridOverlay
 @onready var pin_manager = $PinManager
 @onready var ledger_manager = $LedgerPanel/LedgerManager
-@onready var info_popup = $InfoPopup
 @onready var animation_player = $AnimationPlayer
 @onready var quest_manager = $QuestManager
 @onready var quest_score_label = $ScoreTracker/QuestScoreLabel
@@ -28,9 +27,15 @@ signal data_updated
 @onready var info_capital = $DetailedInfoBox/VBoxContainer/CapitalLabel
 @onready var info_eu = $DetailedInfoBox/VBoxContainer/EULabel
 @onready var hover_timer = $HoverTimer
-@onready var instructions_button = $MenuButtons/HBoxContainer/RightColumn/InstructionsButton
-@onready var instructions_popup = $InstructionsPopup
-
+@onready var instructions_button = $MenuButtons/HBoxContainer/LeftColumn/InstructionsButton
+@onready var info_popup = $PopupLayer/InfoPopup
+@onready var instructions_popup = $PopupLayer/InstructionsPopup
+@onready var difficulty_prompt: PanelContainer = $PopupLayer/DifficultyPrompt
+@onready var new_trip_button: Button = $MenuButtons/HBoxContainer/LeftColumn/NewTripButton
+@onready var easier_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/EasierButton
+@onready var same_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/SameButton
+@onready var harder_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/HarderButton
+@onready var return_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/ReturnButton
 
 var CAR_COLOR = Color.GREEN
 var BOAT_COLOR = Color.BLUE
@@ -50,12 +55,20 @@ var max_score = 0
 var best_path_data = []
 var best_path_distance = INF # Initialize to infinity for easy comparison
 
+# --- New: State variable to pause the max score prompt ---
+var _prompt_paused = false
+
 func _ready():
 	pin_manager.initialize(pins_container, pin_scene)
 	quest_manager.pin_manager = pin_manager
 	hover_timer.wait_time = 1.0
 	hover_timer.one_shot = true
 	hover_timer.timeout.connect(_on_hover_timer_timeout)
+	new_trip_button.pressed.connect(_on_new_trip_button_pressed)
+	easier_button.pressed.connect(_on_difficulty_chosen.bind(-1))
+	same_button.pressed.connect(_on_difficulty_chosen.bind(0))
+	harder_button.pressed.connect(_on_difficulty_chosen.bind(1))
+	return_button.pressed.connect(_on_return_button_pressed)
 	_update_game_state()
 	hover_label.hide()
 	detailed_info_box.hide()
@@ -87,6 +100,11 @@ func _update_game_state():
 			best_path_distance = current_distance
 			print("New best path found with same score but shorter distance.")
 	# -----------------------------------------------------------
+	
+	var max_score = vertical_menu.get_max_possible_score()
+	if max_score > 0 and scores.total_score == max_score and not _prompt_paused:
+		print("Max score reached! Showing difficulty prompt.")
+		difficulty_prompt.show()
 	
 	data_updated.emit()
 
@@ -284,3 +302,43 @@ func _on_instructions_button_pressed():
 	info_popup.hide()
 	# -------------------------------------
 	instructions_popup.show_popup()
+
+# --- New function to show the prompt ---
+func _on_new_trip_button_pressed():
+	_prompt_paused = false
+	difficulty_prompt.show()
+	
+# --- New function to handle the difficulty choice ---
+func _on_difficulty_chosen(adjustment: int):
+	# --- New: Check party size to determine the upper difficulty limit ---
+	var num_members = GlobalState.confirmed_family.size()
+	var upper_limit = 10
+	
+	if num_members == 2:
+		upper_limit = 6
+	elif num_members == 3:
+		upper_limit = 8
+	# -----------------------------------------------------------------
+	
+	# Adjust and clamp the difficulty using the new upper limit.
+	var new_difficulty = GlobalState.initial_difficulty + adjustment
+	GlobalState.initial_difficulty = clamp(new_difficulty, 1, upper_limit)
+	
+	# Clear the old quest data to force a regeneration.
+	GlobalState.current_trip_quests = []
+	
+	# Tell the vertical menu to rebuild itself with new quests.
+	vertical_menu.rebuild_menu()
+	
+	# After rebuilding, we need to update the game state to reflect the new quests.
+	_update_game_state()
+	
+	# Hide the prompt.
+	difficulty_prompt.hide()
+	_prompt_paused = false
+
+# --- New: This function is called when the "Return" button is pressed ---
+func _on_return_button_pressed():
+	difficulty_prompt.hide()
+	# Pause the prompt from showing again until a new trip is started.
+	_prompt_paused = true

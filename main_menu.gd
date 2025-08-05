@@ -38,6 +38,7 @@ func _on_start_button_pressed():
 	# 3. Save the generated list to the GlobalState.
 	GlobalState.confirmed_family = confirmed_family
 	print("Generated random family: ", confirmed_family)
+	GlobalState.initial_difficulty = 3
 	
 	# 4. Change to the game scene.
 	get_tree().change_scene_to_file("res://game_scene.tscn")
@@ -54,6 +55,7 @@ func _on_exit_button_pressed():
 	get_tree().quit()
 	
 func _on_button_family_pressed():
+	GlobalState.initial_difficulty = 3
 	get_tree().change_scene_to_file("res://family_scene.tscn")	
 
 # Helper function to load the family data from the JSON file.

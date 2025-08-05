@@ -101,7 +101,7 @@ func _ready():
 		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]},
 		"MinLegDistance": {"func": _check_leg_distance, "expected": true, "args": [200.0, "min"]},
 		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]},
-		"MinCountries": {"func": _check_country_count, "expected": true, "args": [5, "min"]},
+		"MinCountries": {"func": _check_country_count, "expected": true, "args": [10, "min"]},
 	}
 	
 	for quest_key in quest_checkers.keys():
@@ -617,7 +617,7 @@ func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Arr
 
 func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, num_menu_items: int) -> bool:
 	if dropped_pin_data.size() < 2:
-		return true # No legs exist, so the condition is met by default.
+		return false # No legs exist, so the condition is not met by default.
 
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i]

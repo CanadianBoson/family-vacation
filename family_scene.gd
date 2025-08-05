@@ -29,13 +29,13 @@ func _ready():
 	_load_family_data()
 	_populate_family_list()
 	
+	_on_difficulty_slider_value_changed(GlobalState.initial_difficulty)
 	gender_toggle_button.toggled.connect(_on_gender_toggle_toggled)
 	confirm_button.pressed.connect(_on_confirm_button_pressed)
 	back_button.pressed.connect(_on_back_button_pressed)
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
 	difficulty_slider.value_changed.connect(_on_difficulty_slider_value_changed)
 	warning_timer.timeout.connect(warning_label.hide)
-	
 	name_input.max_length = 10
 	
 	# --- New: Check GlobalState and repopulate the confirmed list ---
@@ -124,6 +124,11 @@ func _update_start_button_visibility():
 		start_game_button.hide()
 
 func _on_start_game_button_pressed():
+	if (
+		(GlobalState.initial_difficulty == difficulty_slider.value) 
+		and (GlobalState.confirmed_family == _confirmed_family_data)
+	):
+		GlobalState.current_trip_quests = []
 	GlobalState.initial_difficulty = int(difficulty_slider.value)	
 	GlobalState.confirmed_family = _confirmed_family_data
 	get_tree().change_scene_to_file("res://game_scene.tscn")
@@ -137,9 +142,6 @@ func _on_difficulty_slider_value_changed(new_value: float):
 	var limit = 10
 	var limit_reason = ""
 	
-	if num_members < 2:
-		limit = 1
-		limit_reason = " (Max 1 for < 2 members)"
 	if num_members == 2:
 		limit = 6
 		limit_reason = " (Max 6 for 2 members)"

@@ -28,16 +28,18 @@ Click on a name to expand or contract the demands of family members. Demands tha
 [ul]
 [b]Back[/b] gets you back to the main menu.
 [b]Family[/b] gets you back to the family menu.
+[b]Info[/b] loads this tooltip.
+[b]New Trip[/b] gives the option to start a new trip.
 [b]Clear All[/b] clears the route and all pins.
-[b]Stats[/b] gives tabular data for cities and dropped pins.
 [b]Reverse[/b] switches the direction of the trip.
 [b]Load Max[/b] reloads the route that had the highest score so far.
-[b]Info[/b] loads this tooltip.
+[b]Stats[/b] gives tabular data for cities and dropped pins.
 [b]Grid[/b] toggles a grid for aesthetic purposes.
 [/ul]
 
 [ul]
 Use the [b]Ledger[/b] on the left to track your current path's distance and cost.
+The bottom left corner shows the scores from demands and from family members.
 [/ul]
 """
 

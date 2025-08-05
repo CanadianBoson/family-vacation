@@ -6,3 +6,4 @@ extends Node
 var confirmed_family = []
 # --- New: Store the difficulty set by the player ---
 var initial_difficulty = 1 # Default to 1
+var current_trip_quests = []
