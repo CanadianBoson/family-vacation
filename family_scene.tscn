@@ -170,17 +170,17 @@ text = "Initial Difficulty: 1"
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 6.0
-offset_top = 668.0
+offset_top = 661.0
 offset_right = 81.0
-offset_bottom = 707.0
+offset_bottom = 700.0
 text = "Back"
 
 [node name="InfoButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 6.0
-offset_top = 626.0
+offset_top = 617.0
 offset_right = 81.0
-offset_bottom = 665.0
+offset_bottom = 656.0
 text = "Info"
 
 [node name="InstructionsPopupFamily" type="PanelContainer" parent="."]

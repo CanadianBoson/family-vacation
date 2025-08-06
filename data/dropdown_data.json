@@ -13,7 +13,7 @@
 			"family": "Transporter",
 			"incompatible": [
 				"CarFree",
-				"BoatFree",
+				"SailFree",
 				"TrainFree",
 				"PlaneFree"
 			],
@@ -23,7 +23,8 @@
 			"difficulty": 3,
 			"family": "Transporter",
 			"incompatible": [
-				"MustUseCar"
+				"MustUseCar",
+				"AllTransport"
 			],
 			"text": "Chart a course that uses no cars"
 		},
@@ -303,25 +304,25 @@
 		"MostlyBoat": {
 			"difficulty": 6,
 			"family": "Transporter",
-			"incompatible": [],
+			"incompatible": ["SailFree"],
 			"text": "The route uses >=50% boats."
 		},
 		"MostlyCar": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": [],
+			"incompatible": ["CarFree"],
 			"text": "The route uses >=50% cars."
 		},
 		"MostlyPlane": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": [],
+			"incompatible": ["PlaneFree"],
 			"text": "The route uses >=50% planes."
 		},
 		"MostlyTrain": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": [],
+			"incompatible": ["TrainFree"],
 			"text": "The route uses >=50% trains."
 		},
 		"MustUseCar": {
@@ -481,7 +482,8 @@
 			"difficulty": 3,
 			"family": "Transporter",
 			"incompatible": [
-				"MustUsePlane"
+				"MustUsePlane",
+				"AllTransport"
 			],
 			"text": "Chart a course that uses no planes"
 		},
@@ -505,7 +507,8 @@
 			"difficulty": 1,
 			"family": "Transporter",
 			"incompatible": [
-				"MustUseSail"
+				"MustUseSail",
+				"AllTransport"
 			],
 			"text": "Chart a course that uses no boats"
 		},
@@ -641,7 +644,8 @@
 			"difficulty": 3,
 			"family": "Transporter",
 			"incompatible": [
-				"MustUseTrain"
+				"MustUseTrain",
+				"AllTransport"
 			],
 			"text": "Chart a course that uses no trains"
 		},

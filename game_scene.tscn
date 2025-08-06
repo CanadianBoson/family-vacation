@@ -454,9 +454,14 @@ script = ExtResource("10_miq82")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupLayer/InstructionsPopup"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PopupLayer/InstructionsPopup/VBoxContainer"]
 layout_mode = 2
+
+[node name="Control" type="Control" parent="PopupLayer/InstructionsPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CloseButton" type="Button" parent="PopupLayer/InstructionsPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -481,6 +486,7 @@ script = ExtResource("6_kdryc")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupLayer/InfoPopup"]
 layout_mode = 2
+theme_override_constants/separation = 25
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PopupLayer/InfoPopup/VBoxContainer"]
 layout_mode = 2
