@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://16ha4ef8tflw"]
+[gd_scene load_steps=10 format=3 uid="uid://16ha4ef8tflw"]
 
 [ext_resource type="Script" uid="uid://cyyvq30j8gqb7" path="res://scripts/menu_item.gd" id="1_34sh5"]
+[ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="1_m5xae"]
 [ext_resource type="Shader" uid="uid://ctggyy2ad2qhe" path="res://shaders/circle_mask.gdshader" id="2_m5xae"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i8jb"]
@@ -72,6 +73,7 @@ _data = {
 custom_minimum_size = Vector2(50, 0)
 offset_right = 80.0
 offset_bottom = 34.0
+theme = ExtResource("1_m5xae")
 script = ExtResource("1_34sh5")
 
 [node name="Header" type="PanelContainer" parent="."]

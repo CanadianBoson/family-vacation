@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://fy5xvtergi3a"]
+[gd_scene load_steps=3 format=3 uid="uid://fy5xvtergi3a"]
 
+[ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="1_8yyaj"]
 [ext_resource type="Script" uid="uid://cddoylei1y73" path="res://scripts/vertical_menu.gd" id="1_hbco0"]
 
 [node name="VerticalMenu" type="Control"]
@@ -7,6 +8,7 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 3
+theme = ExtResource("1_8yyaj")
 script = ExtResource("1_hbco0")
 
 [node name="ColumnsContainer" type="HBoxContainer" parent="."]

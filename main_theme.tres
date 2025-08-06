@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b8gb88bprbuf2"]
+
+[ext_resource type="FontFile" uid="uid://dcitosbbbl4ov" path="res://fonts/NotoSans-Regular.ttf" id="1_470mv"]
+
+[resource]
+Label/fonts/font = ExtResource("1_470mv")
