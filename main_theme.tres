@@ -1,6 +1,10 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b8gb88bprbuf2"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://b8gb88bprbuf2"]
 
 [ext_resource type="FontFile" uid="uid://dcitosbbbl4ov" path="res://fonts/NotoSans-Regular.ttf" id="1_470mv"]
+[ext_resource type="FontVariation" uid="uid://ca2ugltchjdli" path="res://fonts/font_variation.tres" id="1_a2l2q"]
 
 [resource]
-Label/fonts/font = ExtResource("1_470mv")
+default_font = ExtResource("1_470mv")
+default_font_size = 16
+Label/constants/line_spacing = 1
+Label/fonts/font = ExtResource("1_a2l2q")

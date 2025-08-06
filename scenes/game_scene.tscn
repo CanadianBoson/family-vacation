@@ -209,17 +209,17 @@ z_index = 2
 layout_mode = 3
 anchors_preset = 0
 offset_left = 4.0
-offset_top = 172.0
+offset_top = 165.0
 offset_right = 209.0
-offset_bottom = 490.0
+offset_bottom = 537.0
 theme = ExtResource("6_tcjrq")
 
 [node name="LedgerHeaderVBox" type="VBoxContainer" parent="LedgerPanel"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = -13.0
-offset_right = 106.0
-offset_bottom = 54.0
+offset_right = 154.0
+offset_bottom = 67.0
 
 [node name="OverallDistanceLabel" type="Label" parent="LedgerPanel/LedgerHeaderVBox"]
 layout_mode = 2
@@ -235,10 +235,11 @@ layout_mode = 0
 offset_left = 3.0
 offset_top = 48.0
 offset_right = 221.0
-offset_bottom = 344.0
+offset_bottom = 318.0
 
 [node name="LedgerEntriesVBox" type="VBoxContainer" parent="LedgerPanel/LedgerScrollContainer"]
 layout_mode = 2
+theme_override_constants/separation = -1
 
 [node name="LedgerManager" type="Node2D" parent="LedgerPanel"]
 script = ExtResource("3_mixcd")
@@ -321,11 +322,12 @@ size_flags_horizontal = 1
 script = ExtResource("9_udeyl")
 
 [node name="ScoreTracker" type="VBoxContainer" parent="."]
-offset_left = 4.0
-offset_top = 551.0
-offset_right = 194.0
-offset_bottom = 707.0
+offset_left = 8.0
+offset_top = 567.0
+offset_right = 198.0
+offset_bottom = 710.0
 theme = ExtResource("6_tcjrq")
+theme_override_constants/separation = -1
 
 [node name="CurrentDifficultyLabel" type="Label" parent="ScoreTracker"]
 modulate = Color(0, 0, 0, 1)
