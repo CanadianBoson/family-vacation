@@ -488,10 +488,10 @@ func _check_city_name_length(limit: int, check_type: String, dropped_pin_data: A
 		var city_name_length = pin_data.get("city", "").length()
 		
 		if check_type == "max":
-			if city_name_length > limit:
+			if city_name_length >= limit:
 				return false
 		elif check_type == "min":
-			if city_name_length < limit:
+			if city_name_length <= limit:
 				return false
 				
 	return true
@@ -499,13 +499,13 @@ func _check_city_name_length(limit: int, check_type: String, dropped_pin_data: A
 # Checks if every visited country code meets a length requirement.
 func _check_country_code_length(limit: int, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	for pin_data in dropped_pin_data:
-		var country_code_length = pin_data.get("country", "").length()
+		var country_length = pin_data.get("country", "").length()
 		
 		if check_type == "max":
-			if country_code_length > limit:
+			if country_length >= limit:
 				return false
 		elif check_type == "min":
-			if country_code_length < limit:
+			if country_length <= limit:
 				return false
 				
 	return true	
