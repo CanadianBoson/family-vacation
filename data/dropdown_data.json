@@ -360,6 +360,18 @@
 	  "incompatible": ["TrainsWE"],
 	  "family": "Geometer"
 	},
+	"CarsWE": {
+	  "text": "All cars should go more West-East than North-South",
+	  "difficulty": 3,
+	  "incompatible": ["CarsNS"],
+	  "family": "Geometer"
+	},
+	"CarsNS": {
+	  "text": "All cars should go more North-South than West-East",
+	  "difficulty": 3,
+	  "incompatible": ["CarsWE"],
+	  "family": "Geometer"
+	},	
 	"PlanesWE": {
 	  "text": "All planes should go more West-East than North-South",
 	  "difficulty": 3,
@@ -384,8 +396,8 @@
 	  "incompatible": [],
 	  "family": "Linguist"
 	},
-	"CityStartsWithI": {
-	  "text": "Visit a city that starts with I",
+	"CityStartsWithS": {
+	  "text": "Visit a city that starts with S",
 	  "difficulty": 2,
 	  "incompatible": [],
 	  "family": "Linguist"
@@ -491,6 +503,42 @@
 	  "difficulty": 4,
 	  "incompatible": ["StartEndMaxLon"],
 	  "family": "Numerator"
+	},
+	"MostlyPlane": {
+	  "text": "The route uses >=50% planes.",
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Transporter"
+	},
+	"MostlyBoat": {
+	  "text": "The route uses >=50% boats.",
+	  "difficulty": 6,
+	  "incompatible": [],
+	  "family": "Transporter"
+	},
+	"MostlyCar": {
+	  "text": "The route uses >=50% cars.",
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Transporter"
+	},
+	"MostlyTrain": {
+	  "text": "The route uses >=50% trains.",
+	  "difficulty": 4,
+	  "incompatible": [],
+	  "family": "Transporter"
+	},
+	"MaxEndpointDistance": {
+	  "text": "The start and end points are at most 1000km apart.",
+	  "difficulty": 3,
+	  "incompatible": ["MinEndpointDistance"],
+	  "family": "Killjoy"
+	},
+	"MinEndpointDistance": {
+	  "text": "The start and end points are more than 3000km apart.",
+	  "difficulty": 3,
+	  "incompatible": ["MaxEndpointDistance"],
+	  "family": "Spender"
 	}					
   }
 }

@@ -17,7 +17,7 @@ EUROPEAN_COUNTRIES_DICT = {
     'BG': 'Bulgaria',
     'HR': 'Croatia',
     'CY': 'Cyprus',
-    'CZ': 'Czech Republic',
+    'CZ': 'Czechia',
     'DK': 'Denmark',
     'EE': 'Estonia',
     'FI': 'Finland',

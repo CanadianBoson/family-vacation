@@ -57,7 +57,7 @@ Plane (Red): [ul]
 
 [ul]
 Use the [b]Ledger[/b] on the left to track your current path's distance and cost.
-The bottom left corner shows the scores from demands and from family members.
+The bottom left corner shows the current difficulty along with the scores from demands and from family members.
 [/ul]
 """
 

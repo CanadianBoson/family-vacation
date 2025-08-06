@@ -24,7 +24,7 @@ func _ready():
 		"MinLettersCountry": {"func": _check_country_code_length, "expected": true, "args": [6, "min"]},
 		"CityStartsWithB": {"func": _check_city_starting_with, "expected": true, "args": ["B"]},
 		"CityStartsWithF": {"func": _check_city_starting_with, "expected": true, "args": ["F"]},
-		"CityStartsWithI": {"func": _check_city_starting_with, "expected": true, "args": ["I"]},
+		"CityStartsWithS": {"func": _check_city_starting_with, "expected": true, "args": ["S"]},
 		"CityStartsWithL": {"func": _check_city_starting_with, "expected": true, "args": ["L"]},
 		"CityStartsWithN": {"func": _check_city_starting_with, "expected": true, "args": ["N"]},
 		"CityStartsWithP": {"func": _check_city_starting_with, "expected": true, "args": ["P"]},
@@ -34,7 +34,7 @@ func _ready():
 		"CountryStartsWithL": {"func": _check_country_starting_with, "expected": true, "args": ["L"]},
 		"CountryStartsWithN": {"func": _check_country_starting_with, "expected": true, "args": ["N"]},
 		"CountryStartsWithP": {"func": _check_country_starting_with, "expected": true, "args": ["P"]},
-		# transport		
+		# transport
 		"CarFree":    {"func": _check_transport_usage, "expected": true, "args": [0, "avoid"]},
 		"MustUseCar": {"func": _check_transport_usage, "expected": true, "args": [0, "require"]},
 		"SailFree":   {"func": _check_transport_usage, "expected": true, "args": [1, "avoid"]},
@@ -43,6 +43,10 @@ func _ready():
 		"MustUseTrain":{"func": _check_transport_usage, "expected": true, "args": [2, "require"]},
 		"PlaneFree":  {"func": _check_transport_usage, "expected": true, "args": [3, "avoid"]},
 		"MustUsePlane":{"func": _check_transport_usage, "expected": true, "args": [3, "require"]},
+		"MostlyCar":   {"func": _check_mostly_transport, "expected": true, "args": [0]}, # 0 is Car
+		"MostlyBoat":  {"func": _check_mostly_transport, "expected": true, "args": [1]}, # 1 is Boat
+		"MostlyTrain": {"func": _check_mostly_transport, "expected": true, "args": [2]}, # 2 is Train
+		"MostlyPlane": {"func": _check_mostly_transport, "expected": true, "args": [3]}, # 3 is Plane
 		"AllTransport": {"func": _check_all_transport, "expected": true},
 		# geometry
 		"PathsCrossing": {"func": _check_paths_crossing, "expected": true},
@@ -55,6 +59,8 @@ func _ready():
 		"TrainsNS": {"func": _check_journey_direction, "expected": true, "args": [2, "NS"]},
 		"PlanesWE": {"func": _check_journey_direction, "expected": true, "args": [3, "WE"]},
 		"PlanesNS": {"func": _check_journey_direction, "expected": true, "args": [3, "NS"]},
+		"CarsWE": {"func": _check_journey_direction, "expected": true, "args": [0, "WE"]},
+		"CarsNS": {"func": _check_journey_direction, "expected": true, "args": [0, "NS"]},		
 		# stats				
 		"NoCapitals": {"func": _check_no_capitals, "expected": true},
 		"SomeCapitals": {"func": _check_no_capitals, "expected": false},
@@ -95,6 +101,7 @@ func _ready():
 		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
 		"MaxJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [5000.0, "max"]},
 		"MaxCountries": {"func": _check_country_count, "expected": true, "args": [3, "max"]},
+		"MaxEndpointDistance": {"func": _check_endpoint_distance, "expected": true, "args": [1000.0, "max"]},
 		# spoiled
 		"MinOverallCost": {"func": _check_overall_cost, "expected": true, "args": [3000.0, "min"]},
 		"MinLegCost": {"func": _check_leg_cost, "expected": true, "args": [100.0, "min"]},
@@ -102,6 +109,7 @@ func _ready():
 		"MinLegDistance": {"func": _check_leg_distance, "expected": true, "args": [200.0, "min"]},
 		"MinJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [10000.0, "min"]},
 		"MinCountries": {"func": _check_country_count, "expected": true, "args": [10, "min"]},
+		"MinEndpointDistance": {"func": _check_endpoint_distance, "expected": true, "args": [3000.0, "min"]}
 	}
 	
 	for quest_key in quest_checkers.keys():
@@ -634,7 +642,50 @@ func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, 
 				return false # Found a leg that is too cheap.
 				
 	return true # All legs passed the check.
+
+# Checks if a specific transport type is used for more legs than any other type.
+func _check_mostly_transport(transport_type: int, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	var leg_count = dropped_pin_data.size() - 1
+
+	# A journey requires at least one leg (two pins).
+	if leg_count <= 0:
+		return false
+
+	if not is_instance_valid(pin_manager): return false
+
+	var specific_transport_legs = 0
+
+	# Iterate through each segment of the journey to count the transport types.
+	for i in range(leg_count):
+		var p1 = dropped_pin_data[i]
+		var p2 = dropped_pin_data[i+1]
+		
+		var travel_mode = pin_manager.get_travel_mode(p1.index, p2.index)
+		
+		if travel_mode == transport_type:
+			specific_transport_legs += 1
+			
+	# The condition is met if the specific transport legs are 50% or more of the total legs.
+	return (float(specific_transport_legs) / float(leg_count)) >= 0.5
+
+# Checks if the straight-line distance between the start and end points meets a requirement.
+func _check_endpoint_distance(limit: float, check_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	# A path needs a start and an end point.
+	if dropped_pin_data.size() < 2:
+		return false
+
+	var start_pin = dropped_pin_data.front()
+	var end_pin = dropped_pin_data.back()
 	
+	var endpoint_distance = _haversine_distance(start_pin.lat, start_pin.lng, end_pin.lat, end_pin.lng)
+	
+	if check_type == "max":
+		return endpoint_distance <= limit
+	elif check_type == "min":
+		return endpoint_distance >= limit
+		
+	return false
+
 # --- Helper functions ---
 
 func _haversine_distance(lat1, lon1, lat2, lon2) -> float:

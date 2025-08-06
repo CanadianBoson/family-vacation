@@ -247,10 +247,10 @@
 			"y": 447.0775228117159,
 			"lng": 14.4214,
 			"lat": 50.0875,
-			"country": "Czech Republic",
+			"country": "Czechia",
 			"population": 1384732,
 			"is_capital": true,
-			"is_eu": false
+			"is_eu": true
 		},
 		{
 			"index": 21,
@@ -259,10 +259,10 @@
 			"y": 463.3272932698036,
 			"lng": 16.6083,
 			"lat": 49.1925,
-			"country": "Czech Republic",
+			"country": "Czechia",
 			"population": 400566,
 			"is_capital": false,
-			"is_eu": false
+			"is_eu": true
 		},
 		{
 			"index": 22,
