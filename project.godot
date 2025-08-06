@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalState="*res://scripts/global_state.gd"
+Utils="*res://scripts/utils.gd"
 
 [display]
 

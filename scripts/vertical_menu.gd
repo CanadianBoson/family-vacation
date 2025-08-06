@@ -54,7 +54,7 @@ func _build_menu():
 	if num_members == 0: return
 
 	var game_difficulty = GlobalState.initial_difficulty * 8
-	var difficulty_per_member = int(game_difficulty / num_members)
+	var difficulty_per_member = int(game_difficulty / float(num_members))
 	
 	var available_colors = ITEM_COLORS.duplicate()
 	available_colors.shuffle()

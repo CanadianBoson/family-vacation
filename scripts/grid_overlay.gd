@@ -36,8 +36,8 @@ func _draw():
 
 
 # This public function is called from other scripts to turn the grid on or off.
-func set_visibility(visible: bool):
-	is_grid_visible = visible
+func set_visibility(vis: bool):
+	is_grid_visible = vis
 	# queue_redraw() forces the _draw() function to be called on the next frame,
 	# updating the visual state of the grid.
 	queue_redraw()

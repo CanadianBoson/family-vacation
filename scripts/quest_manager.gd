@@ -268,7 +268,7 @@ func _check_paths_crossing(dropped_pin_data: Array, _all_locations_data: Array, 
 		for j in range(i + 2, dropped_pin_data.size() - 1):
 			var p2 = dropped_pin_data[j].position
 			var q2 = dropped_pin_data[j+1].position
-			if _segments_intersect(p1, q1, p2, q2):
+			if Utils.segments_intersect(p1, q1, p2, q2):
 				return true
 	return false
 
@@ -280,7 +280,7 @@ func _check_leg_distance(limit: float, check_type: String, dropped_pin_data: Arr
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i]
 		var p2 = dropped_pin_data[i+1]
-		var leg_distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		var leg_distance = Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 		
 		if check_type == "max":
 			if leg_distance > limit:
@@ -301,7 +301,7 @@ func _check_journey_distance(limit: float, check_type: String, dropped_pin_data:
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i]
 		var p2 = dropped_pin_data[i+1]
-		total_distance += _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		total_distance += Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 	
 	if check_type == "max":
 		return total_distance <= limit
@@ -311,7 +311,7 @@ func _check_journey_distance(limit: float, check_type: String, dropped_pin_data:
 	return false
 	
 # --- New function to check if all cities are in the EU ---
-func _check_stay_in_eu(dropped_pin_data: Array, all_locations_data: Array, _num_menu_items: int) -> bool:
+func _check_stay_in_eu(dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
 	# If no pins are dropped, the condition is met by default.
 	if dropped_pin_data.is_empty():
 		return true
@@ -612,7 +612,7 @@ func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Arr
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i]
 		var p2 = dropped_pin_data[i+1]
-		var distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		var distance = Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
 		overall_cost += _calculate_leg_cost(transport_mode, distance, num_menu_items)
 	
@@ -630,7 +630,7 @@ func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, 
 	for i in range(dropped_pin_data.size() - 1):
 		var p1 = dropped_pin_data[i]
 		var p2 = dropped_pin_data[i+1]
-		var distance = _haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
+		var distance = Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
 		var leg_cost = _calculate_leg_cost(transport_mode, distance, num_menu_items)
 		
@@ -677,7 +677,7 @@ func _check_endpoint_distance(limit: float, check_type: String, dropped_pin_data
 	var start_pin = dropped_pin_data.front()
 	var end_pin = dropped_pin_data.back()
 	
-	var endpoint_distance = _haversine_distance(start_pin.lat, start_pin.lng, end_pin.lat, end_pin.lng)
+	var endpoint_distance = Utils.calculate_haversine_distance(start_pin.lat, start_pin.lng, end_pin.lat, end_pin.lng)
 	
 	if check_type == "max":
 		return endpoint_distance <= limit
@@ -688,36 +688,7 @@ func _check_endpoint_distance(limit: float, check_type: String, dropped_pin_data
 
 # --- Helper functions ---
 
-func _haversine_distance(lat1, lon1, lat2, lon2) -> float:
-	var R = 6371.0 # Earth radius in km
-	var dLat = deg_to_rad(lat2 - lat1)
-	var dLon = deg_to_rad(lon2 - lon1)
-	var a = sin(dLat / 2) * sin(dLat / 2) + \
-			cos(deg_to_rad(lat1)) * cos(deg_to_rad(lat2)) * \
-			sin(dLon / 2) * sin(dLon / 2)
-	var c = 2 * atan2(sqrt(a), sqrt(1 - a))
-	return R * c
 
-func _on_segment(p: Vector2, q: Vector2, r: Vector2) -> bool:
-	return (q.x <= max(p.x, r.x) and q.x >= min(p.x, r.x) and
-			q.y <= max(p.y, r.y) and q.y >= min(p.y, r.y))
-
-func _orientation(p: Vector2, q: Vector2, r: Vector2) -> int:
-	var val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
-	if val == 0: return 0
-	return 1 if val > 0 else 2
-
-func _segments_intersect(p1: Vector2, q1: Vector2, p2: Vector2, q2: Vector2) -> bool:
-	var o1 = _orientation(p1, q1, p2)
-	var o2 = _orientation(p1, q1, q2)
-	var o3 = _orientation(p2, q2, p1)
-	var o4 = _orientation(p2, q2, q1)
-	if (o1 != o2 and o3 != o4): return true
-	if (o1 == 0 and _on_segment(p1, p2, q1)): return true
-	if (o2 == 0 and _on_segment(p1, q2, q1)): return true
-	if (o3 == 0 and _on_segment(p2, p1, q2)): return true
-	if (o4 == 0 and _on_segment(p2, q1, q2)): return true
-	return false
 
 # Returns true if any segment of the path is within 100km of any target city.
 func _is_path_near_country(dropped_pin_data: Array, target_cities: Array) -> bool:
@@ -733,7 +704,7 @@ func _is_path_near_country(dropped_pin_data: Array, target_cities: Array) -> boo
 			
 			# Check distance from the interpolated point to all target cities.
 			for target_city in target_cities:
-				if _haversine_distance(current_lat, current_lng, target_city.lat, target_city.lng) < 100.0:
+				if Utils.calculate_haversine_distance(current_lat, current_lng, target_city.lat, target_city.lng) < 100.0:
 					return true # Path is too close, so we can stop checking.
 
 	return false # The entire path was checked and was never too close.

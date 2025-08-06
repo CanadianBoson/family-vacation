@@ -68,7 +68,6 @@ func _ready():
 	hover_timer.wait_time = 1.0
 	hover_timer.one_shot = true
 	hover_timer.timeout.connect(_on_hover_timer_timeout)
-	new_trip_button.pressed.connect(_on_new_trip_button_pressed)
 	easier_button.pressed.connect(_on_difficulty_chosen.bind(-1))
 	same_button.pressed.connect(_on_difficulty_chosen.bind(0))
 	harder_button.pressed.connect(_on_difficulty_chosen.bind(1))
@@ -106,8 +105,8 @@ func _update_game_state():
 			print("New best path found with same score but shorter distance.")
 	# -----------------------------------------------------------
 	
-	var max_score = vertical_menu.get_max_possible_score()
-	if max_score > 0 and scores.total_score == max_score and not _prompt_paused:
+	var max_score_menu = vertical_menu.get_max_possible_score()
+	if max_score_menu > 0 and scores.total_score == max_score_menu and not _prompt_paused:
 		print("Max score reached! Showing difficulty prompt.")
 		difficulty_prompt.show()
 	
@@ -342,7 +341,7 @@ func _on_difficulty_chosen(adjustment: int):
 	# After rebuilding, we need to update the game state to reflect the new quests.
 	max_score = 0
 	best_path_data = []
-	var best_path_distance = INF
+	best_path_distance = INF
 	max_value_label.text = "Max Score: " + str(max_score)
 	pin_manager.clear_all_pins()
 	_update_game_state()

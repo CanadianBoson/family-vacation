@@ -40,19 +40,6 @@ func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items
 	
 	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
 
-# ... (your _calculate_haversine_distance and _calculate_cumulative_distances_km functions remain the same) ...
-func _calculate_haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-	var R = EARTH_RADIUS_KM
-	var phi1 = deg_to_rad(lat1)
-	var phi2 = deg_to_rad(lat2)
-	var delta_phi = deg_to_rad(lat2 - lat1)
-	var delta_lambda = deg_to_rad(lon2 - lon1)
-	var a = sin(delta_phi / 2) * sin(delta_phi / 2) + \
-			cos(phi1) * cos(phi2) * \
-			sin(delta_lambda / 2) * sin(delta_lambda / 2)
-	var c = 2 * atan2(sqrt(a), sqrt(1 - a))
-	return R * c
-
 func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 	var cumulative_distances_km = []
 	if dropped_pin_data.size() > 0:
@@ -60,7 +47,7 @@ func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 		for i in range(1, dropped_pin_data.size()):
 			var prev_pin_data = dropped_pin_data[i-1]
 			var current_pin_data = dropped_pin_data[i]
-			var segment_distance_km = _calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
+			var segment_distance_km = Utils.calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
 			cumulative_distances_km.append(cumulative_distances_km[i-1] + segment_distance_km)
 	return cumulative_distances_km
 
@@ -98,7 +85,7 @@ func update_ledger_display(pin_manager: Node, num_menu_items: int):
 		else:
 			var prev_pin_data = dropped_pin_data[i-1]
 			var current_pin_data = dropped_pin_data[i]
-			var segment_distance_km = _calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
+			var segment_distance_km = Utils.calculate_haversine_distance(prev_pin_data.lat, prev_pin_data.lng, current_pin_data.lat, current_pin_data.lng)
 			
 			var travel_mode_int = pin_manager.get_travel_mode(prev_pin_data.index, current_pin_data.index)
 			var travel_mode_str = "Plane"

@@ -136,14 +136,11 @@ func _on_difficulty_slider_value_changed(new_value: float):
 	var snapped_value = round(new_value)
 	var num_members = _confirmed_family_data.size()
 	var limit = 10
-	var limit_reason = ""
 	
 	if num_members == 2:
 		limit = 6
-		limit_reason = " (Max 6 for 2 members)"
 	elif num_members == 3:
 		limit = 8
-		limit_reason = " (Max 8 for 3 members)"
 	
 	if snapped_value > limit:
 		snapped_value = limit

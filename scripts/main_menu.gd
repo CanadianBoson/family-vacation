@@ -26,11 +26,11 @@ func _on_start_button_pressed():
 		
 		# Randomly choose a gender.
 		var gender = "male" if randi() % 2 == 0 else "female"
-		var name = data.get("default_name_" + gender, "N/A")
+		var family_name = data.get("default_name_" + gender, "N/A")
 		
 		# Build the data dictionary for this member.
 		confirmed_family.append({
-			"name": name,
+			"name": family_name,
 			"family_key": family_key,
 			"gender": gender
 		})
