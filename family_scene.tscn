@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://gnknhq01f4rf"]
+[gd_scene load_steps=11 format=3 uid="uid://gnknhq01f4rf"]
 
 [ext_resource type="Script" uid="uid://dwdxcagrnrhh0" path="res://family_scene.gd" id="1_lafal"]
 [ext_resource type="Script" uid="uid://dkqhdjyopoieh" path="res://instructions_popup_family.gd" id="2_yn38p"]
@@ -63,6 +63,8 @@ _data = {
 &"popup_in": SubResource("Animation_yn38p"),
 &"popup_out": SubResource("Animation_4uojo")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2umkj"]
 
 [node name="FamilyScene" type="Control"]
 layout_mode = 3
@@ -222,13 +224,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 367.0
-offset_top = 595.0
-offset_right = 796.0
-offset_bottom = 629.0
+offset_left = 375.0
+offset_top = 622.0
+offset_right = 804.0
+offset_bottom = 656.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_2umkj")
 text = "Difficulty limited to 8 for 3 members."
 
 [node name="WarningTimer" type="Timer" parent="."]

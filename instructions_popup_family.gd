@@ -18,7 +18,9 @@ two family members (maximum of six) you can start the game.
 
 [b]Initial Difficulty:[/b]
 Adjust the slider to set the initial difficulty in the game. Note that having more
-family members tends to make the game more difficult due to competing demands.
+family members tends to make the game more difficult due to competing demands. Note
+that demands are randomized and it may be impossible to satisfy everyone, let alone
+a single family member.
 
 [b]UI:[/b]
 [ul]

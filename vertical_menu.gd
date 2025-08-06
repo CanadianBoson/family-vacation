@@ -9,8 +9,8 @@ const MenuItemScene = preload("res://menu_item.tscn")
 @onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
 
 var ITEM_COLORS = [
-	Color.html("#4A90E2"), Color.html("#50E3C2"), Color.html("#F5A623"),
-	Color.html("#BD10E0"), Color.html("#7ED321"), Color.html("#D0021B")
+	Color.SEA_GREEN, Color.DEEP_SKY_BLUE, Color.HOT_PINK,
+	Color.MEDIUM_PURPLE, Color.ORANGE, Color.SANDY_BROWN
 ]
 
 var image_paths = []

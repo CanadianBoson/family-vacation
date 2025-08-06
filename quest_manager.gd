@@ -122,7 +122,7 @@ func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array, nu
 		
 		# Use callv() to call the function with an array of arguments.
 		var result = checker_func.callv(args_for_call)
-		var is_satisfied = (result == expected_result) and not dropped_pin_data.is_empty()
+		var is_satisfied = (result == expected_result) and dropped_pin_data.size() > 1
 		
 		if quest_statuses.get(quest_key) != is_satisfied:
 			quest_statuses[quest_key] = is_satisfied
