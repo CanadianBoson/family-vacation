@@ -11,7 +11,7 @@ const INSTRUCTIONS = """
 [center][b]Welcome to Family Vacation![/b][/center]
 
 [b]Objective:[/b]
-Design a route which satisfies as many family members as possible. Every family member has demands of various difficulties, and your score is the sum of these values along with bonuses for satisfying every demand.
+Design a route which satisfies as many family members as possible. Every family member has demands of various difficulties, and your score is the sum of these values along with bonuses for satisfying all a family member's demands.
 
 [b]Family Controls:[/b]
 Click on a name to expand or contract the demands of family members. Demands that are met appear with a checkmark. Family members with all demands met show up with a border.

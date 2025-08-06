@@ -1,60 +1,60 @@
 {
-  "families": {
-	"Linguist": {
-	  "default_name_male": "Larry",
-	  "default_name_female": "Laurie",
-	  "image_path_male": "res://family_images/linguist_lemur.png",
-	  "image_path_female": "res://family_images/linguist_llama.png",
-	  "description": "Big on letters and words, linguists centre their travels around names of places."
-	},
-	"Transporter": {
-	  "default_name_male": "Travis",
-	  "default_name_female": "Tabitha",
-	  "image_path_male": "res://family_images/transporter_tarantula.png",
-	  "image_path_female": "res://family_images/transporter_tiger.png",
-	  "description": "Obsessed with how they get from place to place, transporters think a lot about planes, trains, and automobiles."
-	},
-	"Geometer": {
-	  "default_name_male": "George",
-	  "default_name_female": "Gina",
-	  "image_path_male": "res://family_images/geometer_gecko.png",
-	  "image_path_female": "res://family_images/geometer_giraffe.png",
-	  "description": "In love with the shape of paths, geometers care about how the route twists and turns."
-	},
-	"Numerator": {
-	  "default_name_male": "Nicholas",
-	  "default_name_female": "Nikita",
-	  "image_path_male": "res://family_images/numbers_narwhal.png",
-	  "image_path_female": "res://family_images/numbers_newt.png",
-	  "description": "Tables are their best friends, and numerators care about populations, capitals, and lat/lon."
-	},
-	"Avoider": {
-	  "default_name_male": "Adam",
-	  "default_name_female": "Alison",
-	  "image_path_male": "res://family_images/avoider_alligator.png",
-	  "image_path_female": "res://family_images/avoider_ant.png",
-	  "description": "Scared of new experiences, avoiders have requirements about where not to go and where to pass through."
-	},
-	"Killjoy": {
-	  "default_name_male": "Kevin",
-	  "default_name_female": "Keira",
-	  "image_path_male": "res://family_images/killjoy_kangaroo.png",
-	  "image_path_female": "res://family_images/killjoy_koala.png",
-	  "description": "Every family has one -- killjoys are here to put limits on costs, distances, and number of places visited."
-	},
-	"Spender": {
-	  "default_name_male": "Steven",
-	  "default_name_female": "Serena",
-	  "image_path_male": "res://family_images/spender_scorpion.png",
-	  "image_path_female": "res://family_images/spender_sloth.png",
-	  "description": "The opposite of killjoys, costly family members want it all and they want it now."
-	},
-	"Rando": {
-	  "default_name_male": "Ronald",
-	  "default_name_female": "Rebecca",
-	  "image_path_male": "res://family_images/rando_raccoon.png",
-	  "image_path_female": "res://family_images/rando_rabbit.png",
-	  "description": "Doing what they please, your family's randos tend to have oddball or strange requests."
+	"families": {
+		"Avoider": {
+			"default_name_female": "Alison",
+			"default_name_male": "Adam",
+			"description": "Scared of new experiences, avoiders have requirements about where not to go and where to pass through.",
+			"image_path_female": "res://family_images/avoider_ant.png",
+			"image_path_male": "res://family_images/avoider_alligator.png"
+		},
+		"Geometer": {
+			"default_name_female": "Gina",
+			"default_name_male": "George",
+			"description": "In love with the shape of paths, geometers care about how the route twists and turns.",
+			"image_path_female": "res://family_images/geometer_giraffe.png",
+			"image_path_male": "res://family_images/geometer_gecko.png"
+		},
+		"Killjoy": {
+			"default_name_female": "Keira",
+			"default_name_male": "Kevin",
+			"description": "Every family has one -- killjoys are here to put limits on costs, distances, and number of places visited.",
+			"image_path_female": "res://family_images/killjoy_koala.png",
+			"image_path_male": "res://family_images/killjoy_kangaroo.png"
+		},
+		"Linguist": {
+			"default_name_female": "Laurie",
+			"default_name_male": "Larry",
+			"description": "Big on letters and words, linguists centre their travels around names of places.",
+			"image_path_female": "res://family_images/linguist_llama.png",
+			"image_path_male": "res://family_images/linguist_lemur.png"
+		},
+		"Numerator": {
+			"default_name_female": "Nikita",
+			"default_name_male": "Nicholas",
+			"description": "Tables are their best friends, and numerators care about populations, capitals, and lat/lon.",
+			"image_path_female": "res://family_images/numbers_newt.png",
+			"image_path_male": "res://family_images/numbers_narwhal.png"
+		},
+		"Rando": {
+			"default_name_female": "Rebecca",
+			"default_name_male": "Ronald",
+			"description": "Doing what they please, your family's randos tend to have oddball or strange requests.",
+			"image_path_female": "res://family_images/rando_rabbit.png",
+			"image_path_male": "res://family_images/rando_raccoon.png"
+		},
+		"Spender": {
+			"default_name_female": "Serena",
+			"default_name_male": "Steven",
+			"description": "The opposite of killjoys, costly family members want it all and they want it now.",
+			"image_path_female": "res://family_images/spender_sloth.png",
+			"image_path_male": "res://family_images/spender_scorpion.png"
+		},
+		"Transporter": {
+			"default_name_female": "Tabitha",
+			"default_name_male": "Travis",
+			"description": "Obsessed with how they get from place to place, transporters think a lot about planes, trains, and automobiles.",
+			"image_path_female": "res://family_images/transporter_tiger.png",
+			"image_path_male": "res://family_images/transporter_tarantula.png"
+		}
 	}
-  }
 }
