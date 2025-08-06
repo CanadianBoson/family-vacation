@@ -41,11 +41,11 @@ func _on_start_button_pressed():
 	GlobalState.initial_difficulty = 3
 	
 	# 4. Change to the game scene.
-	get_tree().change_scene_to_file("res://game_scene.tscn")
+	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
 
 # This function is called when the 'Instructions' button is pressed.
 func _on_instructions_button_pressed():
-	var result = get_tree().change_scene_to_file("res://instructions.tscn")
+	var result = get_tree().change_scene_to_file("res://scenes/instructions.tscn")
 	if result != OK:
 		print("Error: Could not load the instructions scene.")
 
@@ -56,7 +56,7 @@ func _on_exit_button_pressed():
 	
 func _on_button_family_pressed():
 	GlobalState.initial_difficulty = 3
-	get_tree().change_scene_to_file("res://family_scene.tscn")	
+	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")	
 
 # Helper function to load the family data from the JSON file.
 func _load_family_data() -> Dictionary:

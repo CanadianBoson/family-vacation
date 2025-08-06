@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://16ha4ef8tflw"]
 
-[ext_resource type="Script" uid="uid://cyyvq30j8gqb7" path="res://menu_item.gd" id="1_lg34y"]
-[ext_resource type="Shader" uid="uid://ctggyy2ad2qhe" path="res://circle_mask.gdshader" id="2_7i8jb"]
+[ext_resource type="Script" uid="uid://cyyvq30j8gqb7" path="res://scripts/menu_item.gd" id="1_34sh5"]
+[ext_resource type="Shader" uid="uid://ctggyy2ad2qhe" path="res://shaders/circle_mask.gdshader" id="2_m5xae"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i8jb"]
 corner_radius_top_left = 10
@@ -14,7 +14,7 @@ expand_margin_right = 3.0
 expand_margin_bottom = 5.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1khwl"]
-shader = ExtResource("2_7i8jb")
+shader = ExtResource("2_m5xae")
 
 [sub_resource type="Animation" id="Animation_1khwl"]
 length = 0.001
@@ -72,7 +72,7 @@ _data = {
 custom_minimum_size = Vector2(50, 0)
 offset_right = 80.0
 offset_bottom = 34.0
-script = ExtResource("1_lg34y")
+script = ExtResource("1_34sh5")
 
 [node name="Header" type="PanelContainer" parent="."]
 layout_mode = 2

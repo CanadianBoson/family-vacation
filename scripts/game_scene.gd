@@ -2,7 +2,7 @@
 # This script now handles the full drag-and-drop logic for moving pins.
 extends Node2D
 
-var pin_scene = preload("res://pin.tscn")
+var pin_scene = preload("res://scenes/pin.tscn")
 
 signal data_updated
 
@@ -276,7 +276,7 @@ func _on_clear_all_button_pressed():
 	_update_game_state()
 
 func _on_back_button_pressed():
-	get_tree().change_scene_to_file("res://main_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func _on_grid_toggle_button_toggled(button_pressed: bool):
 	grid_overlay.set_visibility(button_pressed)
@@ -360,4 +360,4 @@ func _on_return_button_pressed():
 func _on_continue_button_pressed():
 	# Hide the popup and then change the scene.
 	confirmation_popup.hide()
-	get_tree().change_scene_to_file("res://family_scene.tscn")
+	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")

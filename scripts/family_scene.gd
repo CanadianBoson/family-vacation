@@ -2,7 +2,7 @@
 # This script now loads its state from the GlobalState autoload.
 extends Control
 
-const ConfirmedItemScene = preload("res://family_item.tscn")
+const ConfirmedItemScene = preload("res://scenes/family_item.tscn")
 
 @onready var family_list_vbox: VBoxContainer = $VBoxContainer/HBoxContainer/LeftPanel/FamilyListVBox
 @onready var family_image: TextureRect = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/FamilyImage
@@ -127,10 +127,10 @@ func _on_start_game_button_pressed():
 	GlobalState.current_trip_quests = []
 	GlobalState.initial_difficulty = int(difficulty_slider.value)	
 	GlobalState.confirmed_family = _confirmed_family_data
-	get_tree().change_scene_to_file("res://game_scene.tscn")
+	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
 
 func _on_back_button_pressed():
-	get_tree().change_scene_to_file("res://main_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func _on_difficulty_slider_value_changed(new_value: float):
 	var snapped_value = round(new_value)

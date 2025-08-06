@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbkoxdmxvqm61"
-path="res://.godot/imported/elephant.png-2b8a2a8a65d3a2db8192f32e998b9355.ctex"
+uid="uid://cay2lpyyokjpg"
+path="res://.godot/imported/main_menu_image.png-1032302e657c41b6b41990f7bbce7fa9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://menu_images/elephant.png"
-dest_files=["res://.godot/imported/elephant.png-2b8a2a8a65d3a2db8192f32e998b9355.ctex"]
+source_file="res://background_images/main_menu_image.png"
+dest_files=["res://.godot/imported/main_menu_image.png-1032302e657c41b6b41990f7bbce7fa9.ctex"]
 
 [params]
 

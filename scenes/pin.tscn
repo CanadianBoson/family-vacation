@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ymlato2cu7hc"]
 
-[ext_resource type="Texture2D" uid="uid://duph3aslo601i" path="res://pin.png" id="1_nikp6"]
+[ext_resource type="Texture2D" uid="uid://duph3aslo601i" path="res://background_images/pin.png" id="1_nikp6"]
 
 [node name="Pin" type="Node2D"]
 

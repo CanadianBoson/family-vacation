@@ -42,7 +42,7 @@ func update_pin_at_index(index: int, new_location_data: Dictionary) -> bool:
 # --- (The rest of your pin_manager.gd script is unchanged) ---
 
 func _load_pin_locations():
-	var file_path = "res://locations.json"
+	var file_path = "res://data/locations.json"
 	if not FileAccess.file_exists(file_path):
 		print("Error: Pin locations file not found at ", file_path)
 		return
@@ -67,7 +67,7 @@ func _load_pin_locations():
 		})
 
 func _load_travel_matrix():
-	var file_path = "res://travel_matrix.json"
+	var file_path = "res://data/travel_matrix.json"
 	if not FileAccess.file_exists(file_path):
 		print("Error: Travel matrix file not found at ", file_path)
 		return

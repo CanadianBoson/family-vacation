@@ -2,7 +2,7 @@
 # This script dynamically builds a two-column menu from the global game state.
 extends Control
 
-const MenuItemScene = preload("res://menu_item.tscn")
+const MenuItemScene = preload("res://scenes/menu_item.tscn")
 
 @onready var left_column: VBoxContainer = $ColumnsContainer/LeftColumn
 @onready var right_column: VBoxContainer = $ColumnsContainer/RightColumn
