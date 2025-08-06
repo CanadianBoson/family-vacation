@@ -308,10 +308,11 @@ script = ExtResource("7_6e45b")
 
 [node name="VerticalMenu" parent="." instance=ExtResource("8_e35lh")]
 custom_minimum_size = Vector2(0, 0)
-offset_left = 949.0
-offset_top = 154.0
-offset_right = 1144.0
-offset_bottom = 212.0
+offset_left = 955.0
+offset_top = 155.0
+offset_right = 1149.0
+offset_bottom = 213.0
+size_flags_horizontal = 1
 
 [node name="QuestManager" type="Node" parent="."]
 script = ExtResource("9_udeyl")
