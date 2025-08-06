@@ -269,13 +269,13 @@
 			"difficulty": 3,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Every city must be at least 5 letters long"
+			"text": "Every city must be more than 5 letters long"
 		},
 		"MinLettersCountry": {
 			"difficulty": 3,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Every country must be at least 6 letters long"
+			"text": "Every country must be more than 6 letters long"
 		},
 		"MinLon": {
 			"difficulty": 3,
