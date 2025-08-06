@@ -318,9 +318,15 @@ script = ExtResource("9_udeyl")
 
 [node name="ScoreTracker" type="VBoxContainer" parent="."]
 offset_left = 4.0
-offset_top = 581.0
-offset_right = 137.0
-offset_bottom = 705.0
+offset_top = 551.0
+offset_right = 194.0
+offset_bottom = 707.0
+
+[node name="CurrentDifficultyLabel" type="Label" parent="ScoreTracker"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Current Difficulty: 3"
 
 [node name="QuestScoreLabel" type="Label" parent="ScoreTracker"]
 modulate = Color(0, 0, 0, 1)
@@ -463,7 +469,6 @@ layout_mode = 2
 bbcode_enabled = true
 
 [node name="InfoPopup" type="PanelContainer" parent="PopupLayer"]
-visible = false
 z_index = 20
 offset_left = 70.0
 offset_top = 222.0
@@ -479,13 +484,18 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="PopupLayer/InfoPopup/VBoxContainer"]
 layout_mode = 2
 
-[node name="CloseButton" type="Button" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Close"
-
 [node name="ViewToggleButton" type="CheckButton" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Show Dropped Pins Only"
+
+[node name="Control" type="Control" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Close"
+alignment = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PopupLayer/InfoPopup/VBoxContainer"]
 layout_mode = 2
@@ -497,6 +507,35 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = -1
 columns = 7
 
+[node name="ConfirmationPopup" type="PanelContainer" parent="PopupLayer"]
+visible = false
+offset_left = 329.0
+offset_top = 317.0
+offset_right = 773.0
+offset_bottom = 404.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupLayer/ConfirmationPopup"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="PopupLayer/ConfirmationPopup/VBoxContainer"]
+layout_mode = 2
+text = "Updating the family will start a new trip. 
+Are you sure you want to continue?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupLayer/ConfirmationPopup/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[node name="ReturnButton" type="Button" parent="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Return"
+
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/InstructionsButton" to="." method="_on_instructions_button_pressed"]
@@ -507,3 +546,4 @@ columns = 7
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/InfoButton" to="." method="_on_info_button_pressed"]
 [connection signal="toggled" from="GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="pressed" from="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

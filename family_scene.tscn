@@ -1,25 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://gnknhq01f4rf"]
+[gd_scene load_steps=10 format=3 uid="uid://gnknhq01f4rf"]
 
 [ext_resource type="Script" uid="uid://dwdxcagrnrhh0" path="res://family_scene.gd" id="1_lafal"]
 [ext_resource type="Script" uid="uid://dkqhdjyopoieh" path="res://instructions_popup_family.gd" id="2_yn38p"]
+[ext_resource type="Texture2D" uid="uid://cay2lpyyokjpg" path="res://main_menu_image.png" id="3_05rbw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4uojo"]
+bg_color = Color(0.602528, 0.601874, 0.579556, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_05rbw"]
 bg_color = Color(0.441095, 0.630238, 0.7289, 1)
-
-[sub_resource type="Animation" id="Animation_yn38p"]
-resource_name = "popup_in"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("InstructionsPopupFamily:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_05rbw"]
 length = 0.001
@@ -34,6 +25,21 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_yn38p"]
+resource_name = "popup_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("InstructionsPopupFamily:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_4uojo"]
@@ -65,8 +71,10 @@ script = ExtResource("1_lafal")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 710.0
+offset_left = 7.0
+offset_top = 43.0
+offset_right = 1159.0
+offset_bottom = 753.0
 
 [node name="Control" type="Control" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -80,7 +88,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="LeftPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
@@ -123,26 +131,22 @@ layout_mode = 2
 text = "Add to Family"
 
 [node name="RightPanel" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/RightPanel"]
 layout_mode = 2
 
 [node name="ConfirmedListVBox" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/RightPanel/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="StartGameButton" type="Button" parent="VBoxContainer/HBoxContainer/RightPanel"]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "Start Game"
-
-[node name="DifficultyLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 1
-text = "Initial Difficulty: 1"
 
 [node name="DifficultySlider" type="HSlider" parent="VBoxContainer"]
 custom_minimum_size = Vector2(650, 0)
@@ -153,6 +157,13 @@ max_value = 10.0
 value = 1.0
 tick_count = 10
 ticks_on_borders = true
+
+[node name="DifficultyLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_4uojo")
+text = "Initial Difficulty: 1"
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0
@@ -171,15 +182,17 @@ offset_bottom = 665.0
 text = "Info"
 
 [node name="InstructionsPopupFamily" type="PanelContainer" parent="."]
-offset_left = 186.0
-offset_top = 152.0
-offset_right = 948.0
-offset_bottom = 456.0
+layout_mode = 0
+offset_left = 215.0
+offset_top = 189.0
+offset_right = 977.0
+offset_bottom = 493.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_05rbw")
 script = ExtResource("2_yn38p")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="InstructionsPopupFamily"]
 layout_mode = 2
+theme_override_constants/separation = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="InstructionsPopupFamily/VBoxContainer"]
 layout_mode = 2
@@ -220,5 +233,15 @@ text = "Difficulty limited to 8 for 3 members."
 
 [node name="WarningTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -5
+layout_mode = 0
+offset_left = -6.0
+offset_right = 2853.0
+offset_bottom = 1536.0
+scale = Vector2(0.406792, 0.460246)
+mouse_filter = 2
+texture = ExtResource("3_05rbw")
 
 [connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]

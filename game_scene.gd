@@ -13,6 +13,7 @@ signal data_updated
 @onready var ledger_manager = $LedgerPanel/LedgerManager
 @onready var animation_player = $AnimationPlayer
 @onready var quest_manager = $QuestManager
+@onready var current_difficulty_label = $ScoreTracker/CurrentDifficultyLabel
 @onready var quest_score_label = $ScoreTracker/QuestScoreLabel
 @onready var family_score_label = $ScoreTracker/FamilyScoreLabel
 @onready var score_value_label = $ScoreTracker/ScoreValueLabel
@@ -36,6 +37,9 @@ signal data_updated
 @onready var same_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/SameButton
 @onready var harder_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/HarderButton
 @onready var return_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/ReturnButton
+@onready var confirmation_popup: PanelContainer = $PopupLayer/ConfirmationPopup
+@onready var family_continue_button: Button = $PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton
+@onready var family_return_button: Button = $PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ReturnButton
 
 var CAR_COLOR = Color.GREEN
 var BOAT_COLOR = Color.BLUE
@@ -69,6 +73,7 @@ func _ready():
 	same_button.pressed.connect(_on_difficulty_chosen.bind(0))
 	harder_button.pressed.connect(_on_difficulty_chosen.bind(1))
 	return_button.pressed.connect(_on_return_button_pressed)
+	family_return_button.pressed.connect(confirmation_popup.hide)
 	_update_game_state()
 	hover_label.hide()
 	detailed_info_box.hide()
@@ -82,7 +87,7 @@ func _update_game_state():
 	quest_score_label.text = "Quest Score: " + str(scores["quest_score"])
 	family_score_label.text = "Family Score: " + str(scores["family_score"])
 	score_value_label.text = "Total Score: " + str(scores["total_score"])
-	
+	current_difficulty_label.text = "Current Difficulty: " + str(GlobalState.initial_difficulty)
 	# --- New: Check if the current path is the new best path ---
 	var current_path = pin_manager.dropped_pin_data
 	
@@ -121,6 +126,10 @@ func _unhandled_input(event: InputEvent):
 				if mouse_pos.distance_to(pin_data.position) <= CLICK_RADIUS:
 					is_dragging = true
 					dragged_pin_index = i
+					# disable hover text
+					hover_timer.stop()
+					hover_label.hide()
+					detailed_info_box.hide()
 					# Find the actual pin node in the scene.
 					for child in pins_container.get_children():
 						if child.position == pin_data.position:
@@ -285,7 +294,7 @@ func _on_load_max_path_button_pressed():
 
 # This function is called when the "Family" button is pressed.
 func _on_family_button_pressed():
-	get_tree().change_scene_to_file("res://family_scene.tscn")
+	confirmation_popup.show()
 
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
@@ -331,6 +340,11 @@ func _on_difficulty_chosen(adjustment: int):
 	vertical_menu.rebuild_menu()
 	
 	# After rebuilding, we need to update the game state to reflect the new quests.
+	max_score = 0
+	best_path_data = []
+	var best_path_distance = INF
+	max_value_label.text = "Max Score: " + str(max_score)
+	pin_manager.clear_all_pins()
 	_update_game_state()
 	
 	# Hide the prompt.
@@ -342,3 +356,8 @@ func _on_return_button_pressed():
 	difficulty_prompt.hide()
 	# Pause the prompt from showing again until a new trip is started.
 	_prompt_paused = true
+
+func _on_continue_button_pressed():
+	# Hide the popup and then change the scene.
+	confirmation_popup.hide()
+	get_tree().change_scene_to_file("res://family_scene.tscn")

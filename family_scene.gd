@@ -124,11 +124,7 @@ func _update_start_button_visibility():
 		start_game_button.hide()
 
 func _on_start_game_button_pressed():
-	if (
-		(GlobalState.initial_difficulty == difficulty_slider.value) 
-		and (GlobalState.confirmed_family == _confirmed_family_data)
-	):
-		GlobalState.current_trip_quests = []
+	GlobalState.current_trip_quests = []
 	GlobalState.initial_difficulty = int(difficulty_slider.value)	
 	GlobalState.confirmed_family = _confirmed_family_data
 	get_tree().change_scene_to_file("res://game_scene.tscn")

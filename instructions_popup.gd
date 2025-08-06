@@ -24,6 +24,24 @@ Click on a name to expand or contract the demands of family members. Demands tha
 [b]Hover:[/b] Hover over a city briefly to see the name, and for one second to get more details.
 [/ul]
 
+[b]Transport Options:[/b]
+Different methods of transport are generated automatically depending on the distance and terrain between two cities.
+The calculation and cost of different methods is shown below:
+
+[ul]
+Car (Green): [ul]
+	Distance under 300km and 60% of points between two cities are land
+	Cost is 50 + 0.5 * num_kms [/ul]
+Boat (Blue): [ul]
+	Distance under 500km and 60% of points between two cities are water
+	Cost is (50 + 0.2 * num_kms) * num_family [/ul]
+Train (Purple): [ul]
+	Distance between 300km and 1000km and 60% of points between two cities are land
+	Cost is (50 + 0.4 * num_kms) * num_family [/ul]
+Plane (Red): [ul]
+	All other cases
+	Cost is (30 + 0.8 * num_kms) * num_family [/ul][/ul]
+
 [b]Buttons:[/b]
 [ul]
 [b]Back[/b] gets you back to the main menu.
