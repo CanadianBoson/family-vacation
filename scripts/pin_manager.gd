@@ -15,7 +15,6 @@ func initialize(pins_container_node: Node2D, pin_packed_scene: PackedScene):
 	_load_pin_locations()
 	_load_travel_matrix()
 
-# --- New function to update a pin's data ---
 func update_pin_at_index(index: int, new_location_data: Dictionary) -> bool:
 	if index < 0 or index >= dropped_pin_data.size():
 		return false
@@ -38,8 +37,6 @@ func update_pin_at_index(index: int, new_location_data: Dictionary) -> bool:
 	# Replace the old data with the new data in the dropped pins array.
 	dropped_pin_data[index] = new_location_data
 	return true
-
-# --- (The rest of your pin_manager.gd script is unchanged) ---
 
 func _load_pin_locations():
 	var file_path = "res://data/locations.json"

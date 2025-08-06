@@ -6,7 +6,6 @@ extends PanelContainer
 @onready var instructions_text: RichTextLabel = $VBoxContainer/InstructionsText
 @onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("FamilyScene/AnimationPlayer")
 
-# --- You can edit the instructions text here ---
 const INSTRUCTIONS = """
 [center][b]Welcome to Family Vacation![/b][/center]
 

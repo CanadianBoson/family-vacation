@@ -3,10 +3,7 @@
 extends Node
 
 var pin_manager: Node
-
-# --- This dictionary is now refactored to avoid the bind() bug with Arrays ---
 var quest_checkers = {}
-
 var quest_statuses = {}
 
 func _ready():
@@ -316,7 +313,6 @@ func _check_unique_country_letters(dropped_pin_data: Array, _all_locations_data:
 		var country = pin_data.get("country", "")
 		if not country.is_empty() and not unique_countries.has(country):
 			unique_countries.append(country)
-	# ---------------------------------------------------------
 
 	# Now, check the first letters of the unique countries
 	var seen_letters = []
@@ -523,7 +519,7 @@ func _check_overall_cost(limit: float, check_type: String, dropped_pin_data: Arr
 		var p2 = dropped_pin_data[i+1]
 		var distance = Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
-		overall_cost += _calculate_leg_cost(transport_mode, distance, num_menu_items)
+		overall_cost += Utils.calculate_leg_cost(transport_mode, distance, num_menu_items)
 	
 	if check_type == "max":
 		return overall_cost <= limit * num_menu_items
@@ -539,7 +535,7 @@ func _check_leg_cost(limit: float, check_type: String, dropped_pin_data: Array, 
 		var p2 = dropped_pin_data[i+1]
 		var distance = Utils.calculate_haversine_distance(p1.lat, p1.lng, p2.lat, p2.lng)
 		var transport_mode = pin_manager.get_travel_mode(p1.index, p2.index)
-		var leg_cost = _calculate_leg_cost(transport_mode, distance, num_menu_items)
+		var leg_cost = Utils.calculate_leg_cost(transport_mode, distance, num_menu_items)
 		
 		if check_type == "max":
 			if leg_cost > limit * num_menu_items:
@@ -584,29 +580,6 @@ func _check_endpoint_distance(limit: float, check_type: String, dropped_pin_data
 	return false
 
 # --- Helper functions ---
-
-# Calculates the cost of a given leg of the journey
-func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
-	var base_cost = 0.0
-	var per_km_cost = 0.0
-	var family_multiplier = num_menu_items
-	
-	match transport_type:
-		0: # Land/Car
-			base_cost = 50.0
-			per_km_cost = 0.5
-			family_multiplier = 1.0
-		1: # Boat
-			base_cost = 50.0
-			per_km_cost = 0.2
-		2: # Train
-			base_cost = 50.0
-			per_km_cost = 0.4
-		3: # Plane
-			base_cost = 30.0
-			per_km_cost = 0.8
-	
-	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
 
 # Returns true if any segment of the path is within 100km of any target city.
 func _is_path_near_country(dropped_pin_data: Array, target_cities: Array) -> bool:

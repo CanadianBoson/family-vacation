@@ -35,7 +35,6 @@ func _load_all_dropdown_options() -> Dictionary:
 		return json_data.details
 	return {}
 
-# --- New: Public function to allow the game scene to force a refresh ---
 func rebuild_menu():
 	# Clear old menu items before rebuilding.
 	for item in menu_item_instances:
@@ -68,17 +67,14 @@ func _build_menu():
 		# Generate the quests for this member.
 		var bullet_points_for_item = _select_quests_for_member(family_key, difficulty_per_member, available_dropdown_keys)
 		
-		# --- New: Store the generated data in GlobalState ---
 		GlobalState.current_trip_quests.append({
 			"member_data": member_data,
 			"quests": bullet_points_for_item
 		})
-		# ----------------------------------------------------
 		
 		# Create the UI for the menu item.
 		_create_menu_item_ui(i, member_data, bullet_points_for_item, available_colors)
 
-# --- New: Advanced quest selection algorithm ---
 func _select_quests_for_member(family_key: String, target_difficulty: int, available_keys: Array) -> Array:
 	var selected_quests = []
 	var selected_keys = []

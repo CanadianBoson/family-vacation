@@ -157,7 +157,7 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         df['x'] = scale_x * df['merc_x'] + offset_x
         df['y'] = scale_y * df['merc_y'] + offset_y
 
-        # --- NEW FILTERING LOGIC ---
+    
         # 1. Filter for cities within the map's pixel boundaries.
         is_in_map_area = df['x'].between(0, 940) & df['y'].between(0, 1000)
         map_cities_df = df[is_in_map_area & df['iso2'].isin(list(EUROPEAN_COUNTRIES_DICT.keys()))].copy()
@@ -195,7 +195,7 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
             final_df = pd.concat(final_selection)
         else:
             final_df = pd.DataFrame(columns=df.columns)
-        # --- END OF NEW LOGIC ---
+
 
         # add country names using pycountry
         final_df['country'] = df.apply(lambda x: EUROPEAN_COUNTRIES_DICT[x.iso2] if x.iso2 in list(EUROPEAN_COUNTRIES_DICT.keys()) else "", axis=1)

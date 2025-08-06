@@ -38,11 +38,9 @@ func _ready():
 	warning_timer.timeout.connect(warning_label.hide)
 	name_input.max_length = 10
 	
-	# --- New: Check GlobalState and repopulate the confirmed list ---
 	if not GlobalState.confirmed_family.is_empty():
 		for member_data in GlobalState.confirmed_family:
 			_add_confirmed_member(member_data)
-	# ----------------------------------------------------------------
 	
 	# The Start Game button is now managed by the _update_start_button_visibility function.
 	_update_start_button_visibility()
@@ -50,7 +48,6 @@ func _ready():
 	if not _family_data.is_empty():
 		_on_family_selected(_family_data.keys()[0])
 
-# --- (Your _load_family_data and _populate_family_list functions are unchanged) ---
 func _load_family_data():
 	var file_path = "res://data/families.json"
 	if not FileAccess.file_exists(file_path): return
@@ -96,10 +93,8 @@ func _on_confirm_button_pressed():
 		"name": final_name, "family_key": _selected_family_key, "gender": _selected_gender
 	}
 	_add_confirmed_member(new_member_data)
-	# --- New: Validate the slider after adding a member ---
 	_validate_slider_value()
 
-# --- New: Refactored helper function to add a confirmed member ---
 func _add_confirmed_member(member_data: Dictionary):
 	var new_item = ConfirmedItemScene.instantiate()
 	var info_text = "%s (%s)" % [member_data.name, member_data.family_key]
@@ -113,10 +108,8 @@ func _on_confirmed_item_deleted(item_node: Node, data_to_remove: Dictionary):
 	_confirmed_family_data.erase(data_to_remove)
 	item_node.queue_free()
 	_update_start_button_visibility()
-	# --- New: Validate the slider after removing a member ---
 	_validate_slider_value()
 
-# --- New: Helper function to manage the Start Game button's visibility ---
 func _update_start_button_visibility():
 	if _confirmed_family_data.size() >= 2:
 		start_game_button.show()
@@ -157,7 +150,6 @@ func _validate_slider_value():
 	# Trigger the value_changed logic with the slider's current value.
 	_on_difficulty_slider_value_changed(difficulty_slider.value)
 
-# --- New: Helper function to show the warning text ---
 func _flash_warning_text(text: String):
 	warning_label.text = text
 	warning_label.show()

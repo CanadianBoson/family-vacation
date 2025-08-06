@@ -4,10 +4,7 @@ extends Node
 
 @onready var _ledger_entries_vbox: VBoxContainer = $"../LedgerScrollContainer/LedgerEntriesVBox"
 @onready var _overall_distance_label: Label = $"../LedgerHeaderVBox/OverallDistanceLabel"
-# --- New: Add a reference to the new cost label ---
 @onready var _overall_cost_label: Label = $"../LedgerHeaderVBox/OverallCostLabel"
-
-const EARTH_RADIUS_KM = 6371.0
 
 # A public function to calculate the total distance of a given path array.
 func calculate_total_distance(path_data: Array) -> float:
@@ -15,30 +12,6 @@ func calculate_total_distance(path_data: Array) -> float:
 	if cumulative_distances.is_empty():
 		return 0.0
 	return cumulative_distances.back()
-
-# --- Updated: Cost calculation function now includes number of menu items ---
-# Calculates the cost of a single leg of the journey.
-func _calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
-	var base_cost = 0.0
-	var per_km_cost = 0.0
-	var family_multiplier = num_menu_items
-	
-	match transport_type:
-		0: # Land/Car
-			base_cost = 50.0
-			per_km_cost = 0.5
-			family_multiplier = 1.0
-		1: # Boat
-			base_cost = 50.0
-			per_km_cost = 0.2
-		2: # Train
-			base_cost = 50.0
-			per_km_cost = 0.4
-		3: # Plane
-			base_cost = 30.0
-			per_km_cost = 0.8
-	
-	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
 
 func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 	var cumulative_distances_km = []
@@ -51,7 +24,6 @@ func _calculate_cumulative_distances_km(dropped_pin_data: Array) -> Array:
 			cumulative_distances_km.append(cumulative_distances_km[i-1] + segment_distance_km)
 	return cumulative_distances_km
 
-# --- Updated: This function now requires the number of menu items ---
 func update_ledger_display(pin_manager: Node, num_menu_items: int):
 	var dropped_pin_data = pin_manager.dropped_pin_data
 
@@ -94,10 +66,8 @@ func update_ledger_display(pin_manager: Node, num_menu_items: int):
 				1: travel_mode_str = "Boat"
 				2: travel_mode_str = "Train"
 
-			# --- Updated: Pass the number of menu items to the cost function ---
-			var leg_cost = _calculate_leg_cost(travel_mode_int, segment_distance_km, num_menu_items)
+			var leg_cost = Utils.calculate_leg_cost(travel_mode_int, segment_distance_km, num_menu_items)
 			overall_cost += leg_cost
-			# -----------------------------------------------------------------
 
 			entry_text = "%d. %s (%.1f km by %s, %.2f€" % [pin_number, city_name, segment_distance_km, travel_mode_str, leg_cost]
 

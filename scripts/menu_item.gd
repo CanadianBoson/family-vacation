@@ -30,7 +30,6 @@ func setup(item_text: String, background_color: Color, image_path: String, bulle
 	_quest_manager = quest_manager_ref
 	_background_color = background_color
 	
-	# --- New: Dynamic Font Size Logic ---
 	var text_length = item_text.length()
 	var new_font_size = 15 # Default font size
 	
@@ -42,7 +41,6 @@ func setup(item_text: String, background_color: Color, image_path: String, bulle
 		
 	# Apply the calculated font size as an override.
 	label.add_theme_font_size_override("font_size", new_font_size)
-	# ------------------------------------
 	
 	if not image_path.is_empty():
 		circle_image.texture = load(image_path)
@@ -86,8 +84,6 @@ func _update_completion_border():
 		stylebox.border_width_bottom = 0
 	
 	header.add_theme_stylebox_override("panel", stylebox)
-
-# --- (The rest of your script remains unchanged) ---
 
 func _on_header_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():

@@ -11,8 +11,6 @@ const COLUMN_WIDTHS = [180, 100, 120, 120, 120, 80] # City, Country, Lat, Lng, P
 
 var _all_locations_data = []
 var _dropped_pin_data = []
-
-# --- New: Variables to track sorting state ---
 var _sort_key = "city"
 var _sort_ascending = true
 
@@ -85,7 +83,6 @@ func _add_cell_label(text: String):
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info_grid.add_child(label)
 
-# --- New: This function is called when a header button is clicked ---
 func _on_header_clicked(new_sort_key: String):
 	if new_sort_key == _sort_key:
 		# If clicking the same column, reverse the sort direction.
@@ -102,7 +99,6 @@ func _on_header_clicked(new_sort_key: String):
 	# Refresh the grid to show the newly sorted data.
 	_on_view_toggle_toggled(view_toggle_button.button_pressed)
 
-# --- New: Helper function to sort a list of dictionaries ---
 func _sort_data_list(data_list: Array):
 	data_list.sort_custom(func(a, b):
 		var val_a = a.get(_sort_key)
