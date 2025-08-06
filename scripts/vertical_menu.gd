@@ -10,7 +10,7 @@ const MenuItemScene = preload("res://scenes/menu_item.tscn")
 
 var ITEM_COLORS = [
 	Color.SEA_GREEN, Color.DEEP_SKY_BLUE, Color.HOT_PINK,
-	Color.MEDIUM_PURPLE, Color.ORANGE, Color.SANDY_BROWN
+	Color.MEDIUM_PURPLE, Color.DARK_CYAN, Color.SANDY_BROWN
 ]
 
 var image_paths = []

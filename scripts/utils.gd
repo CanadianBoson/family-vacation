@@ -40,25 +40,28 @@ func segments_intersect(p1: Vector2, q1: Vector2, p2: Vector2, q2: Vector2) -> b
 	if (o4 == 0 and on_segment(p2, q1, q2)): return true
 	return false
 
-# Calculates the cost of a given leg of the journey
+# Calculates the cost of a single leg of the journey based on a non-linear model.
+# Prices are rough estimates for a European tourist season and scale with sqrt(distance).
 func calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items: int) -> float:
 	var base_cost = 0.0
-	var per_km_cost = 0.0
-	var family_multiplier = num_menu_items
-	
+	var per_km_sqrt_coeff = 0.0 # This is the coefficient for the square root of the distance
+	var family_multiplier = float(num_menu_items)
+
 	match transport_type:
-		0: # Land/Car
-			base_cost = 50.0
-			per_km_cost = 0.5
+		0: # Car (Represents a rental car)
+			base_cost = 120.0
+			per_km_sqrt_coeff = 3.0
 			family_multiplier = 1.0
-		1: # Boat
-			base_cost = 50.0
-			per_km_cost = 0.2
+		1: # Boat (Ferry)
+			base_cost = 40.0
+			per_km_sqrt_coeff = 5.0
 		2: # Train
-			base_cost = 50.0
-			per_km_cost = 0.4
-		3: # Plane
-			base_cost = 30.0
-			per_km_cost = 0.8
-	
-	return (base_cost + (distance_km * per_km_cost)) * family_multiplier
+			base_cost = 60.0
+			per_km_sqrt_coeff = 8.0
+		3: # Plane (Budget Airline)
+			base_cost = 150.0
+			per_km_sqrt_coeff = 15.0
+
+	# The formula now uses the square root of the distance for non-linear scaling.
+	# This makes very long trips less punishingly expensive.
+	return (base_cost + (sqrt(distance_km) * per_km_sqrt_coeff)) * family_multiplier

@@ -30,16 +30,16 @@ The calculation and cost of different methods is shown below:
 [ul]
 Car (Green): [ul]
 	Distance under 300km and 60% of points between two cities are land
-	Cost is 50 + 0.5 * num_kms [/ul]
+	Cost is 120 + 3 * sqrt(num_kms) [/ul]
 Boat (Blue): [ul]
 	Distance under 500km and 60% of points between two cities are water
-	Cost is (50 + 0.2 * num_kms) * num_family [/ul]
+	Cost is (40 + 5 * sqrt(num_kms)) * num_family [/ul]
 Train (Purple): [ul]
 	Distance between 300km and 1000km and 60% of points between two cities are land
-	Cost is (50 + 0.4 * num_kms) * num_family [/ul]
+	Cost is (60 + 8 * sqrt(num_kms)) * num_family [/ul]
 Plane (Red): [ul]
 	All other cases
-	Cost is (30 + 0.8 * num_kms) * num_family [/ul][/ul]
+	Cost is (150 + 15 * sqrt(num_kms)) * num_family [/ul][/ul]
 
 [b]Buttons:[/b]
 [ul]
@@ -54,6 +54,7 @@ Plane (Red): [ul]
 [b]Grid[/b] toggles a grid for aesthetic purposes.
 [/ul]
 
+[b]Scoring:[/b]
 [ul]
 Use the [b]Ledger[/b] on the left to track your current path's distance and cost.
 The bottom left corner shows the current difficulty along with the scores from demands and from family members.
