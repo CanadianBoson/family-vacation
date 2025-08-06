@@ -1,6 +1,8 @@
-[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://ca2ugltchjdli"]
+[gd_resource type="FontVariation" load_steps=3 format=3 uid="uid://ca2ugltchjdli"]
 
 [ext_resource type="FontFile" uid="uid://dcitosbbbl4ov" path="res://fonts/NotoSans-Regular.ttf" id="1_8vkvh"]
+[ext_resource type="FontFile" uid="uid://q4k5d4x53xo2" path="res://fonts/NotoSansSymbols2-Regular.ttf" id="2_8vkvh"]
 
 [resource]
+fallbacks = Array[Font]([ExtResource("2_8vkvh")])
 base_font = ExtResource("1_8vkvh")
