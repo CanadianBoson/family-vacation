@@ -117,7 +117,7 @@ func _populate_dropdown():
 		bullet_point.text = "%s %s (%d)" % [icon, item_data.get("text", "N/A"), item_data.get("difficulty", "N/A")]
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bullet_point.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		bullet_point.add_theme_font_size_override("font_size", 9)
+		bullet_point.add_theme_font_size_override("font_size", 10)
 		bullet_point.set("theme_override_colors/font_color", Color.DARK_ORCHID)
 		dropdown_container.add_child(bullet_point)
 

@@ -129,7 +129,8 @@
 			"difficulty": 3,
 			"family": "Numerator",
 			"incompatible": [
-				"StayInEU"
+				"StayInEU",
+				"CrossThree"
 			],
 			"text": "Visit at least one city outside the EU"
 		},
