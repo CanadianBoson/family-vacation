@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=26 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://scripts/game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://background_images/blank_map.png" id="2_po0ka"]
@@ -11,6 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://fy5xvtergi3a" path="res://scenes/vertical_menu.tscn" id="8_e35lh"]
 [ext_resource type="Script" uid="uid://bqpydbv16hqws" path="res://scripts/quest_manager.gd" id="9_udeyl"]
 [ext_resource type="Script" uid="uid://cwc3qlcvdaouq" path="res://scripts/instructions_popup.gd" id="10_miq82"]
+[ext_resource type="AudioStream" uid="uid://bq8sot0oalxc1" path="res://sounds/pin_pop.wav" id="12_rvs2r"]
+[ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="13_5ay1a"]
+[ext_resource type="AudioStream" uid="uid://ds24umvthgo1d" path="res://sounds/success.mp3" id="13_tqxxy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
@@ -553,6 +556,15 @@ text = "Continue"
 [node name="ReturnButton" type="Button" parent="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Return"
+
+[node name="PlacePinSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_rvs2r")
+
+[node name="ButtonSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_5ay1a")
+
+[node name="SuccessSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_tqxxy")
 
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]

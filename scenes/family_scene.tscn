@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://gnknhq01f4rf"]
+[gd_scene load_steps=14 format=3 uid="uid://gnknhq01f4rf"]
 
 [ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="1_jw53m"]
 [ext_resource type="Script" uid="uid://dwdxcagrnrhh0" path="res://scripts/family_scene.gd" id="1_lafal"]
 [ext_resource type="Script" uid="uid://dkqhdjyopoieh" path="res://scripts/instructions_popup_family.gd" id="2_yn38p"]
 [ext_resource type="Texture2D" uid="uid://cay2lpyyokjpg" path="res://background_images/main_menu_image.png" id="3_05rbw"]
+[ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="5_ti8cm"]
+[ext_resource type="AudioStream" uid="uid://bk6xfxhrs1a8r" path="res://sounds/warning.wav" id="6_56p4u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4uojo"]
 bg_color = Color(0.602528, 0.601874, 0.579556, 1)
@@ -249,5 +251,11 @@ offset_bottom = 1536.0
 scale = Vector2(0.406792, 0.460246)
 mouse_filter = 2
 texture = ExtResource("3_05rbw")
+
+[node name="ButtonSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_ti8cm")
+
+[node name="WarningSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_56p4u")
 
 [connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]

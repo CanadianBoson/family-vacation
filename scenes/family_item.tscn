@@ -1,9 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://c6lp02ycsfgwq"]
+[gd_scene load_steps=3 format=3 uid="uid://c6lp02ycsfgwq"]
 
 [ext_resource type="Script" uid="uid://dlu5m0upnhbud" path="res://scripts/family_item.gd" id="1_xg680"]
+[ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="2_8d4si"]
 
 [node name="FamilyItem" type="PanelContainer"]
 script = ExtResource("1_xg680")
 
 [node name="InfoLabel" type="Label" parent="."]
 layout_mode = 2
+
+[node name="ButtonSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_8d4si")
