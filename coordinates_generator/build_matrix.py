@@ -40,7 +40,7 @@ def classify_travel_path(lat1, lon1, lat2, lon2, distance):
         return 0  # Land
         
     # Check for ocean path
-    if distance < 500 and sum(globe.is_ocean(lats, lons)[1:-1]) >= 6:
+    if distance < 800 and sum(globe.is_ocean(lats, lons)[1:-1]) >= 6:
         return 1  # Boat
 
     # Check for train path
@@ -96,7 +96,7 @@ def build_travel_matrix(locations_file):
                 
         print("Travel matrix successfully built.")
         try:
-            with open("../travel_matrix.json", 'w') as f:
+            with open("../data/travel_matrix.json", 'w') as f:
                 # Convert numpy array to a standard Python list for JSON serialization
                 json.dump({"matrix": travel_matrix.tolist()}, f)
             print(f"Matrix successfully saved to JSON")

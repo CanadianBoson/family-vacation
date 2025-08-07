@@ -25,14 +25,14 @@ Click on a name to expand or contract the demands of family members. Demands tha
 
 [b]Transport Options:[/b]
 Different methods of transport are generated automatically depending on the distance and terrain between two cities.
-The calculation and cost of different methods is shown below:
 
+The calculation and cost of different methods is shown below:
 [ul]
 Car (Green): [ul]
 	Distance under 300km and 60% of points between two cities are land
 	Cost is 120 + 3 * sqrt(num_kms) [/ul]
 Boat (Blue): [ul]
-	Distance under 500km and 60% of points between two cities are water
+	Distance under 800km and 60% of points between two cities are water
 	Cost is (40 + 5 * sqrt(num_kms)) * num_family [/ul]
 Train (Purple): [ul]
 	Distance between 300km and 1000km and 60% of points between two cities are land

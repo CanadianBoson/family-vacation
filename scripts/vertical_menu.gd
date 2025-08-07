@@ -21,7 +21,7 @@ var all_family_data = {}
 
 func _ready():
 	# Remove the _load_image_paths() call
-	all_family_data = _load_family_data() # Load the family data
+	all_family_data = Utils.load_family_data() # Load the family data
 	all_quest_data = _load_all_dropdown_options()
 	_build_menu()
 
@@ -159,16 +159,6 @@ func calculate_scores() -> Dictionary:
 		"family_score": family_score,
 		"total_score": total_score
 	}
-	
-func _load_family_data() -> Dictionary:
-	var file_path = "res://data/families.json"
-	if not FileAccess.file_exists(file_path): return {}
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var content = file.get_as_text()
-	var json_data = JSON.parse_string(content)
-	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
-		return json_data.families
-	return {}
 
 func _load_menu_from_global_state():
 	var available_colors = ITEM_COLORS.duplicate()

@@ -26,7 +26,7 @@ var _selected_gender = "male"
 var _confirmed_family_data = []
 
 func _ready():
-	_load_family_data()
+	_family_data = Utils.load_family_data()
 	_populate_family_list()
 	
 	_on_difficulty_slider_value_changed(GlobalState.initial_difficulty)
@@ -47,15 +47,6 @@ func _ready():
 	
 	if not _family_data.is_empty():
 		_on_family_selected(_family_data.keys()[0])
-
-func _load_family_data():
-	var file_path = "res://data/families.json"
-	if not FileAccess.file_exists(file_path): return
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var content = file.get_as_text()
-	var json_data = JSON.parse_string(content)
-	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
-		_family_data = json_data.families
 
 func _populate_family_list():
 	for family_key in _family_data.keys():

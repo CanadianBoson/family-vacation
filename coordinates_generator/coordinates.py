@@ -21,6 +21,7 @@ EUROPEAN_COUNTRIES_DICT = {
     'DK': 'Denmark',
     'EE': 'Estonia',
     'FI': 'Finland',
+    'FO': 'Faroe Islands',
     'FR': 'France',
     'GE': 'Georgia',
     'DE': 'Germany',
@@ -126,7 +127,7 @@ def calculate_transform_parameters(point1, point2):
     return scale_x, offset_x, scale_y, offset_y
 
 
-def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scale_y, offset_y):
+def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scale_y, offset_y, saved_cities=[], removed_cities=[]):
     """
     Reads city data, filters it based on map area and a dynamic population-based
     quota per country, and writes the result to a JSON file.
@@ -161,13 +162,11 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         # 1. Filter for cities within the map's pixel boundaries.
         is_in_map_area = df['x'].between(0, 940) & df['y'].between(0, 1000)
         map_cities_df = df[is_in_map_area & df['iso2'].isin(list(EUROPEAN_COUNTRIES_DICT.keys()))].copy()
-
-        # 2. Filter those cities for populations over 100k.
-        pop_filtered_df = map_cities_df
+        saved_cities_df = map_cities_df[map_cities_df['city'].isin(saved_cities)].copy()
 
         # 3. Dynamically select cities per country.
         final_selection = []
-        for country_code, group in pop_filtered_df.groupby('iso2'):
+        for country_code, group in map_cities_df.groupby('iso2'):
             num_available = len(group)
             if num_available == 0:
                 continue
@@ -196,9 +195,10 @@ def filter_cities_to_json(csv_file_path, json_file_path, scale_x, offset_x, scal
         else:
             final_df = pd.DataFrame(columns=df.columns)
 
-
+        final_df = pd.concat([final_df, saved_cities_df])
+        final_df = final_df[~final_df['city'].isin(removed_cities)].copy()
         # add country names using pycountry
-        final_df['country'] = df.apply(lambda x: EUROPEAN_COUNTRIES_DICT[x.iso2] if x.iso2 in list(EUROPEAN_COUNTRIES_DICT.keys()) else "", axis=1)
+        final_df['country'] = final_df.apply(lambda x: EUROPEAN_COUNTRIES_DICT[x.iso2] if x.iso2 in list(EUROPEAN_COUNTRIES_DICT.keys()) else "", axis=1)
         # add EU membership status using countrygroups
         final_df['is_eu'] = final_df['country'].apply(lambda x: x in countrygroups.EUROPEAN_UNION.names)
 
@@ -239,7 +239,17 @@ csv_input_file = "worldcities.csv"
 json_output_file = "locations.json"
 
 # Run the main function with the calculated parameters
-filter_cities_to_json(csv_input_file, json_output_file, scale_x, offset_x, scale_y, offset_y)
+saved_cities = [
+    "Dundee", "Umeå", "Murmansk", "Visby", "Trondheim", "Tórshavn", 
+    "Akureyri", "Galway", "Cork", "Cork", "Belfast", "Cagliari", 
+    "Venice", "Dubrovnik", "Kaliningrad", "Irákleio"
+]
+removed_cities = [
+    "Finglas", "Esch-sur-Alzette", "Essen", "Schaan", "Esenyurt",
+    "Borgo Maggiore", "Sant Pere", "Qormi", "Nice", "Balashikha",
+    "Mersin", 
+    ]
+filter_cities_to_json(csv_input_file, json_output_file, scale_x, offset_x, scale_y, offset_y, saved_cities, removed_cities)
 
 # Calculate the lat/lon from the pixel coordinates
 for x in [0, 1000]:

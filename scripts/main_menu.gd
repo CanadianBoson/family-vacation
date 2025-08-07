@@ -6,7 +6,7 @@ extends Control
 # This is the new "quick start" logic.
 func _on_start_button_pressed():
 	# 1. Load the raw family data.
-	var all_family_data = _load_family_data()
+	var all_family_data = Utils.load_family_data()
 	if all_family_data.is_empty():
 		print("Error: Could not load family data to start game.")
 		return
@@ -48,27 +48,7 @@ func _on_instructions_button_pressed():
 	var result = get_tree().change_scene_to_file("res://scenes/instructions.tscn")
 	if result != OK:
 		print("Error: Could not load the instructions scene.")
-
-# This function is called when the 'Exit' button is pressed.
-func _on_exit_button_pressed():
-	# This line quits the application.
-	get_tree().quit()
 	
 func _on_button_family_pressed():
 	GlobalState.initial_difficulty = 3
 	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")	
-
-# Helper function to load the family data from the JSON file.
-func _load_family_data() -> Dictionary:
-	var file_path = "res://data/families.json"
-	if not FileAccess.file_exists(file_path):
-		print("Error: Family data file not found at ", file_path)
-		return {}
-
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var content = file.get_as_text()
-	var json_data = JSON.parse_string(content)
-	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
-		return json_data.families
-	
-	return {}

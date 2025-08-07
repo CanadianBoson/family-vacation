@@ -65,3 +65,13 @@ func calculate_leg_cost(transport_type: int, distance_km: float, num_menu_items:
 	# The formula now uses the square root of the distance for non-linear scaling.
 	# This makes very long trips less punishingly expensive.
 	return (base_cost + (sqrt(distance_km) * per_km_sqrt_coeff)) * family_multiplier
+
+func load_family_data() -> Dictionary:
+	var file_path = "res://data/families.json"
+	if not FileAccess.file_exists(file_path): return {}
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	var content = file.get_as_text()
+	var json_data = JSON.parse_string(content)
+	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
+		return json_data.families
+	return {}

@@ -17,7 +17,7 @@
 				"TrainFree",
 				"PlaneFree"
 			],
-			"text": "Use every possible method of transport"
+			"text": "Use every method of transport"
 		},
 		"CarFree": {
 			"difficulty": 3,
@@ -26,7 +26,7 @@
 				"MustUseCar",
 				"AllTransport"
 			],
-			"text": "Chart a course that uses no cars"
+			"text": "Use no cars"
 		},
 		"CarsNS": {
 			"difficulty": 3,
@@ -44,77 +44,77 @@
 			],
 			"text": "All cars should go more West-East than North-South"
 		},
-		"CityStartsWithB": {
+		"CityStartsWithC": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with B"
+			"text": "Visit a city starting with C"
 		},
 		"CityStartsWithF": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with F"
+			"text": "Visit a city starting with F"
 		},
 		"CityStartsWithL": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with L"
+			"text": "Visit a city starting with L"
 		},
 		"CityStartsWithN": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with N"
+			"text": "Visit a city starting with N"
 		},
 		"CityStartsWithP": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with P"
+			"text": "Visit a city starting with P"
 		},
 		"CityStartsWithS": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a city that starts with S"
+			"text": "Visit a city starting with S"
 		},
 		"CountryStartsWithB": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with B"
+			"text": "Visit a country starting with B"
 		},
 		"CountryStartsWithF": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with F"
+			"text": "Visit a country starting with F"
 		},
 		"CountryStartsWithI": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with I"
+			"text": "Visit a country starting with I"
 		},
 		"CountryStartsWithL": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with L"
+			"text": "Visit a country starting with L"
 		},
 		"CountryStartsWithN": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with N"
+			"text": "Visit a country starting with N"
 		},
 		"CountryStartsWithP": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
-			"text": "Visit a country that starts with P"
+			"text": "Visit a country starting with P"
 		},
 		"CrossThree": {
 			"difficulty": 4,
@@ -155,7 +155,7 @@
 			"incompatible": [
 				"MinEndpointDistance"
 			],
-			"text": "The start and end points are at most 1000km apart."
+			"text": "The start and end points are at most 1000km apart"
 		},
 		"MaxJourneyDistance": {
 			"difficulty": 4,
@@ -169,7 +169,8 @@
 			"difficulty": 3,
 			"family": "Numerator",
 			"incompatible": [
-				"MinLat"
+				"MinLat",
+				"StartEndMinLat"
 			],
 			"text": "The route should not exceed 10 degrees latitude in spread"
 		},
@@ -177,7 +178,7 @@
 			"difficulty": 5,
 			"family": "Killjoy",
 			"incompatible": [],
-			"text": "Every leg of the trip must cost under 300 Euros per person"
+			"text": "Every leg of the trip must cost under 300€ per person"
 		},
 		"MaxLegDistance": {
 			"difficulty": 4,
@@ -201,7 +202,8 @@
 			"difficulty": 2,
 			"family": "Numerator",
 			"incompatible": [
-				"MinLon"
+				"MinLon",
+				"StartEndMinLon"
 			],
 			"text": "The route should not exceed 15 degrees longitude in spread"
 		},
@@ -211,7 +213,7 @@
 			"incompatible": [
 				"MinOverallCost"
 			],
-			"text": "The trip must cost under 2000 Euros per person"
+			"text": "Spend under 2000€ per person"
 		},
 		"MinCities": {
 			"difficulty": 5,
@@ -249,7 +251,8 @@
 			"difficulty": 4,
 			"family": "Numerator",
 			"incompatible": [
-				"MaxLat"
+				"MaxLat",
+				"StartEndMaxLat"
 			],
 			"text": "The route should exceed 20 degrees latitude in spread"
 		},
@@ -257,7 +260,7 @@
 			"difficulty": 4,
 			"family": "Spender",
 			"incompatible": [],
-			"text": "Every leg of the trip must cost at least 100 Euros per person"
+			"text": "Every leg of the trip must cost at least 100€ per person"
 		},
 		"MinLegDistance": {
 			"difficulty": 3,
@@ -281,7 +284,8 @@
 			"difficulty": 3,
 			"family": "Numerator",
 			"incompatible": [
-				"MaxLon"
+				"MaxLon",
+				"StartEndMaxLon"
 			],
 			"text": "The route should exceed 25 degrees longitude in spread"
 		},
@@ -291,7 +295,7 @@
 			"incompatible": [
 				"MaxOverallCost"
 			],
-			"text": "The trip must cost over 3000 Euros per person"
+			"text": "The trip must cost over 3000€ per person"
 		},
 		"MinPopulation": {
 			"difficulty": 4,
@@ -305,25 +309,25 @@
 			"difficulty": 6,
 			"family": "Transporter",
 			"incompatible": ["SailFree"],
-			"text": "The route uses >=50% boats."
+			"text": "Use >=50% boats."
 		},
 		"MostlyCar": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["CarFree"],
-			"text": "The route uses >=50% cars."
+			"text": "Use >=50% cars."
 		},
 		"MostlyPlane": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["PlaneFree"],
-			"text": "The route uses >=50% planes."
+			"text": "Use >=50% planes."
 		},
 		"MostlyTrain": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["TrainFree"],
-			"text": "The route uses >=50% trains."
+			"text": "Use >=50% trains."
 		},
 		"MustUseCar": {
 			"difficulty": 1,
@@ -331,7 +335,7 @@
 			"incompatible": [
 				"CarFree"
 			],
-			"text": "Chart a course that uses cars"
+			"text": "Use cars"
 		},
 		"MustUsePlane": {
 			"difficulty": 2,
@@ -339,7 +343,7 @@
 			"incompatible": [
 				"PlaneFree"
 			],
-			"text": "Chart a course that uses planes"
+			"text": "Use planes"
 		},
 		"MustUseSail": {
 			"difficulty": 3,
@@ -347,7 +351,7 @@
 			"incompatible": [
 				"SailFree"
 			],
-			"text": "Chart a course that uses boats"
+			"text": "Use boats"
 		},
 		"MustUseTrain": {
 			"difficulty": 2,
@@ -355,7 +359,7 @@
 			"incompatible": [
 				"TrainFree"
 			],
-			"text": "Chart a course that uses trains"
+			"text": "Use trains"
 		},
 		"NoCapitals": {
 			"difficulty": 2,
@@ -364,7 +368,7 @@
 				"SomeCapitals",
 				"AllCapitals"
 			],
-			"text": "Plan a route that avoids all capital cities"
+			"text": "Avoid all capital cities"
 		},
 		"NoCrossThree": {
 			"difficulty": 2,
@@ -388,7 +392,7 @@
 			"incompatible": [
 				"ThreeLetter"
 			],
-			"text": "Ensure no three cities start with the same letter"
+			"text": "No three cities can start with the same letter"
 		},
 		"OnlyAcute": {
 			"difficulty": 5,
@@ -485,7 +489,7 @@
 				"MustUsePlane",
 				"AllTransport"
 			],
-			"text": "Chart a course that uses no planes"
+			"text": "Use no planes"
 		},
 		"PlanesNS": {
 			"difficulty": 3,
@@ -510,7 +514,7 @@
 				"MustUseSail",
 				"AllTransport"
 			],
-			"text": "Chart a course that uses no boats"
+			"text": "Use no boats"
 		},
 		"SomeCapitals": {
 			"difficulty": 1,
@@ -532,33 +536,37 @@
 			"difficulty": 4,
 			"family": "Numerator",
 			"incompatible": [
-				"StartEndMinLat"
+				"StartEndMinLat",
+				"MinLat"
 			],
-			"text": "The route endpoints should not exceed 10 degrees latitude in spread"
+			"text": "The endpoints should not exceed 10 degrees latitude in spread"
 		},
 		"StartEndMaxLon": {
 			"difficulty": 3,
 			"family": "Numerator",
 			"incompatible": [
-				"StartEndMinLon"
+				"StartEndMinLon",
+				"MinLon"
 			],
-			"text": "The route endpoints should not exceed 15 degrees longitude in spread"
+			"text": "The endpoints should not exceed 15 degrees longitude in spread"
 		},
 		"StartEndMinLat": {
 			"difficulty": 5,
 			"family": "Numerator",
 			"incompatible": [
-				"StartEndMaxLat"
+				"StartEndMaxLat",
+				"MaxLat"
 			],
-			"text": "The route endpoints should exceed 20 degrees latitude in spread"
+			"text": "The endpoints should exceed 15 degrees latitude in spread"
 		},
 		"StartEndMinLon": {
 			"difficulty": 4,
 			"family": "Numerator",
 			"incompatible": [
-				"StartEndMaxLon"
+				"StartEndMaxLon",
+				"MaxLon"
 			],
-			"text": "The route endpoints should exceed 25 degrees longitude in spread"
+			"text": "The endpoints should exceed 20 degrees longitude in spread"
 		},
 		"StayAwayDE": {
 			"difficulty": 2,
