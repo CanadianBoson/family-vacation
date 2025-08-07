@@ -69,12 +69,12 @@ func update_ledger_display(pin_manager: Node, num_menu_items: int):
 			var leg_cost = Utils.calculate_leg_cost(travel_mode_int, segment_distance_km, num_menu_items)
 			overall_cost += leg_cost
 
-			entry_text = "%d. %s (%.1f km by %s, %.2f€" % [pin_number, city_name, segment_distance_km, travel_mode_str, leg_cost]
+			entry_text = "%d. %s (%.0f km by %s, %.0f€)" % [pin_number, city_name, segment_distance_km, travel_mode_str, leg_cost]
 
 		var entry_label = Label.new()
 		entry_label.text = entry_text
 		entry_label.add_theme_color_override("font_color", Color.DARK_BLUE)
-		entry_label.add_theme_font_size_override("font_size", 14)
+		entry_label.add_theme_font_size_override("font_size", 12)
 		_ledger_entries_vbox.add_child(entry_label)
 		
 		var spacer_entry = Control.new()

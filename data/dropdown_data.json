@@ -237,7 +237,7 @@
 			"incompatible": [
 				"MaxEndpointDistance"
 			],
-			"text": "The start and end points are more than 3000km apart."
+			"text": "The start and end points are more than 3000km apart"
 		},
 		"MinJourneyDistance": {
 			"difficulty": 5,
@@ -309,25 +309,25 @@
 			"difficulty": 6,
 			"family": "Transporter",
 			"incompatible": ["SailFree"],
-			"text": "Use >=50% boats."
+			"text": "Use >=50% boats"
 		},
 		"MostlyCar": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["CarFree"],
-			"text": "Use >=50% cars."
+			"text": "Use >=50% cars"
 		},
 		"MostlyPlane": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["PlaneFree"],
-			"text": "Use >=50% planes."
+			"text": "Use >=50% planes"
 		},
 		"MostlyTrain": {
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": ["TrainFree"],
-			"text": "Use >=50% trains."
+			"text": "Use >=50% trains"
 		},
 		"MustUseCar": {
 			"difficulty": 1,
