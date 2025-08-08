@@ -22,8 +22,8 @@ func _ready():
 	view_toggle_button.toggled.connect(_on_view_toggle_toggled)
 
 func show_popup(all_locations: Array, dropped_pins: Array):
-	_all_locations_data = all_locations
-	_dropped_pin_data = dropped_pins
+	_all_locations_data = all_locations.duplicate(true)
+	_dropped_pin_data = dropped_pins.duplicate(true)
 	
 	# Sort the data by the default key before showing
 	_sort_data_list(_all_locations_data)
