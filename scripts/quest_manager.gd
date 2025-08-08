@@ -11,6 +11,10 @@ func _ready():
 	# Each value is a dictionary containing the function, expected result, and extra args.
 	quest_checkers = {
 		# linguistic
+		"AlphabetAscCity": {"func": _check_alphabetical_order, "expected": true, "args": ["city", "asc"]},
+		"AlphabetDescCity": {"func": _check_alphabetical_order, "expected": true, "args": ["city", "desc"]},
+		"AlphabetAscCountry": {"func": _check_alphabetical_order, "expected": true, "args": ["country", "asc"]},
+		"AlphabetDescCountry": {"func": _check_alphabetical_order, "expected": true, "args": ["country", "desc"]},
 		"CityStartsWithB": {"func": _check_city_starting_with, "expected": true, "args": ["B"]},
 		"CityStartsWithC": {"func": _check_city_starting_with, "expected": true, "args": ["C"]},
 		"CityStartsWithL": {"func": _check_city_starting_with, "expected": true, "args": ["L"]},
@@ -578,6 +582,27 @@ func _check_endpoint_distance(limit: float, check_type: String, dropped_pin_data
 		return endpoint_distance >= limit
 		
 	return false
+	
+# Checks if all visited cities or countries are in alphabetical order.
+func _check_alphabetical_order(item_type: String, order_type: String, dropped_pin_data: Array, _all_locations_data: Array, _num_menu_items: int) -> bool:
+	# Extract the relevant names (city or country) into a simple array.
+	var names_to_check = []
+	for pin_data in dropped_pin_data:
+		names_to_check.append(pin_data.get(item_type, ""))
+
+	# Iterate through the list and compare each item to the next.
+	for i in range(names_to_check.size() - 1):
+		var current_item = names_to_check[i]
+		var next_item = names_to_check[i+1]
+		
+		if order_type == "asc":
+			if current_item > next_item:
+				return false
+		elif order_type == "desc":
+			if current_item < next_item:
+				return false
+				
+	return true	
 
 # --- Helper functions ---
 

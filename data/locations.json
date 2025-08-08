@@ -1922,18 +1922,6 @@
 		},
 		{
 			"index": 160,
-			"city": "Irákleio",
-			"x": 680.0946731500437,
-			"y": 684.8453581034164,
-			"lng": 25.1344,
-			"lat": 35.3403,
-			"country": "Greece",
-			"population": 211370,
-			"is_capital": false,
-			"is_eu": true
-		},
-		{
-			"index": 161,
 			"city": "Dundee",
 			"x": 315.3293177829775,
 			"y": 321.47562030819233,
@@ -1945,7 +1933,7 @@
 			"is_eu": false
 		},
 		{
-			"index": 162,
+			"index": 161,
 			"city": "Cagliari",
 			"x": 472.2018865165253,
 			"y": 627.5441071054875,
@@ -1957,7 +1945,7 @@
 			"is_eu": true
 		},
 		{
-			"index": 163,
+			"index": 162,
 			"city": "Umeå",
 			"x": 616.967698888564,
 			"y": 146.60639763731172,
@@ -1969,7 +1957,7 @@
 			"is_eu": true
 		},
 		{
-			"index": 164,
+			"index": 163,
 			"city": "Galway",
 			"x": 236.5237825387541,
 			"y": 386.64388497506513,
@@ -1981,19 +1969,19 @@
 			"is_eu": true
 		},
 		{
-			"index": 165,
-			"city": "Irákleio",
-			"x": 662.3433752559228,
-			"y": 645.1049053145614,
-			"lng": 23.7667,
-			"lat": 38.05,
+			"index": 164,
+			"city": "Chaniá",
+			"x": 665.5881105586428,
+			"y": 682.3000917845347,
+			"lng": 24.0167,
+			"lat": 35.5167,
 			"country": "Greece",
-			"population": 50494,
+			"population": 53910,
 			"is_capital": false,
 			"is_eu": true
 		},
 		{
-			"index": 166,
+			"index": 165,
 			"city": "Dubrovnik",
 			"x": 588.9033343082772,
 			"y": 574.2473382151775,
@@ -2005,7 +1993,7 @@
 			"is_eu": true
 		},
 		{
-			"index": 167,
+			"index": 166,
 			"city": "Visby",
 			"x": 591.4835478210002,
 			"y": 296.2201255464694,
@@ -2017,7 +2005,7 @@
 			"is_eu": true
 		},
 		{
-			"index": 168,
+			"index": 167,
 			"city": "Akureyri",
 			"x": 118.95793726235749,
 			"y": 95.4501151447248,
@@ -2026,18 +2014,6 @@
 			"country": "Iceland",
 			"population": 19893,
 			"is_capital": false,
-			"is_eu": false
-		},
-		{
-			"index": 169,
-			"city": "Tórshavn",
-			"x": 265.8367212635274,
-			"y": 193.83887817704306,
-			"lng": -6.7833,
-			"lat": 62.0,
-			"country": "Faroe Islands",
-			"population": 13326,
-			"is_capital": true,
 			"is_eu": false
 		}
 	]

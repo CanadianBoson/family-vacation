@@ -240,9 +240,9 @@ json_output_file = "locations.json"
 
 # Run the main function with the calculated parameters
 saved_cities = [
-    "Dundee", "Umeå", "Murmansk", "Visby", "Trondheim", "Tórshavn", 
+    "Dundee", "Umeå", "Murmansk", "Visby", "Trondheim", 
     "Akureyri", "Galway", "Cork", "Cork", "Belfast", "Cagliari", 
-    "Venice", "Dubrovnik", "Kaliningrad", "Irákleio"
+    "Venice", "Dubrovnik", "Kaliningrad", "Chaniá"
 ]
 removed_cities = [
     "Finglas", "Esch-sur-Alzette", "Essen", "Schaan", "Esenyurt",

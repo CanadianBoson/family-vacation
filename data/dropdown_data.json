@@ -19,6 +19,38 @@
 			],
 			"text": "Use every method of transport"
 		},
+		"AlphabetAscCity": {
+			"difficulty": 5,
+			"family": "Linguist",
+			"incompatible": [
+				"AlphabetDescCity"
+			],
+			"text": "Cities must be in alphabetical order"
+		},
+		"AlphabetAscCountry": {
+			"difficulty": 5,
+			"family": "Linguist",
+			"incompatible": [
+				"AlphabetDescCountry"
+			],
+			"text": "Countries must be in alphabetical order"
+		},
+		"AlphabetDescCity": {
+			"difficulty": 5,
+			"family": "Linguist",
+			"incompatible": [
+				"AlphabetAscCity"
+			],
+			"text": "Cities must be in reverse alphabetical order"
+		},
+		"AlphabetDescCountry": {
+			"difficulty": 5,
+			"family": "Linguist",
+			"incompatible": [
+				"AlphabetAscCountry"
+			],
+			"text": "Countries must be in reverse alphabetical order"
+		},
 		"CarFree": {
 			"difficulty": 3,
 			"family": "Transporter",
@@ -309,25 +341,33 @@
 		"MostlyBoat": {
 			"difficulty": 6,
 			"family": "Transporter",
-			"incompatible": ["SailFree"],
+			"incompatible": [
+				"SailFree"
+			],
 			"text": "Use >=50% boats"
 		},
 		"MostlyCar": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": ["CarFree"],
+			"incompatible": [
+				"CarFree"
+			],
 			"text": "Use >=50% cars"
 		},
 		"MostlyPlane": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": ["PlaneFree"],
+			"incompatible": [
+				"PlaneFree"
+			],
 			"text": "Use >=50% planes"
 		},
 		"MostlyTrain": {
 			"difficulty": 4,
 			"family": "Transporter",
-			"incompatible": ["TrainFree"],
+			"incompatible": [
+				"TrainFree"
+			],
 			"text": "Use >=50% trains"
 		},
 		"MustUseCar": {
