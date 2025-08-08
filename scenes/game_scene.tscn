@@ -523,7 +523,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Show Dropped Pins Only"
 
-[node name="Control" type="Control" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
+[node name="LatLonLabel" type="Label" parent="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 

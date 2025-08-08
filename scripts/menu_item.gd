@@ -115,13 +115,14 @@ func _populate_dropdown():
 	for item_data in bullet_points_to_display:
 		var bullet_point = Label.new()
 		var icon = "✗"
+		bullet_point.set("theme_override_colors/font_color", Color.DARK_ORCHID)
 		if _quest_manager.is_quest_satisfied(item_data.get("key")):
 			icon = "✓"
+			bullet_point.set("theme_override_colors/font_color", Color.DARK_SLATE_GRAY)
 		bullet_point.text = "%s %s (%d)" % [icon, item_data.get("text", "N/A"), item_data.get("difficulty", "N/A")]
 		bullet_point.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bullet_point.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		bullet_point.add_theme_font_size_override("font_size", 10)
-		bullet_point.set("theme_override_colors/font_color", Color.DARK_ORCHID)
 		dropdown_container.add_child(bullet_point)
 
 func _clear_dropdown_nodes():

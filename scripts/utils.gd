@@ -75,3 +75,33 @@ func load_family_data() -> Dictionary:
 	if typeof(json_data) == TYPE_DICTIONARY and json_data.has("families"):
 		return json_data.families
 	return {}
+	
+func calculate_spans(dropped_pin_data: Array) -> Dictionary:
+	if dropped_pin_data.size() < 2:
+		# Return zero vectors if there's no path to measure.
+		return {"journey_span": Vector2.ZERO, "endpoint_span": Vector2.ZERO}
+
+	# --- Calculate Journey Span (all points) ---
+	var min_lat = 90.0
+	var max_lat = -90.0
+	var min_lon = 180.0
+	var max_lon = -180.0
+
+	for pin in dropped_pin_data:
+		min_lat = min(min_lat, pin.lat)
+		max_lat = max(max_lat, pin.lat)
+		min_lon = min(min_lon, pin.lng)
+		max_lon = max(max_lon, pin.lng)
+
+	var journey_lat_span = max_lat - min_lat
+	var journey_lon_span = max_lon - min_lon
+	var journey_span = Vector2(journey_lat_span, journey_lon_span)
+
+	# --- Calculate Endpoint Span (start and end only) ---
+	var start_pin = dropped_pin_data.front()
+	var end_pin = dropped_pin_data.back()
+	var endpoint_lat_span = abs(start_pin.lat - end_pin.lat)
+	var endpoint_lon_span = abs(start_pin.lng - end_pin.lng)
+	var endpoint_span = Vector2(endpoint_lat_span, endpoint_lon_span)
+
+	return {"journey_span": journey_span, "endpoint_span": endpoint_span}	

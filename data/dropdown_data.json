@@ -77,17 +77,17 @@
 			],
 			"text": "All cars should go more West-East than North-South"
 		},
+		"CityStartsWithB": {
+			"difficulty": 2,
+			"family": "Linguist",
+			"incompatible": [],
+			"text": "Visit a city starting with B"
+		},
 		"CityStartsWithC": {
 			"difficulty": 2,
 			"family": "Linguist",
 			"incompatible": [],
 			"text": "Visit a city starting with C"
-		},
-		"CityStartsWithF": {
-			"difficulty": 2,
-			"family": "Linguist",
-			"incompatible": [],
-			"text": "Visit a city starting with F"
 		},
 		"CityStartsWithL": {
 			"difficulty": 2,

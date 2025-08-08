@@ -24,6 +24,12 @@ Click on a name to expand or contract the demands of family members. Demands tha
 [b]Hover:[/b] Hover over a city briefly to see the name, and for one second to get more details.
 [/ul]
 
+[b]Info:[/b]
+[ul]
+Use the [b]Info[/b] button to show comprehensive statistics for all locations along with the overall and endpoint latitude and longitude values.
+Clicking on a header for a given column will sort the values in order.
+[/ul]
+
 [b]Transport Options:[/b]
 Different methods of transport are generated automatically depending on the distance and terrain between two cities.
 

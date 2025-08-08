@@ -107,27 +107,24 @@ func _select_quests_for_member(family_key: String, target_difficulty: int, avail
 			
 			# Check if adding this quest would be a good fit
 			if current_difficulty + quest_diff <= target_difficulty + 2: # Allow a small overshoot
-				var is_compatible = true
-				var incompatible_list = quest_data.get("incompatible", [])
-				for existing_key in selected_keys:
-					if incompatible_list.has(existing_key):
-						is_compatible = false
-						break
+				quest_data["key"] = quest_key
+				selected_quests.append(quest_data)
+				selected_keys.append(quest_key)
+				current_difficulty += quest_diff
 				
-				if is_compatible:
-					# Add the quest
-					quest_data["key"] = quest_key
-					selected_quests.append(quest_data)
-					selected_keys.append(quest_key)
-					current_difficulty += quest_diff
+				# Remove from all pools to ensure it's not picked again
+				available_keys.erase(quest_key)
+				matching_quests.erase(quest_key)
+				other_quests.erase(quest_key)
+				
+				var incompatible_list = quest_data.get("incompatible", [])
+				for incompatible_key in incompatible_list:
+					available_keys.erase(incompatible_key)
+					matching_quests.erase(incompatible_key)
+					other_quests.erase(incompatible_key)
 					
-					# Remove from all pools to ensure it's not picked again
-					available_keys.erase(quest_key)
-					matching_quests.erase(quest_key)
-					other_quests.erase(quest_key)
-					
-					found_quest = true
-					break # Found a quest for this iteration, break to restart the while loop
+				found_quest = true
+				break # Found a quest for this iteration, break to restart the while loop
 		
 		# If no suitable quest was found in any pool, we have to stop.
 		if not found_quest:

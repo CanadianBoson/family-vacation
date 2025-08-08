@@ -7,13 +7,15 @@ extends PanelContainer
 @onready var view_toggle_button: CheckButton = $"VBoxContainer/HBoxContainer/ViewToggleButton"
 @onready var animation_player: AnimationPlayer = get_node("/root/GameScene/AnimationPlayer")
 @onready var button_sound = get_tree().get_root().get_node("GameScene/ButtonSound")
+@onready var lat_lon_label = $"VBoxContainer/HBoxContainer/LatLonLabel"
 
-const COLUMN_WIDTHS = [180, 100, 120, 120, 120, 80] # City, Country, Lat, Lng, Pop, Capital
+const COLUMN_WIDTHS = [180, 100, 120, 120, 120, 80, 80] # City, Country, Lat, Lng, Pop, Capital, EU
 
 var _all_locations_data = []
 var _dropped_pin_data = []
 var _sort_key = "city"
 var _sort_ascending = true
+var _spans: Dictionary = {"journey_span": Vector2(0.0, 0.0), "endpoint_span": Vector2(0.0, 0.0)}
 
 func _ready():
 	hide()
@@ -24,6 +26,7 @@ func _ready():
 func show_popup(all_locations: Array, dropped_pins: Array):
 	_all_locations_data = all_locations.duplicate(true)
 	_dropped_pin_data = dropped_pins.duplicate(true)
+	_spans = Utils.calculate_spans(dropped_pins)
 	
 	# Sort the data by the default key before showing
 	_sort_data_list(_all_locations_data)
@@ -35,7 +38,7 @@ func show_popup(all_locations: Array, dropped_pins: Array):
 	show()
 	animation_player.play("popup_info")
 
-func _update_content(data_to_display: Array):
+func _update_content(data_to_display: Array, 	):
 	for child in info_grid.get_children():
 		child.queue_free()
 
@@ -46,7 +49,7 @@ func _update_content(data_to_display: Array):
 	_add_header_label("Longitude", COLUMN_WIDTHS[3], "lng")
 	_add_header_label("Population", COLUMN_WIDTHS[4], "population")
 	_add_header_label("Capital", COLUMN_WIDTHS[5], "is_capital")
-	_add_header_label("EU", COLUMN_WIDTHS[5], "is_eu")
+	_add_header_label("EU", COLUMN_WIDTHS[6], "is_eu")
 
 	# Add a row for each city from the loaded data.
 	for location in data_to_display:
@@ -60,6 +63,8 @@ func _update_content(data_to_display: Array):
 		for i in range(7):
 			var separator = HSeparator.new()
 			info_grid.add_child(separator)
+			
+	lat_lon_label.text = "        Journey Span (Lat/Lon): %.1f° / %.1f°         Endpoint Span (Lat/Lon): %.1f° / %.1f°     " % [_spans.journey_span.x, _spans.journey_span.y, _spans.endpoint_span.x, _spans.endpoint_span.y]
 
 # This function now creates a clickable Button for the header.
 func _add_header_label(text: String, min_width: int, sort_key: String):
