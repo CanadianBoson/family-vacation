@@ -83,6 +83,7 @@ var _prompt_paused = false
 
 
 func _ready():
+	sound_toggle_button.button_pressed = GlobalState.is_sound_enabled
 	pin_manager.initialize(pins_container, pin_scene)
 	quest_manager.pin_manager = pin_manager
 	

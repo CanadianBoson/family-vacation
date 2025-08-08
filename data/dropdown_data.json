@@ -56,7 +56,8 @@
 			"family": "Transporter",
 			"incompatible": [
 				"MustUseCar",
-				"AllTransport"
+				"AllTransport",
+				"MostlyCar"
 			],
 			"text": "Use no cars"
 		},
@@ -528,7 +529,8 @@
 			"family": "Transporter",
 			"incompatible": [
 				"MustUsePlane",
-				"AllTransport"
+				"AllTransport",
+				"MostlyPlane"
 			],
 			"text": "Use no planes"
 		},
@@ -553,7 +555,8 @@
 			"family": "Transporter",
 			"incompatible": [
 				"MustUseSail",
-				"AllTransport"
+				"AllTransport",
+				"MostlyBoat"
 			],
 			"text": "Use no boats"
 		},
@@ -694,7 +697,8 @@
 			"family": "Transporter",
 			"incompatible": [
 				"MustUseTrain",
-				"AllTransport"
+				"AllTransport",
+				"MostlyTrain"
 			],
 			"text": "Chart a course that uses no trains"
 		},
