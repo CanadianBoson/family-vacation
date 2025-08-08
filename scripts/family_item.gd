@@ -20,4 +20,5 @@ func set_info(text: String):
 func _on_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_MIDDLE and event.is_pressed():	
 		delete_requested.emit()
-		button_sound.play()
+		if GlobalState.is_sound_enabled:
+			button_sound.play()

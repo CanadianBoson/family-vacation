@@ -403,11 +403,26 @@ offset_bottom = 40.0
 
 [node name="GridToggleButton" type="CheckButton" parent="."]
 modulate = Color(0, 0, 0, 1)
-offset_left = 8.0
-offset_top = 12.0
-offset_right = 89.0
-offset_bottom = 43.0
+offset_left = 9.0
+offset_top = 10.0
+offset_right = 93.0
+offset_bottom = 41.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 14
 text = "Grid"
+
+[node name="SoundToggleButton" type="CheckButton" parent="."]
+modulate = Color(0, 0, 0, 1)
+offset_left = 3.0
+offset_top = 39.0
+offset_right = 94.0
+offset_bottom = 67.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 14
+button_pressed = true
+text = "Sound"
 
 [node name="PopupLayer" type="CanvasLayer" parent="."]
 
@@ -575,5 +590,6 @@ stream = ExtResource("13_tqxxy")
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/LoadMaxPathButton" to="." method="_on_load_max_path_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/RightColumn/InfoButton" to="." method="_on_info_button_pressed"]
 [connection signal="toggled" from="GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
+[connection signal="toggled" from="SoundToggleButton" to="." method="_on_sound_toggle_toggled"]
 [connection signal="pressed" from="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

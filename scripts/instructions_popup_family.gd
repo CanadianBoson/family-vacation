@@ -5,6 +5,7 @@ extends PanelContainer
 @onready var close_button: Button = $VBoxContainer/HBoxContainer/CloseButton
 @onready var instructions_text: RichTextLabel = $VBoxContainer/InstructionsText
 @onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("FamilyScene/AnimationPlayer")
+@onready var button_sound = get_tree().get_root().get_node("FamilyScene/ButtonSound")
 
 const INSTRUCTIONS = """
 [center][b]Welcome to Family Vacation![/b][/center]
@@ -45,6 +46,8 @@ func show_popup():
 	instructions_text.text = INSTRUCTIONS
 
 func _on_close_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	animation_player.play("popup_out")
 	await animation_player.animation_finished
 	hide()

@@ -3,8 +3,17 @@
 
 extends Control
 
+@onready var sound_toggle_button: CheckButton = $VBoxContainer/SoundToggleButton
+@onready var button_sound = $ButtonSound
+
+func _ready():
+	_update_sound_button_text()
+	sound_toggle_button.button_pressed = GlobalState.is_sound_enabled
+
 # This is the new "quick start" logic.
 func _on_start_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	# 1. Load the raw family data.
 	var all_family_data = Utils.load_family_data()
 	if all_family_data.is_empty():
@@ -50,5 +59,19 @@ func _on_instructions_button_pressed():
 		print("Error: Could not load the instructions scene.")
 	
 func _on_button_family_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	GlobalState.initial_difficulty = 3
 	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")	
+
+func _on_sound_toggle_toggled(button_pressed: bool):
+	# Update the global state with the new setting.
+	GlobalState.is_sound_enabled = button_pressed
+	_update_sound_button_text()
+
+func _update_sound_button_text():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+		sound_toggle_button.text = "Sound On"
+	else:
+		sound_toggle_button.text = "Sound Off"

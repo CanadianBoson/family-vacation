@@ -79,12 +79,14 @@ func _update_middle_panel():
 
 func _on_confirm_button_pressed():
 	if confirmed_list_vbox.get_child_count() >= 6:
-		warning_sound.play()
+		if GlobalState.is_sound_enabled:
+			warning_sound.play()
 		return
 	var final_name = name_input.text
 	for member in _confirmed_family_data:
-		if member.name == final_name: 
-			warning_sound.play()
+		if member.name == final_name:
+			if GlobalState.is_sound_enabled:
+				warning_sound.play()
 			return
 		
 	var new_member_data = {
@@ -96,7 +98,8 @@ func _on_confirm_button_pressed():
 func _add_confirmed_member(member_data: Dictionary):
 	var new_item = ConfirmedItemScene.instantiate()
 	var info_text = "%s (%s)" % [member_data.name, member_data.family_key]
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	new_item.set_info(info_text)
 	confirmed_list_vbox.add_child(new_item)
 	_confirmed_family_data.append(member_data)
@@ -129,7 +132,8 @@ func _on_difficulty_slider_value_changed(new_value: float):
 	var num_members = _confirmed_family_data.size()
 	var limit = 10
 	
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	
 	if num_members == 2:
 		limit = 6
@@ -145,6 +149,8 @@ func _on_difficulty_slider_value_changed(new_value: float):
 
 # This function is called when the "Info" button is pressed.
 func _on_info_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	instructions_popup.show_popup()
 
 func _validate_slider_value():

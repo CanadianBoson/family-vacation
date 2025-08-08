@@ -43,6 +43,7 @@ var pin_scene = preload("res://scenes/pin.tscn")
 @onready var hover_timer = $HoverTimer
 
 # Popups & Buttons
+@onready var sound_toggle_button = $SoundToggleButton
 @onready var info_popup = $PopupLayer/InfoPopup
 @onready var instructions_popup = $PopupLayer/InstructionsPopup
 @onready var difficulty_prompt: PanelContainer = $PopupLayer/DifficultyPrompt
@@ -93,7 +94,7 @@ func _ready():
 	same_button.pressed.connect(_on_difficulty_chosen.bind(0))
 	harder_button.pressed.connect(_on_difficulty_chosen.bind(1))
 	return_button.pressed.connect(_on_return_button_pressed)
-	family_return_button.pressed.connect(confirmation_popup.hide)
+	family_return_button.pressed.connect(_on_family_return_button_pressed)
 	
 	_update_game_state()
 	hover_label.hide()
@@ -125,7 +126,8 @@ func _update_game_state():
 	
 	var max_score_menu = vertical_menu.get_max_possible_score()
 	if max_score_menu > 0 and scores.total_score == max_score_menu and not _prompt_paused:
-		success_sound.play()
+		if GlobalState.is_sound_enabled:
+			success_sound.play()
 		difficulty_prompt.show()
 	
 	data_updated.emit()
@@ -153,7 +155,8 @@ func _unhandled_input(event: InputEvent):
 					return
 			
 			if pin_manager.place_pin_at_click(mouse_pos, CLICK_RADIUS):
-				place_pin_sound.play()
+				if GlobalState.is_sound_enabled:
+					place_pin_sound.play()
 				_update_game_state()
 
 		else: # Mouse button was released
@@ -171,6 +174,8 @@ func _unhandled_input(event: InputEvent):
 					dragged_pin_node.position = original_pos
 				
 				dragged_pin_node.show()
+				if GlobalState.is_sound_enabled:
+					place_pin_sound.play()
 				
 				is_dragging = false
 				dragged_pin_index = -1
@@ -180,7 +185,8 @@ func _unhandled_input(event: InputEvent):
 
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
 		if pin_manager.remove_pin_at_click(mouse_pos, CLICK_RADIUS):
-			place_pin_sound.play()
+			if GlobalState.is_sound_enabled:
+				place_pin_sound.play()
 			_update_game_state()
 
 	elif event is InputEventMouseMotion:
@@ -274,49 +280,60 @@ func _update_detailed_box_position():
 # --- Button Signal Handlers ---
 
 func _on_clear_all_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	pin_manager.clear_all_pins()
 	_update_game_state()
 
 func _on_back_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func _on_grid_toggle_button_toggled(button_pressed: bool):
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	grid_overlay.set_visibility(button_pressed)
 
 func _on_reverse_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	pin_manager.reverse_path()
 	_update_game_state()
 	
 func _on_load_max_path_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	if not best_path_data.is_empty():
 		pin_manager.load_path(best_path_data)
 		_update_game_state()
 
 func _on_family_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	confirmation_popup.show()
 
 func _on_info_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	instructions_popup.hide()
 	info_popup.show_popup(pin_manager.valid_pin_locations, pin_manager.dropped_pin_data)
 
 func _on_instructions_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	info_popup.hide()
 	instructions_popup.show_popup()
 
 func _on_new_trip_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	_prompt_paused = false
 	difficulty_prompt.show()
 	
 func _on_difficulty_chosen(adjustment: int):
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	var num_members = GlobalState.confirmed_family.size()
 	var upper_limit = 10
 	if num_members == 2: upper_limit = 6
@@ -339,11 +356,24 @@ func _on_difficulty_chosen(adjustment: int):
 	_prompt_paused = false
 
 func _on_return_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	difficulty_prompt.hide()
 	_prompt_paused = true
+	
+func _on_family_return_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	confirmation_popup.hide()
 
 func _on_continue_button_pressed():
-	button_sound.play()
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	confirmation_popup.hide()
 	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")
+
+func _on_sound_toggle_toggled(button_pressed: bool):
+	# Update the global state with the new setting.
+	GlobalState.is_sound_enabled = button_pressed
+	if GlobalState.is_sound_enabled:
+		button_sound.play()

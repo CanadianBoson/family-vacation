@@ -6,6 +6,7 @@ extends PanelContainer
 @onready var close_button: Button = $"VBoxContainer/HBoxContainer/CloseButton"
 @onready var view_toggle_button: CheckButton = $"VBoxContainer/HBoxContainer/ViewToggleButton"
 @onready var animation_player: AnimationPlayer = get_node("/root/GameScene/AnimationPlayer")
+@onready var button_sound = get_tree().get_root().get_node("GameScene/ButtonSound")
 
 const COLUMN_WIDTHS = [180, 100, 120, 120, 120, 80] # City, Country, Lat, Lng, Pop, Capital
 
@@ -115,6 +116,8 @@ func _sort_data_list(data_list: Array):
 	)
 
 func _on_close_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	animation_player.play("popout_info")
 	await animation_player.animation_finished
 	hide()

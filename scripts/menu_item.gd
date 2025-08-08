@@ -7,6 +7,7 @@ extends VBoxContainer
 @onready var circle_image: TextureRect = $Header/HBoxContainer/CircleImage
 @onready var dropdown_container: VBoxContainer = $DropdownContainer
 @onready var dropdown_animator: AnimationPlayer = $DropdownAnimator
+@onready var dropdown_sound: AudioStreamPlayer2D = $DropdownSound
 
 var is_open = false
 var is_animating = false
@@ -91,6 +92,8 @@ func _on_header_gui_input(event: InputEvent):
 			toggle_dropdown()
 
 func toggle_dropdown():
+	if GlobalState.is_sound_enabled:
+		dropdown_sound.play()
 	is_animating = true
 	is_open = not is_open
 	

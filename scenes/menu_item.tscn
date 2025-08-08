@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://16ha4ef8tflw"]
+[gd_scene load_steps=11 format=3 uid="uid://16ha4ef8tflw"]
 
 [ext_resource type="Script" uid="uid://cyyvq30j8gqb7" path="res://scripts/menu_item.gd" id="1_34sh5"]
 [ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="1_m5xae"]
 [ext_resource type="Shader" uid="uid://ctggyy2ad2qhe" path="res://shaders/circle_mask.gdshader" id="2_m5xae"]
+[ext_resource type="AudioStream" uid="uid://dsxe0w7iehteg" path="res://sounds/dropdown.wav" id="4_1e4j2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7i8jb"]
 corner_radius_top_left = 10
@@ -104,3 +105,7 @@ theme_override_constants/separation = -1
 libraries = {
 &"": SubResource("AnimationLibrary_nxtqp")
 }
+
+[node name="DropdownSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_1e4j2")
+volume_db = -6.966
