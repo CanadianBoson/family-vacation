@@ -15,7 +15,8 @@
 				"CarFree",
 				"SailFree",
 				"TrainFree",
-				"PlaneFree"
+				"PlaneFree",
+				"MinLegCost"
 			],
 			"text": "Use every method of transport"
 		},
@@ -187,9 +188,10 @@
 			"difficulty": 3,
 			"family": "Killjoy",
 			"incompatible": [
-				"MinEndpointDistance"
+				"MinEndpointDistance",
+				"MinLat"
 			],
-			"text": "The start and end points are at most 1000km apart"
+			"text": "The endpoints are at most 1000km apart"
 		},
 		"MaxJourneyDistance": {
 			"difficulty": 4,
@@ -286,14 +288,19 @@
 			"family": "Numerator",
 			"incompatible": [
 				"MaxLat",
-				"StartEndMaxLat"
+				"StartEndMaxLat",
+				"MaxEndpointDistance"
 			],
 			"text": "The route should exceed 20 degrees latitude in spread"
 		},
 		"MinLegCost": {
 			"difficulty": 4,
 			"family": "Spender",
-			"incompatible": [],
+			"incompatible": [
+				"AllTransport",
+				"MustUseCar",
+				"MostlyCar"
+			],
 			"text": "Every leg of the trip must cost at least 100€ per person"
 		},
 		"MinLegDistance": {
@@ -319,7 +326,8 @@
 			"family": "Numerator",
 			"incompatible": [
 				"MaxLon",
-				"StartEndMaxLon"
+				"StartEndMaxLon",
+				"MaxEndpointDistance"
 			],
 			"text": "The route should exceed 25 degrees longitude in spread"
 		},
@@ -351,7 +359,8 @@
 			"difficulty": 4,
 			"family": "Transporter",
 			"incompatible": [
-				"CarFree"
+				"CarFree",
+				"MinLegCost"
 			],
 			"text": "Use >=50% cars"
 		},
@@ -375,7 +384,8 @@
 			"difficulty": 1,
 			"family": "Transporter",
 			"incompatible": [
-				"CarFree"
+				"CarFree",
+				"MinLegCost"
 			],
 			"text": "Use cars"
 		},
