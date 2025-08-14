@@ -95,7 +95,7 @@ func _ready():
 		"StayAwayRU": {"func": _check_stay_away, "expected": true, "args": ["Russia", "avoid"]},
 		"StayAwayTR": {"func": _check_stay_away, "expected": true, "args": ["Turkey", "avoid"]},
 		"StayAwayUK": {"func": _check_stay_away, "expected": true, "args": ["United Kingdom", "avoid"]},
-		# party_pooper
+		# killjoy
 		"MaxCities": {"func": _check_city_count, "expected": true, "args": [5, "max"]},
 		"MaxCountries": {"func": _check_country_count, "expected": true, "args": [5, "max"]},
 		"MaxEndpointDistance": {"func": _check_endpoint_distance, "expected": true, "args": [1000.0, "max"]},
@@ -103,7 +103,7 @@ func _ready():
 		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "max"]},
 		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
 		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [2000.0, "max"]},	
-		# spoiled
+		# spender
 		"MinCities": {"func": _check_city_count, "expected": true, "args": [10, "min"]},
 		"MinCountries": {"func": _check_country_count, "expected": true, "args": [10, "min"]},
 		"MinEndpointDistance": {"func": _check_endpoint_distance, "expected": true, "args": [3000.0, "min"]},

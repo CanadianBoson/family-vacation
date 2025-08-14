@@ -189,7 +189,8 @@
 			"family": "Killjoy",
 			"incompatible": [
 				"MinEndpointDistance",
-				"MinLat"
+				"MinLat",
+				"MinLon"
 			],
 			"text": "The endpoints are at most 1000km apart"
 		},
@@ -213,7 +214,11 @@
 		"MaxLegCost": {
 			"difficulty": 5,
 			"family": "Killjoy",
-			"incompatible": [],
+			"incompatible": [
+				"MostlyPlane",
+				"MostlyTrain",
+				"MostlyBoat"
+			],
 			"text": "Every leg of the trip must cost under 300€ per person"
 		},
 		"MaxLegDistance": {
