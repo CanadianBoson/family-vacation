@@ -105,3 +105,37 @@ func calculate_spans(dropped_pin_data: Array) -> Dictionary:
 	var endpoint_span = Vector2(endpoint_lat_span, endpoint_lon_span)
 
 	return {"journey_span": journey_span, "endpoint_span": endpoint_span}	
+
+# Converts an array of pin data (containing Vector2) into a clean JSON string.
+static func stringify_path_data(path_data: Array) -> String:
+	var serializable_path = []
+	for pin_data in path_data:
+		var serializable_pin = pin_data.duplicate()
+		
+		if serializable_pin.has("position") and serializable_pin.position is Vector2:
+			var pos_vec = serializable_pin.position
+			serializable_pin.position = {"x": pos_vec.x, "y": pos_vec.y}
+		
+		serializable_path.append(serializable_pin)
+		
+	return JSON.stringify(serializable_path)
+
+
+# Converts a JSON string from Firebase back into a usable Godot array with Vector2.
+static func load_path_from_string(json_string: String) -> Array:
+	var parsed_data = JSON.parse_string(json_string)
+	
+	if not parsed_data is Array:
+		return []
+
+	var reconstructed_path = []
+	for serializable_pin in parsed_data:
+		var pin_data = serializable_pin.duplicate()
+		
+		if pin_data.has("position") and pin_data.position is Dictionary:
+			var pos_dict = pin_data.position
+			pin_data.position = Vector2(pos_dict.get("x", 0), pos_dict.get("y", 0))
+			
+		reconstructed_path.append(pin_data)
+		
+	return reconstructed_path

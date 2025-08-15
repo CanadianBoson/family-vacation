@@ -81,8 +81,12 @@ var best_path_distance = INF
 # UI State
 var _prompt_paused = false
 
+var high_scores_collection = Firebase.Firestore.collection('high_scores')
+
 
 func _ready():
+	Firebase.Auth.login_anonymous()
+	
 	sound_toggle_button.button_pressed = GlobalState.is_sound_enabled
 	pin_manager.initialize(pins_container, pin_scene)
 	quest_manager.pin_manager = pin_manager
@@ -277,7 +281,24 @@ func _update_detailed_box_position():
 	else:
 		new_pos = mouse_pos + Vector2(15, 15)
 	detailed_info_box.position = new_pos
-
+	
+func _save_best_path_to_firebase():
+	# Only save if a valid high score was achieved.
+	if max_score <= 0 or best_path_data.is_empty():
+		return
+	
+	var document = await high_scores_collection.add("", 
+		{
+			'score': max_score,
+			'difficulty': GlobalState.initial_difficulty,
+			'family': GlobalState.confirmed_family,
+			'quests': GlobalState.current_trip_quests,
+			'path': Utils.stringify_path_data(best_path_data),
+			'completed': max_score == vertical_menu.get_max_possible_score(),
+			'timestamp': Time.get_unix_time_from_system()
+		}
+	)
+	
 # --- Button Signal Handlers ---
 
 func _on_clear_all_button_pressed():
@@ -333,6 +354,9 @@ func _on_new_trip_button_pressed():
 	difficulty_prompt.show()
 	
 func _on_difficulty_chosen(adjustment: int):
+	# save the results of the completed trip before starting a new one
+	_save_best_path_to_firebase()
+	
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
 	var num_members = GlobalState.confirmed_family.size()

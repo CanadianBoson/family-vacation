@@ -138,7 +138,6 @@ func check_all_conditions(dropped_pin_data: Array, all_locations_data: Array, nu
 		
 		if quest_statuses.get(quest_key) != is_satisfied:
 			quest_statuses[quest_key] = is_satisfied
-			print("Status for '%s' changed to: %s" % [quest_key, is_satisfied])
 
 func is_quest_satisfied(quest_key: String) -> bool:
 	return quest_statuses.get(quest_key, false)

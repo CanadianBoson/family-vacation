@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GlobalState="*res://scripts/global_state.gd"
 Utils="*res://scripts/utils.gd"
+Firebase="*res://addons/godot-firebase/firebase/firebase.tscn"
 
 [display]
 
@@ -29,3 +30,7 @@ window/stretch/mode="canvas_items"
 [dotnet]
 
 project/assembly_name="family-vacation"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-firebase/plugin.cfg", "res://addons/http-sse-client/plugin.cfg")
