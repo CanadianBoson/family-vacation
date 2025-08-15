@@ -23,34 +23,14 @@
 		"AlphabetAscCity": {
 			"difficulty": 5,
 			"family": "Linguist",
-			"incompatible": [
-				"AlphabetDescCity"
-			],
-			"text": "Cities must be in alphabetical order"
+			"incompatible": [],
+			"text": "Cities must be in alphabetical (asc/desc) order"
 		},
 		"AlphabetAscCountry": {
 			"difficulty": 5,
 			"family": "Linguist",
-			"incompatible": [
-				"AlphabetDescCountry"
-			],
-			"text": "Countries must be in alphabetical order"
-		},
-		"AlphabetDescCity": {
-			"difficulty": 5,
-			"family": "Linguist",
-			"incompatible": [
-				"AlphabetAscCity"
-			],
-			"text": "Cities must be in reverse alphabetical order"
-		},
-		"AlphabetDescCountry": {
-			"difficulty": 5,
-			"family": "Linguist",
-			"incompatible": [
-				"AlphabetAscCountry"
-			],
-			"text": "Countries must be in reverse alphabetical order"
+			"incompatible": [],
+			"text": "Countries must be in alphabetical (asc/desc) order"
 		},
 		"CarFree": {
 			"difficulty": 3,

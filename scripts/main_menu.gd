@@ -5,6 +5,7 @@ extends Control
 
 @onready var sound_toggle_button: CheckButton = $VBoxContainer/SoundToggleButton
 @onready var button_sound = $ButtonSound
+@onready var instructions_popup = $InstructionsPopup
 
 func _ready():
 	_update_sound_button_text()
@@ -54,9 +55,7 @@ func _on_start_button_pressed():
 
 # This function is called when the 'Instructions' button is pressed.
 func _on_instructions_button_pressed():
-	var result = get_tree().change_scene_to_file("res://scenes/instructions.tscn")
-	if result != OK:
-		print("Error: Could not load the instructions scene.")
+	instructions_popup.show_popup()
 	
 func _on_button_family_pressed():
 	if GlobalState.is_sound_enabled:

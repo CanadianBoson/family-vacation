@@ -325,10 +325,10 @@ size_flags_horizontal = 1
 script = ExtResource("9_udeyl")
 
 [node name="ScoreTracker" type="VBoxContainer" parent="."]
-offset_left = 8.0
-offset_top = 567.0
-offset_right = 198.0
-offset_bottom = 710.0
+offset_left = 7.0
+offset_top = 533.0
+offset_right = 197.0
+offset_bottom = 704.0
 theme = ExtResource("6_tcjrq")
 theme_override_constants/separation = -1
 

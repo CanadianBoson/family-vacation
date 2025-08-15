@@ -30,6 +30,7 @@ Use the [b]Info[/b] button to show comprehensive statistics for all locations al
 Clicking on a header for a given column will sort the values in order.
 [/ul]
 
+
 [b]Transport Options:[/b]
 Different methods of transport are generated automatically depending on the distance and terrain between two cities.
 

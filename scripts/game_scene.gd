@@ -290,11 +290,13 @@ func _save_best_path_to_firebase():
 	var document = await high_scores_collection.add("", 
 		{
 			'score': max_score,
+			'max_possible_score': vertical_menu.get_max_possible_score(),
+			'progress_percent': float(max_score) / float(vertical_menu.get_max_possible_score()),
+			'completed': max_score == vertical_menu.get_max_possible_score(),
 			'difficulty': GlobalState.initial_difficulty,
 			'family': GlobalState.confirmed_family,
 			'quests': GlobalState.current_trip_quests,
 			'path': Utils.stringify_path_data(best_path_data),
-			'completed': max_score == vertical_menu.get_max_possible_score(),
 			'timestamp': Time.get_unix_time_from_system()
 		}
 	)
