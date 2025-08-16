@@ -13,7 +13,7 @@ const INSTRUCTIONS = """
 [b]Info:[/b]
 Start by choosing some members to join your family. You can choose between two
 pictures and personalize their names, and when ready click 'Add to Family'. You can remove
-family members by middle clicking them in the right panel. Once you've added at least
+family members by right clicking them in the right panel. Once you've added at least
 two family members (maximum of six) you can start the game.
 
 [b]Initial Difficulty:[/b]

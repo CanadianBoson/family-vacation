@@ -86,7 +86,6 @@ var high_scores_collection = Firebase.Firestore.collection('high_scores')
 
 func _ready():
 	Firebase.Auth.login_anonymous()
-	
 	sound_toggle_button.button_pressed = GlobalState.is_sound_enabled
 	pin_manager.initialize(pins_container, pin_scene)
 	quest_manager.pin_manager = pin_manager
@@ -287,7 +286,7 @@ func _save_best_path_to_firebase():
 	if max_score <= 0 or best_path_data.is_empty():
 		return
 	
-	var document = await high_scores_collection.add("", 
+	await high_scores_collection.add("", 
 		{
 			'score': max_score,
 			'max_possible_score': vertical_menu.get_max_possible_score(),

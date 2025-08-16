@@ -93,7 +93,7 @@ func _select_quests_for_member(family_key: String, target_difficulty: int, avail
 				other_quests.append(key)
 
 	# Try to fill the difficulty target
-	while current_difficulty < target_difficulty and selected_quests.size() < 6:
+	while current_difficulty < target_difficulty and selected_quests.size() < 5:
 		var pool_to_use = other_quests
 		# 75% chance to pick from matching quests if available
 		if randf() < 0.75 and not matching_quests.is_empty():

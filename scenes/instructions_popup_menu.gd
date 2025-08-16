@@ -15,8 +15,9 @@ Work your hardest to satisfy everyone, but be aware due to randomness that it mi
 to make everyone happy!
 
 Click the Casual Mode button to play with a randomized family. You have the option to play entirely
-new trips with the New button, play trips others have successfully completed with Completion Mode,
 or try where others have failed with Frustration Mode.
+new trips with the Brand New button, play trips others have successfully completed with Completion 
+Mode, or try where others have failed with Frustration Mode.
 """
 
 func _ready():

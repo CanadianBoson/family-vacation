@@ -107,7 +107,7 @@ func calculate_spans(dropped_pin_data: Array) -> Dictionary:
 	return {"journey_span": journey_span, "endpoint_span": endpoint_span}	
 
 # Converts an array of pin data (containing Vector2) into a clean JSON string.
-static func stringify_path_data(path_data: Array) -> String:
+func stringify_path_data(path_data: Array) -> String:
 	var serializable_path = []
 	for pin_data in path_data:
 		var serializable_pin = pin_data.duplicate()
@@ -122,7 +122,7 @@ static func stringify_path_data(path_data: Array) -> String:
 
 
 # Converts a JSON string from Firebase back into a usable Godot array with Vector2.
-static func load_path_from_string(json_string: String) -> Array:
+func load_path_from_string(json_string: String) -> Array:
 	var parsed_data = JSON.parse_string(json_string)
 	
 	if not parsed_data is Array:

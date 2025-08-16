@@ -6,13 +6,31 @@ extends Control
 @onready var sound_toggle_button: CheckButton = $VBoxContainer/SoundToggleButton
 @onready var button_sound = $ButtonSound
 @onready var instructions_popup = $InstructionsPopup
+@onready var difficulty_prompt: PanelContainer = $DifficultyPrompt
+@onready var same_button: Button = $DifficultyPrompt/VBoxContainer/HBoxContainer/NewButton
+@onready var completion_button: Button = $DifficultyPrompt/VBoxContainer/HBoxContainer/CompletionButton
+@onready var frustration_button: Button = $DifficultyPrompt/VBoxContainer/HBoxContainer/FrustrationButton
 
 func _ready():
+	await Firebase.Auth.login_anonymous()
+	var query = FirestoreQuery.new().from("high_scores")
+	GlobalState.firebase_data = await Firebase.Firestore.query(query)
+	GlobalState.firebase_data.shuffle()
 	_update_sound_button_text()
 	sound_toggle_button.button_pressed = GlobalState.is_sound_enabled
 
 # This is the new "quick start" logic.
 func _on_start_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	difficulty_prompt.show()
+
+func _on_return_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	difficulty_prompt.hide()
+
+func _on_new_button_pressed():
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
 	# 1. Load the raw family data.
@@ -53,8 +71,43 @@ func _on_start_button_pressed():
 	# 4. Change to the game scene.
 	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
 
-# This function is called when the 'Instructions' button is pressed.
+func _on_completion_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	
+	for document in GlobalState.firebase_data:
+		if not GlobalState.used_trip_ids.has(document.doc_name) and document.completed:		
+			GlobalState.confirmed_family = document.family
+			GlobalState.current_trip_quests = document.quests
+			GlobalState.initial_difficulty = document.difficulty
+			GlobalState.used_trip_ids.append(document.doc_name)
+			print("Loaded completed trip: ", document.doc_name)
+			break
+	
+	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
+
+func _on_frustration_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	
+	for document in GlobalState.firebase_data:
+		if (
+			not GlobalState.used_trip_ids.has(document.doc_name) 
+			and document.progress_percent > 0.75
+			and not document.completed
+		):		
+			GlobalState.confirmed_family = document.family
+			GlobalState.current_trip_quests = document.quests
+			GlobalState.initial_difficulty = document.difficulty
+			GlobalState.used_trip_ids.append(document.doc_name)
+			print("Loaded completed trip: ", document.doc_name)
+			break
+	
+	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
+
 func _on_instructions_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
 	instructions_popup.show_popup()
 	
 func _on_button_family_pressed():
