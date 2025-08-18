@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://d1r2dwh600cam"]
+[gd_scene load_steps=27 format=3 uid="uid://d1r2dwh600cam"]
 
 [ext_resource type="Script" uid="uid://b423nh08n8n7s" path="res://scripts/game_scene.gd" id="1_po0ka"]
 [ext_resource type="Texture2D" uid="uid://ciy17e11hsa45" path="res://background_images/blank_map.png" id="2_po0ka"]
@@ -11,17 +11,18 @@
 [ext_resource type="PackedScene" uid="uid://fy5xvtergi3a" path="res://scenes/vertical_menu.tscn" id="8_e35lh"]
 [ext_resource type="Script" uid="uid://bqpydbv16hqws" path="res://scripts/quest_manager.gd" id="9_udeyl"]
 [ext_resource type="Script" uid="uid://cwc3qlcvdaouq" path="res://scripts/instructions_popup.gd" id="10_miq82"]
+[ext_resource type="RichTextEffect" uid="uid://crbsguq3dqcg4" path="res://fonts/rich_text.tres" id="11_ldkr4"]
 [ext_resource type="AudioStream" uid="uid://bq8sot0oalxc1" path="res://sounds/pin_pop.wav" id="12_rvs2r"]
 [ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="13_5ay1a"]
 [ext_resource type="AudioStream" uid="uid://ds24umvthgo1d" path="res://sounds/success.mp3" id="13_tqxxy"]
 
+[sub_resource type="CanvasTexture" id="CanvasTexture_6e45b"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kdryc"]
 shader = ExtResource("3_mj2jn")
-shader_parameter/solid_color = Color(0.901961, 0.941176, 0.972549, 1)
+shader_parameter/solid_color = Color(0.92549, 0.941176, 0.972549, 1)
 shader_parameter/gradient_start = 0.0
 shader_parameter/gradient_end = 0.0
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_6e45b"]
 
 [sub_resource type="Animation" id="Animation_kdryc"]
 length = 0.001
@@ -183,6 +184,13 @@ position = Vector2(-6, 3)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="GameScene"]
 layer = -1
+
+[node name="TogglePanel" type="TextureRect" parent="GameScene/CanvasLayer"]
+offset_left = 769.0
+offset_top = 1.0
+offset_right = 940.0
+offset_bottom = 154.0
+texture = SubResource("CanvasTexture_6e45b")
 
 [node name="MapBackground" type="TextureRect" parent="GameScene/CanvasLayer"]
 z_index = -1
@@ -403,21 +411,21 @@ offset_bottom = 40.0
 
 [node name="GridToggleButton" type="CheckButton" parent="."]
 modulate = Color(0, 0, 0, 1)
-offset_left = 9.0
+offset_left = 853.0
 offset_top = 10.0
-offset_right = 93.0
+offset_right = 938.0
 offset_bottom = 41.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 14
-text = "Grid"
+text = "  Grid"
 
 [node name="SoundToggleButton" type="CheckButton" parent="."]
 modulate = Color(0, 0, 0, 1)
-offset_left = 3.0
-offset_top = 39.0
-offset_right = 94.0
-offset_bottom = 67.0
+offset_left = 847.0
+offset_top = 40.0
+offset_right = 938.0
+offset_bottom = 68.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 14
@@ -499,7 +507,9 @@ z_index = 10
 clip_contents = false
 custom_minimum_size = Vector2(160, 250)
 layout_mode = 2
+theme = ExtResource("6_tcjrq")
 bbcode_enabled = true
+custom_effects = [ExtResource("11_ldkr4")]
 
 [node name="InfoPopup" type="PanelContainer" parent="PopupLayer"]
 z_index = 20
@@ -556,7 +566,7 @@ theme_override_constants/separation = 5
 
 [node name="Label" type="Label" parent="PopupLayer/ConfirmationPopup/VBoxContainer"]
 layout_mode = 2
-text = "Updating the family will start a new trip. 
+text = "This will start a new trip. 
 Are you sure you want to continue?"
 horizontal_alignment = 1
 
@@ -581,6 +591,33 @@ stream = ExtResource("13_5ay1a")
 [node name="SuccessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("13_tqxxy")
 
+[node name="ModeSelector" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(150, 0)
+offset_left = 7.0
+offset_top = 6.0
+offset_right = 157.0
+offset_bottom = 46.0
+
+[node name="CurrentModeButton" type="Button" parent="ModeSelector"]
+layout_mode = 2
+mouse_filter = 2
+text = "Family Mode"
+
+[node name="FamilyModeButton" type="Button" parent="ModeSelector"]
+visible = false
+layout_mode = 2
+text = "Family Mode"
+
+[node name="CompletionModeButton" type="Button" parent="ModeSelector"]
+visible = false
+layout_mode = 2
+text = "Completion Mode"
+
+[node name="FrustrationModeButton" type="Button" parent="ModeSelector"]
+visible = false
+layout_mode = 2
+text = "Frustration Mode"
+
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/FamilyButton" to="." method="_on_family_button_pressed"]
 [connection signal="pressed" from="MenuButtons/HBoxContainer/LeftColumn/InstructionsButton" to="." method="_on_instructions_button_pressed"]
@@ -592,4 +629,4 @@ stream = ExtResource("13_tqxxy")
 [connection signal="toggled" from="GridToggleButton" to="." method="_on_grid_toggle_button_toggled"]
 [connection signal="toggled" from="SoundToggleButton" to="." method="_on_sound_toggle_toggled"]
 [connection signal="pressed" from="PopupLayer/InfoPopup/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton" to="." method="_on_family_continue_button_pressed"]

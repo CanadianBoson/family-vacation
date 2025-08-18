@@ -8,16 +8,11 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("MainMenu/MainMenu/ButtonSound")
 
 const INSTRUCTIONS = """
-[center][b]Welcome to Family Vacation![/b][/center]
+[center]Welcome to Family Vacation![/center]
 
-Click the Start button to make a family that will travel around Europe, all with competing demands.
-Work your hardest to satisfy everyone, but be aware due to randomness that it might be impossible
-to make everyone happy!
+Click the [bfont]New Family[/bfont] button to make a family that will travel around Europe, all with competing demands. Work your hardest to satisfy everyone, but be aware due to randomness that it might be impossible to make everyone happy!
 
-Click the Casual Mode button to play with a randomized family. You have the option to play entirely
-or try where others have failed with Frustration Mode.
-new trips with the Brand New button, play trips others have successfully completed with Completion 
-Mode, or try where others have failed with Frustration Mode.
+Click the [bfont]Casual Mode[/bfont] button to play with a randomized family. You have the option to play entirely new trips with the [bfont]Brand New[/bfont] button, play trips others have successfully completed with [bfont]Completion Mode[/bfont] , or try where others have failed with [bfont]Frustration Mode.
 """
 
 func _ready():
@@ -25,9 +20,6 @@ func _ready():
 	hide()
 	modulate.a = 0.0 # Start transparent for animations
 	close_button.pressed.connect(_on_close_button_pressed)
-	
-	# Set the text for the RichTextLabel.
-	instructions_text.text = INSTRUCTIONS
 
 # This function is called from the main scene to show the popup.
 func show_popup():

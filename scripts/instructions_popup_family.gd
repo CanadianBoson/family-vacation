@@ -8,23 +8,23 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("FamilyScene/ButtonSound")
 
 const INSTRUCTIONS = """
-[center][b]Welcome to Family Vacation![/b][/center]
+[center]Welcome to Family Vacation![/center]
 
-[b]Info:[/b]
+Info:
 Start by choosing some members to join your family. You can choose between two
-pictures and personalize their names, and when ready click 'Add to Family'. You can remove
+pictures and personalize their names, and when ready click [bfont]Add to Family[/bfont]. You can remove
 family members by right clicking them in the right panel. Once you've added at least
 two family members (maximum of six) you can start the game.
 
-[b]Initial Difficulty:[/b]
+Initial Difficulty:
 Adjust the slider to set the initial difficulty in the game. Note that having more
 family members tends to make the game more difficult due to competing demands. Note
 that demands are randomized and it may be impossible to satisfy everyone, let alone
 a single family member.
 
-[b]UI:[/b]
+UI:
 [ul]
-Use the [b]Back[/b] button to return to the main screen.
+Use the [bfont]Back[/bfont] button to return to the main screen.
 [/ul]
 """
 

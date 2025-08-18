@@ -139,3 +139,21 @@ func load_path_from_string(json_string: String) -> Array:
 		reconstructed_path.append(pin_data)
 		
 	return reconstructed_path
+	
+func load_completion_or_frustration_mode():
+	for document in GlobalState.firebase_data:
+		if (
+			not GlobalState.used_trip_ids.has(document.doc_name) 
+			and (document.completed == (GlobalState.mode == "completion"))
+		):
+			GlobalState.confirmed_family = document.family
+			GlobalState.current_trip_quests = document.quests
+			GlobalState.initial_difficulty = document.difficulty
+			GlobalState.used_trip_ids.append(document.doc_name)
+			print(
+				"Loaded trip from Firebase: ", 
+				document.doc_name, 
+				", completed: ", 
+				document.completed
+			)
+			break	

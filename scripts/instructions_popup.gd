@@ -8,30 +8,36 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("GameScene/ButtonSound")
 
 const INSTRUCTIONS = """
-[center][b]Welcome to Family Vacation![/b][/center]
+[center]Welcome to Family Vacation![/center]
 
-[b]Objective:[/b]
+Objective:
 Design a route which satisfies as many family members as possible. Every family member has demands of various difficulties, and your score is the sum of these values along with bonuses for satisfying all a family member's demands.
 
-[b]Family Controls:[/b]
-Click on a name to expand or contract the demands of family members. Demands that are met appear with a checkmark. Family members with all demands met show up with a border.
-
-[b]Map Controls:[/b]
+Mode:
 [ul]
-[b]Left-Click:[/b] Place a pin on an available city.
-[b]Right-Click:[/b] Remove a pin from the map.
-[b]Drag-and-Drop:[/b] Move an existing pin to a new, unoccupied city.
-[b]Hover:[/b] Hover over a city briefly to see the name, and for one second to get more details.
+[bfont]Family Mode[/bfont]: The default mode. New quests for the same family members.
+[bfont]Completion Mode[/bfont]: Randomly play a family/quests combination that another player has previously succeeded with.
+[bfont]Frustration Mode[/bfont]: Randomly play a family/quests combination that another player has ALMOST succeeded with.
 [/ul]
 
-[b]Info:[/b]
+Family Controls:
+Click on a name to expand or contract the demands of family members. Demands that are met appear with a checkmark. Family members with all demands met show up with a border.
+
+Map Controls:
 [ul]
-Use the [b]Info[/b] button to show comprehensive statistics for all locations along with the overall and endpoint latitude and longitude values.
+Left-Click: Place a pin on an available city.
+Right-Click: Remove a pin from the map.
+Drag-and-Drop: Move an existing pin to a new, unoccupied city.
+Hover: Hover over a city briefly to see the name, and for one second to get more details.
+[/ul]
+
+Info:
+[ul]
+Use the [bfont]Info[/bfont] button to show comprehensive statistics for all locations along with the overall and endpoint latitude and longitude values.
 Clicking on a header for a given column will sort the values in order.
 [/ul]
 
-
-[b]Transport Options:[/b]
+Transport Options:
 Different methods of transport are generated automatically depending on the distance and terrain between two cities.
 
 The calculation and cost of different methods is shown below:
@@ -49,22 +55,26 @@ Plane (Red): [ul]
 	All other cases
 	Cost is (150 + 15 * sqrt(num_kms)) * num_family [/ul][/ul]
 
-[b]Buttons:[/b]
+Buttons:
 [ul]
-[b]Back[/b] gets you back to the main menu.
-[b]Family[/b] gets you back to the family menu.
-[b]Info[/b] loads this tooltip.
-[b]New Trip[/b] gives the option to start a new trip.
-[b]Clear All[/b] clears the route and all pins.
-[b]Reverse[/b] switches the direction of the trip.
-[b]Load Max[/b] reloads the route that had the highest score so far.
-[b]Stats[/b] gives tabular data for cities and dropped pins.
-[b]Grid[/b] toggles a grid for aesthetic purposes.
+[bfont]Back[/bfont] gets you back to the main menu.
+[bfont]Family[/bfont] gets you back to the family menu.
+[bfont]Info[/bfont] loads this tooltip.
+[bfont]New Trip[/bfont] gives the option to start a new trip.
+[ul]
+In 'Family Mode' you will be prompted to adjust the difficulty for the same family.
+In 'Completion' or 'Frustration' modes, a random trip will be generated.
+[/ul]
+[bfont]Clear All[/bfont] clears the route and all pins.
+[bfont]Reverse[/bfont] switches the direction of the trip.
+[bfont]Load Max[/bfont] reloads the route that had the highest score so far.
+[bfont]Stats[/bfont] gives tabular data for cities and dropped pins.
+[bfont]Grid[/bfont] toggles a grid for aesthetic purposes.
 [/ul]
 
-[b]Scoring:[/b]
+Scoring:
 [ul]
-Use the [b]Ledger[/b] on the left to track your current path's distance and cost.
+Use the [bfont]Ledger[/bfont] on the left to track your current path's distance and cost.
 The bottom left corner shows the current difficulty along with the scores from demands and from family members.
 [/ul]
 """

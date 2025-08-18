@@ -16,7 +16,8 @@
 				"SailFree",
 				"TrainFree",
 				"PlaneFree",
-				"MinLegCost"
+				"MinLegCost",
+				"MaxLegCost"
 			],
 			"text": "Use every method of transport"
 		},
@@ -197,7 +198,8 @@
 			"incompatible": [
 				"MostlyPlane",
 				"MostlyTrain",
-				"MostlyBoat"
+				"MostlyBoat",
+				"AllTransport"
 			],
 			"text": "Every leg of the trip must cost under 300€ per person"
 		},

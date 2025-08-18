@@ -56,7 +56,11 @@ var pin_scene = preload("res://scenes/pin.tscn")
 @onready var return_button: Button = $PopupLayer/DifficultyPrompt/VBoxContainer/HBoxContainer/ReturnButton
 @onready var family_continue_button: Button = $PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ContinueButton
 @onready var family_return_button: Button = $PopupLayer/ConfirmationPopup/VBoxContainer/HBoxContainer/ReturnButton
-
+@onready var mode_selector: VBoxContainer = $ModeSelector
+@onready var current_mode_button: Button = $ModeSelector/CurrentModeButton
+@onready var family_mode_button: Button = $ModeSelector/FamilyModeButton
+@onready var completion_mode_button: Button = $ModeSelector/CompletionModeButton
+@onready var frustration_mode_button: Button = $ModeSelector/FrustrationModeButton
 # --- Constants & State Variables ---
 const CLICK_RADIUS = 3.0
 var CAR_COLOR = Color.GREEN
@@ -80,7 +84,9 @@ var best_path_distance = INF
 
 # UI State
 var _prompt_paused = false
+var _pending_action = ""
 
+# Firebase collection
 var high_scores_collection = Firebase.Firestore.collection('high_scores')
 
 
@@ -99,6 +105,14 @@ func _ready():
 	harder_button.pressed.connect(_on_difficulty_chosen.bind(1))
 	return_button.pressed.connect(_on_return_button_pressed)
 	family_return_button.pressed.connect(_on_family_return_button_pressed)
+	
+	mode_selector.mouse_entered.connect(_on_mode_selector_mouse_entered)
+	mode_selector.mouse_exited.connect(_on_mode_selector_mouse_exited)
+	
+	family_mode_button.pressed.connect(_on_mode_button_pressed.bind("family"))
+	completion_mode_button.pressed.connect(_on_mode_button_pressed.bind("completion"))
+	frustration_mode_button.pressed.connect(_on_mode_button_pressed.bind("frustration"))
+	_update_current_mode_button_text()
 	
 	_update_game_state()
 	hover_label.hide()
@@ -129,7 +143,12 @@ func _update_game_state():
 			print("New best path found with same score but shorter distance.")
 	
 	var max_score_menu = vertical_menu.get_max_possible_score()
-	if max_score_menu > 0 and scores.total_score == max_score_menu and not _prompt_paused:
+	if (
+		max_score_menu > 0 
+		and scores.total_score == max_score_menu 
+		and not _prompt_paused
+		and GlobalState.mode == "family"
+	):
 		if GlobalState.is_sound_enabled:
 			success_sound.play()
 		difficulty_prompt.show()
@@ -282,8 +301,11 @@ func _update_detailed_box_position():
 	detailed_info_box.position = new_pos
 	
 func _save_best_path_to_firebase():
-	# Only save if a valid high score was achieved.
-	if max_score <= 0 or best_path_data.is_empty():
+	# Only save if a good enough valid high score was achieved with a new setup.
+	if (
+		max_score < 0.65 * vertical_menu.get_max_possible_score()
+		or GlobalState.mode != "family"
+	):
 		return
 	
 	await high_scores_collection.add("", 
@@ -334,6 +356,7 @@ func _on_load_max_path_button_pressed():
 func _on_family_button_pressed():
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
+	_pending_action = "family"
 	confirmation_popup.show()
 
 func _on_info_button_pressed():
@@ -351,8 +374,12 @@ func _on_instructions_button_pressed():
 func _on_new_trip_button_pressed():
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
-	_prompt_paused = false
-	difficulty_prompt.show()
+	if GlobalState.mode == "family":
+		_prompt_paused = false
+		difficulty_prompt.show()
+	if GlobalState.mode == "completion" or GlobalState.mode == "frustration":
+		_pending_action = GlobalState.mode
+		confirmation_popup.show()
 	
 func _on_difficulty_chosen(adjustment: int):
 	# save the results of the completed trip before starting a new one
@@ -360,26 +387,28 @@ func _on_difficulty_chosen(adjustment: int):
 	
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
-	var num_members = GlobalState.confirmed_family.size()
-	var upper_limit = 10
-	if num_members == 2: upper_limit = 6
-	elif num_members == 3: upper_limit = 8
-	
-	var new_difficulty = GlobalState.initial_difficulty + adjustment
-	GlobalState.initial_difficulty = clamp(new_difficulty, 1, upper_limit)
-	GlobalState.current_trip_quests = []
-	
-	vertical_menu.rebuild_menu()
-	
-	max_score = 0
-	best_path_data = []
-	best_path_distance = INF
-	max_value_label.text = "Max Score: " + str(max_score)
-	pin_manager.clear_all_pins()
-	_update_game_state()
-	
-	difficulty_prompt.hide()
-	_prompt_paused = false
+		
+	# Extra guardrail in case the prompt is shown in another context
+	if GlobalState.mode == "family":
+		var num_members = GlobalState.confirmed_family.size()
+		var upper_limit = 10
+		if num_members == 2: upper_limit = 6
+		elif num_members == 3: upper_limit = 8
+		
+		var new_difficulty = GlobalState.initial_difficulty + adjustment
+		GlobalState.initial_difficulty = clamp(new_difficulty, 1, upper_limit)
+		GlobalState.current_trip_quests = []
+		
+		vertical_menu.rebuild_menu()
+		max_score = 0
+		best_path_data = []
+		best_path_distance = INF
+		max_value_label.text = "Max Score: " + str(max_score)
+		pin_manager.clear_all_pins()
+		_update_game_state()
+		
+		difficulty_prompt.hide()
+		_prompt_paused = false
 
 func _on_return_button_pressed():
 	if GlobalState.is_sound_enabled:
@@ -392,11 +421,45 @@ func _on_family_return_button_pressed():
 		button_sound.play()
 	confirmation_popup.hide()
 
-func _on_continue_button_pressed():
+func _on_family_continue_button_pressed():
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
 	confirmation_popup.hide()
-	get_tree().change_scene_to_file("res://scenes/family_scene.tscn")
+	if _pending_action == "family":
+		get_tree().change_scene_to_file("res://scenes/family_scene.tscn")
+	if _pending_action == "completion" or _pending_action == "frustration":
+		GlobalState.mode = _pending_action
+		_update_current_mode_button_text()
+		print("Game mode is now: ", _pending_action)
+		print("Used ids: ", GlobalState.used_trip_ids)
+		Utils.load_completion_or_frustration_mode()
+		get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
+
+func _on_mode_selector_mouse_entered():
+	hover_timer.stop() # Cancel any pending hide action.
+	current_mode_button.modulate.a = 0.5
+	family_mode_button.show()
+	completion_mode_button.show()
+	frustration_mode_button.show()
+
+func _on_mode_selector_mouse_exited():
+	hover_timer.start()
+
+func _on_mode_hover_timer_timeout():
+	family_mode_button.hide()
+	completion_mode_button.hide()
+	frustration_mode_button.hide()
+
+func _on_mode_button_pressed(new_mode: String):
+	_pending_action = new_mode
+	current_mode_button.modulate.a = 1.0
+	_on_mode_hover_timer_timeout()
+	# Skip if the mode isn't new
+	if not GlobalState.mode == _pending_action:
+		confirmation_popup.show()
+
+func _update_current_mode_button_text():
+	current_mode_button.text = GlobalState.mode.capitalize() + " Mode"
 
 func _on_sound_toggle_toggled(button_pressed: bool):
 	# Update the global state with the new setting.

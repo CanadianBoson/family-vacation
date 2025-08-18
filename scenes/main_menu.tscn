@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://3q4xssgkfqfd"]
+[gd_scene load_steps=12 format=3 uid="uid://3q4xssgkfqfd"]
 
 [ext_resource type="Script" uid="uid://udsjy2frw6jc" path="res://scripts/main_menu.gd" id="1_06t4h"]
 [ext_resource type="Texture2D" uid="uid://cay2lpyyokjpg" path="res://background_images/main_menu_image.png" id="1_7vrkn"]
 [ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="2_bqqt6"]
 [ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="4_wu84c"]
 [ext_resource type="Script" uid="uid://d3lrs6hnsh2vp" path="res://scenes/instructions_popup_menu.gd" id="5_8ln24"]
+[ext_resource type="RichTextEffect" uid="uid://crbsguq3dqcg4" path="res://fonts/rich_text.tres" id="6_rtw2f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rtw2f"]
 bg_color = Color(0.441095, 0.630238, 0.7289, 1)
@@ -112,7 +113,7 @@ text = "Instructions"
 
 [node name="Button_Family" type="Button" parent="MainMenu/VBoxContainer"]
 layout_mode = 2
-text = "Start"
+text = "New Family"
 
 [node name="Button_Start" type="Button" parent="MainMenu/VBoxContainer"]
 layout_mode = 2
@@ -122,6 +123,7 @@ text = "Casual Mode"
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
+button_pressed = true
 text = "Sound On"
 
 [node name="InstructionsPopup" type="PanelContainer" parent="MainMenu"]
@@ -155,6 +157,7 @@ clip_contents = false
 custom_minimum_size = Vector2(160, 250)
 layout_mode = 2
 bbcode_enabled = true
+custom_effects = [ExtResource("6_rtw2f")]
 
 [node name="DifficultyPrompt" type="PanelContainer" parent="MainMenu"]
 visible = false
@@ -217,6 +220,4 @@ libraries = {
 [connection signal="pressed" from="MainMenu/VBoxContainer/Button_Start" to="MainMenu" method="_on_start_button_pressed"]
 [connection signal="toggled" from="MainMenu/VBoxContainer/SoundToggleButton" to="MainMenu" method="_on_sound_toggle_toggled"]
 [connection signal="pressed" from="MainMenu/DifficultyPrompt/VBoxContainer/HBoxContainer/NewButton" to="MainMenu" method="_on_new_button_pressed"]
-[connection signal="pressed" from="MainMenu/DifficultyPrompt/VBoxContainer/HBoxContainer/CompletionButton" to="MainMenu" method="_on_completion_button_pressed"]
-[connection signal="pressed" from="MainMenu/DifficultyPrompt/VBoxContainer/HBoxContainer/FrustrationButton" to="MainMenu" method="_on_frustration_button_pressed"]
 [connection signal="pressed" from="MainMenu/DifficultyPrompt/VBoxContainer/HBoxContainer/ReturnButton" to="MainMenu" method="_on_return_button_pressed"]
