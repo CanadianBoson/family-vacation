@@ -8,7 +8,7 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("GameScene/ButtonSound")
 
 const INSTRUCTIONS = """
-[center]Welcome to Family Vacation![/center]
+[center][bfont]Welcome to Family Vacation![/bfont][/center]
 
 Objective:
 Design a route which satisfies as many family members as possible. Every family member has demands of various difficulties, and your score is the sum of these values along with bonuses for satisfying all a family member's demands.

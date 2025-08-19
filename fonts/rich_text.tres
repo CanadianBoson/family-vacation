@@ -1,6 +1,6 @@
 [gd_resource type="RichTextEffect" script_class="RichTextBoldFont" load_steps=2 format=3 uid="uid://crbsguq3dqcg4"]
 
-[ext_resource type="Script" uid="uid://dv6s8fxruuuvn" path="res://rich_text.gd" id="1_oy80o"]
+[ext_resource type="Script" uid="uid://dv6s8fxruuuvn" path="res://scripts/rich_text.gd" id="1_oy80o"]
 
 [resource]
 script = ExtResource("1_oy80o")

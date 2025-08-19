@@ -8,7 +8,7 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("FamilyScene/ButtonSound")
 
 const INSTRUCTIONS = """
-[center]Welcome to Family Vacation![/center]
+[center][bfont]Welcome to Family Vacation![/bfont][/center]
 
 Info:
 Start by choosing some members to join your family. You can choose between two

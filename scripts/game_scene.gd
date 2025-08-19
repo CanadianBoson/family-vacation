@@ -322,6 +322,8 @@ func _save_best_path_to_firebase():
 		}
 	)
 	
+	GlobalState.firebase_updated = true
+	
 # --- Button Signal Handlers ---
 
 func _on_clear_all_button_pressed():

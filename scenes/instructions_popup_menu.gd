@@ -8,7 +8,7 @@ extends PanelContainer
 @onready var button_sound = get_tree().get_root().get_node("MainMenu/MainMenu/ButtonSound")
 
 const INSTRUCTIONS = """
-[center]Welcome to Family Vacation![/center]
+[center][bfont]Welcome to Family Vacation![/bfont][/center]
 
 Click the [bfont]New Family[/bfont] button to make a family that will travel around Europe, all with competing demands. Work your hardest to satisfy everyone, but be aware due to randomness that it might be impossible to make everyone happy!
 

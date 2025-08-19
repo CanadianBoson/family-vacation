@@ -156,4 +156,4 @@ func load_completion_or_frustration_mode():
 				", completed: ", 
 				document.completed
 			)
-			break	
+			break

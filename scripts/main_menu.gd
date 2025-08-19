@@ -5,7 +5,8 @@ extends Control
 
 @onready var sound_toggle_button: CheckButton = $VBoxContainer/SoundToggleButton
 @onready var button_sound = $ButtonSound
-@onready var instructions_popup = $InstructionsPopup
+@onready var instructions_popup: PanelContainer = $InstructionsPopup
+@onready var info_popup: PanelContainer = $InfoPopup
 @onready var difficulty_prompt: PanelContainer = $DifficultyPrompt
 @onready var same_button: Button = $DifficultyPrompt/VBoxContainer/HBoxContainer/NewButton
 @onready var completion_button: Button = $DifficultyPrompt/VBoxContainer/HBoxContainer/CompletionButton
@@ -13,9 +14,12 @@ extends Control
 
 func _ready():
 	await Firebase.Auth.login_anonymous()
-	var query = FirestoreQuery.new().from("high_scores")
-	GlobalState.firebase_data = await Firebase.Firestore.query(query)
-	GlobalState.firebase_data.shuffle()
+	if GlobalState.firebase_data.is_empty() or GlobalState.firebase_updated:
+		var query = FirestoreQuery.new().from("high_scores")
+		GlobalState.firebase_data = await Firebase.Firestore.query(query)
+		GlobalState.firebase_data.shuffle()
+		_sort_firebase_leaderboard_data()
+		GlobalState.firebase_updated = false
 	completion_button.pressed.connect(_on_completion_or_frustration_button_pressed.bind("completion"))
 	frustration_button.pressed.connect(_on_completion_or_frustration_button_pressed.bind("frustration"))
 	_update_sound_button_text()
@@ -97,9 +101,45 @@ func _on_sound_toggle_toggled(button_pressed: bool):
 	GlobalState.is_sound_enabled = button_pressed
 	_update_sound_button_text()
 
+func _on_leaderboard_button_pressed():
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	instructions_popup.hide()
+	info_popup.show_popup()
+
 func _update_sound_button_text():
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
 		sound_toggle_button.text = "Sound On"
 	else:
 		sound_toggle_button.text = "Sound Off"
+		
+func _sort_firebase_leaderboard_data():
+	var sorted_data = GlobalState.firebase_data.duplicate()
+	sorted_data.sort_custom(func(a, b):
+		var score_a = a.score
+		var score_b = b.score
+		if score_a != score_b:
+			return score_a > score_b # Higher score first
+		else:
+			# If scores are tied, the one with the smaller family wins.
+			var dist_a = a.family.size()
+			var dist_b = b.family.size()
+			return dist_a < dist_b
+	)
+	var top_10 = sorted_data.slice(0, 10)
+	# Reset it in case it gets refreshed by the player
+	GlobalState.leaders = []
+	for entry in top_10:
+		var family_size = entry.family.size()
+		var names = []
+		for member in entry.family:
+			names.append(member.get("name", "N/A"))
+		names.sort()
+		var names_str = ", ".join(names)
+		
+		GlobalState.leaders.append(
+			[family_size, names_str, entry.progress_percent, entry.score]
+		)
+	print("Leaders:")
+	print(GlobalState.leaders)
