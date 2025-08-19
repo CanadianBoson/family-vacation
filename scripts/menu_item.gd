@@ -36,9 +36,9 @@ func setup(item_text: String, background_color: Color, image_path: String, bulle
 	
 	# Define thresholds for when to shrink the font.
 	if text_length > 8:
-		new_font_size = 11
+		new_font_size = 8
 	elif text_length > 6:
-		new_font_size = 13
+		new_font_size = 10
 		
 	# Apply the calculated font size as an override.
 	label.add_theme_font_size_override("font_size", new_font_size)

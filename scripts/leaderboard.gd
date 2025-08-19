@@ -29,7 +29,7 @@ func _update_content():
 	_add_header_label("Completion", COLUMN_WIDTHS[2])
 	_add_header_label("Score", COLUMN_WIDTHS[3])
 
-	# Add a row for each city from the loaded data.
+	# Add a row for each leader from the loaded data.
 	for l in GlobalState.leaders:
 		_add_cell_label(str(l[0]))
 		_add_cell_label(str(l[1]))
@@ -38,9 +38,7 @@ func _update_content():
 		for i in range(4):
 			var separator = HSeparator.new()
 			info_grid.add_child(separator)
-		
 
-# This function now creates a clickable Button for the header.
 func _add_header_label(text: String, min_width: int):
 	var header_label = Label.new()
 	header_label.text = text

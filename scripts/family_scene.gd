@@ -1,5 +1,4 @@
 # family_scene.gd
-# This script now loads its state from the GlobalState autoload.
 extends Control
 
 const ConfirmedItemScene = preload("res://scenes/family_item.tscn")
@@ -39,7 +38,7 @@ func _ready():
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
 	difficulty_slider.value_changed.connect(_on_difficulty_slider_value_changed)
 	warning_timer.timeout.connect(warning_label.hide)
-	name_input.max_length = 10
+	name_input.max_length = 9
 	
 	if not GlobalState.confirmed_family.is_empty():
 		for member_data in GlobalState.confirmed_family:
@@ -122,6 +121,7 @@ func _on_start_game_button_pressed():
 	GlobalState.current_trip_quests = []
 	GlobalState.initial_difficulty = int(difficulty_slider.value)	
 	GlobalState.confirmed_family = _confirmed_family_data
+	GlobalState.mode = "family"
 	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
 
 func _on_back_button_pressed():

@@ -8,10 +8,8 @@ extends PanelContainer
 signal delete_requested
 
 func _ready():
-	# Connect to the input signal to detect mouse clicks.
 	gui_input.connect(_on_gui_input)
 
-# This function allows the main scene to set the display text.
 func set_info(text: String):
 	$InfoLabel.text = text
 

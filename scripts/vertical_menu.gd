@@ -4,6 +4,7 @@ extends Control
 
 const MenuItemScene = preload("res://scenes/menu_item.tscn")
 
+@onready var columns_container: HBoxContainer = $ColumnsContainer
 @onready var left_column: VBoxContainer = $ColumnsContainer/LeftColumn
 @onready var right_column: VBoxContainer = $ColumnsContainer/RightColumn
 @onready var quest_manager: Node = get_tree().get_root().get_node("GameScene/QuestManager")
@@ -24,6 +25,7 @@ func _ready():
 	all_family_data = Utils.load_family_data() # Load the family data
 	all_quest_data = _load_all_dropdown_options()
 	_build_menu()
+	columns_container.add_theme_constant_override("separation", 15)
 
 func _load_all_dropdown_options() -> Dictionary:
 	var file_path = "res://data/dropdown_data.json"

@@ -12,7 +12,9 @@ const INSTRUCTIONS = """
 
 Click the [bfont]New Family[/bfont] button to make a family that will travel around Europe, all with competing demands. Work your hardest to satisfy everyone, but be aware due to randomness that it might be impossible to make everyone happy!
 
-Click the [bfont]Casual Mode[/bfont] button to play with a randomized family. You have the option to play entirely new trips with the [bfont]Brand New[/bfont] button, play trips others have successfully completed with [bfont]Completion Mode[/bfont] , or try where others have failed with [bfont]Frustration Mode.
+Click the [bfont]Casual Mode[/bfont] button to play with a randomized family. You have the option to play entirely new trips with the [bfont]Brand New[/bfont] button, play trips others have successfully completed with [bfont]Completion Mode[/bfont] , or try where others have failed with [bfont]Frustration Mode[/bfont].
+
+Click the [bfont]Leaderboard[/bfont] button to see other families that have made it to the top. The leaderboard is live so come back once you've had a good run to see if you're on it (must reach at least 65% of the max possible score)! It loads from the cloud so refresh it if it appears blank.
 """
 
 func _ready():

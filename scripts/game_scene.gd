@@ -117,6 +117,9 @@ func _ready():
 	_update_game_state()
 	hover_label.hide()
 	detailed_info_box.hide()
+	
+	# Hard-coding as it comes from the scene
+	vertical_menu.position = Vector2(953, 154)
 
 func _update_game_state():
 	var num_items = vertical_menu.menu_item_instances.size()

@@ -171,7 +171,9 @@
 			"incompatible": [
 				"MinEndpointDistance",
 				"MinLat",
-				"MinLon"
+				"MinLon",
+				"StartEndMinLat",
+				"StartEndMinLon"
 			],
 			"text": "The endpoints are at most 1000km apart"
 		},
@@ -258,7 +260,9 @@
 			"difficulty": 3,
 			"family": "Spender",
 			"incompatible": [
-				"MaxEndpointDistance"
+				"MaxEndpointDistance",
+				"StartEndMaxLat",
+				"StartEndMaxLon"
 			],
 			"text": "The start and end points are more than 3000km apart"
 		},
@@ -578,7 +582,8 @@
 			"family": "Numerator",
 			"incompatible": [
 				"StartEndMinLat",
-				"MinLat"
+				"MinLat",
+				"MinEndpointDistance"
 			],
 			"text": "The endpoints should not exceed 10 degrees latitude in spread"
 		},
@@ -587,7 +592,8 @@
 			"family": "Numerator",
 			"incompatible": [
 				"StartEndMinLon",
-				"MinLon"
+				"MinLon",
+				"MinEndpointDistance"
 			],
 			"text": "The endpoints should not exceed 15 degrees longitude in spread"
 		},
@@ -596,7 +602,8 @@
 			"family": "Numerator",
 			"incompatible": [
 				"StartEndMaxLat",
-				"MaxLat"
+				"MaxLat",
+				"MaxEndpointDistance"
 			],
 			"text": "The endpoints should exceed 15 degrees latitude in spread"
 		},
@@ -605,7 +612,8 @@
 			"family": "Numerator",
 			"incompatible": [
 				"StartEndMaxLon",
-				"MaxLon"
+				"MaxLon",
+				"MaxEndpointDistance"
 			],
 			"text": "The endpoints should exceed 20 degrees longitude in spread"
 		},

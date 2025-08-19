@@ -323,10 +323,10 @@ script = ExtResource("7_6e45b")
 
 [node name="VerticalMenu" parent="." instance=ExtResource("8_e35lh")]
 custom_minimum_size = Vector2(0, 0)
-offset_left = 955.0
-offset_top = 155.0
-offset_right = 1149.0
-offset_bottom = 213.0
+offset_left = 956.0
+offset_top = 154.0
+offset_right = 1143.0
+offset_bottom = 212.0
 size_flags_horizontal = 1
 
 [node name="QuestManager" type="Node" parent="."]
@@ -512,6 +512,7 @@ bbcode_enabled = true
 custom_effects = [ExtResource("11_ldkr4")]
 
 [node name="InfoPopup" type="PanelContainer" parent="PopupLayer"]
+visible = false
 z_index = 20
 offset_left = 70.0
 offset_top = 222.0
