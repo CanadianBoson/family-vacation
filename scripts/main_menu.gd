@@ -127,10 +127,10 @@ func _sort_firebase_leaderboard_data():
 			var dist_b = b.family.size()
 			return dist_a < dist_b
 	)
-	var top_10 = sorted_data.slice(0, 10)
+	var top_20 = sorted_data.slice(0, 20)
 	# Reset it in case it gets refreshed by the player
 	GlobalState.leaders = []
-	for entry in top_10:
+	for entry in top_20:
 		var family_size = entry.family.size()
 		var names = []
 		for member in entry.family:

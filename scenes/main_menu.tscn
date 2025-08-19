@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cay2lpyyokjpg" path="res://background_images/main_menu_image.png" id="1_7vrkn"]
 [ext_resource type="Theme" uid="uid://b8gb88bprbuf2" path="res://main_theme.tres" id="2_bqqt6"]
 [ext_resource type="AudioStream" uid="uid://dno0iubhgq47l" path="res://sounds/button_pop.wav" id="4_wu84c"]
-[ext_resource type="Script" uid="uid://d3lrs6hnsh2vp" path="res://scenes/instructions_popup_menu.gd" id="5_8ln24"]
+[ext_resource type="Script" uid="uid://d3lrs6hnsh2vp" path="res://scripts/instructions_popup_menu.gd" id="5_8ln24"]
 [ext_resource type="RichTextEffect" uid="uid://crbsguq3dqcg4" path="res://fonts/rich_text.tres" id="6_rtw2f"]
 [ext_resource type="Script" uid="uid://o1l13n7shd04" path="res://scripts/leaderboard.gd" id="7_oa1go"]
 
@@ -79,7 +79,7 @@ tracks/0/path = NodePath("MainMenu/InfoPopup:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
+"times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
