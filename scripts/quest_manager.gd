@@ -98,7 +98,7 @@ func _ready():
 		"MaxCountries": {"func": _check_country_count, "expected": true, "args": [5, "max"]},
 		"MaxEndpointDistance": {"func": _check_endpoint_distance, "expected": true, "args": [1000.0, "max"]},
 		"MaxJourneyDistance": {"func": _check_journey_distance, "expected": true, "args": [5000.0, "max"]},
-		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [300.0, "max"]},
+		"MaxLegCost": {"func": _check_leg_cost, "expected": true, "args": [500.0, "max"]},
 		"MaxLegDistance": {"func": _check_leg_distance, "expected": true, "args": [500.0, "max"]},
 		"MaxOverallCost": {"func": _check_overall_cost, "expected": true, "args": [2000.0, "max"]},	
 		# spender

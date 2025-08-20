@@ -153,7 +153,8 @@
 			"difficulty": 3,
 			"family": "Killjoy",
 			"incompatible": [
-				"MinCities"
+				"MinCities",
+				"MinCountries"
 			],
 			"text": "Visit at most 5 cities"
 		},
@@ -203,7 +204,7 @@
 				"MostlyBoat",
 				"AllTransport"
 			],
-			"text": "Every leg of the trip must cost under 300€ per person"
+			"text": "Every leg of the trip must cost under 500€ per person"
 		},
 		"MaxLegDistance": {
 			"difficulty": 4,
@@ -252,7 +253,8 @@
 			"difficulty": 5,
 			"family": "Spender",
 			"incompatible": [
-				"MaxCountries"
+				"MaxCountries",
+				"MaxCities"
 			],
 			"text": "Visit at least 10 countries"
 		},
