@@ -7,7 +7,7 @@ extends PanelContainer
 @onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("MainMenu/AnimationPlayer")
 @onready var button_sound = get_tree().get_root().get_node("MainMenu/MainMenu/ButtonSound")
 
-const COLUMN_WIDTHS = [150, 250, 130, 130]
+const COLUMN_WIDTHS = [150, 250, 130, 80]
 
 func _ready():
 	hide()

@@ -220,9 +220,9 @@ z_index = 2
 layout_mode = 3
 anchors_preset = 0
 offset_left = 4.0
-offset_top = 165.0
+offset_top = 162.0
 offset_right = 209.0
-offset_bottom = 537.0
+offset_bottom = 534.0
 theme = ExtResource("6_tcjrq")
 
 [node name="LedgerHeaderVBox" type="VBoxContainer" parent="LedgerPanel"]
@@ -350,25 +350,25 @@ text = "Current Difficulty: 3"
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Quest Score: 0"
+text = "Quest Score: 0 / 0"
 
 [node name="FamilyScoreLabel" type="Label" parent="ScoreTracker"]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Family Score: 0"
+text = "Family Score: 0 / 0"
 
 [node name="ScoreValueLabel" type="Label" parent="ScoreTracker"]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Total Score: 0"
+text = "Total Score: 0 / 0"
 
 [node name="MaxValueLabel" type="Label" parent="ScoreTracker"]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Max Score: 0"
+text = "Max Score: "
 
 [node name="DetailedInfoBox" type="PanelContainer" parent="."]
 z_index = 3

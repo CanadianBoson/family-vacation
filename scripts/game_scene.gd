@@ -127,9 +127,10 @@ func _update_game_state():
 	quest_manager.check_all_conditions(pin_manager.dropped_pin_data, pin_manager.valid_pin_locations, num_items)
 	
 	var scores = vertical_menu.calculate_scores()
-	quest_score_label.text = "Quest Score: " + str(scores["quest_score"])
-	family_score_label.text = "Family Score: " + str(scores["family_score"])
-	score_value_label.text = "Total Score: " + str(scores["total_score"])
+	var max_possible_score = vertical_menu.get_max_possible_score()
+	quest_score_label.text = "Quest Score: " + str(scores["quest_score"]) + " / " + str(max_possible_score - 5 * num_items)
+	family_score_label.text = "Family Score: " + str(scores["family_score"]) + " / " + str(5 * num_items)
+	score_value_label.text = "Total Score: " + str(scores["total_score"])+ " / " + str(max_possible_score)
 	current_difficulty_label.text = "Current Difficulty: " + str(GlobalState.initial_difficulty)
 	
 	var current_path = pin_manager.dropped_pin_data
@@ -137,7 +138,7 @@ func _update_game_state():
 		max_score = scores.total_score
 		best_path_data = current_path.duplicate(true)
 		best_path_distance = ledger_manager.calculate_total_distance(best_path_data)
-		max_value_label.text = "Max Score: " + str(max_score)
+		max_value_label.text = "Max Score: " + str(max_score) + " / " + str(vertical_menu.get_max_possible_score())
 	elif scores.total_score == max_score and scores.total_score > 0:
 		var current_distance = ledger_manager.calculate_total_distance(current_path)
 		if current_distance < best_path_distance:
