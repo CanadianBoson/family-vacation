@@ -68,6 +68,9 @@ var BOAT_COLOR = Color.BLUE
 var TRAIN_COLOR = Color.DARK_ORCHID
 var PLANE_COLOR = Color.FIREBRICK
 
+# Boat State
+var boat_lines = false
+
 # Drag-and-Drop State
 var is_dragging = false
 var dragged_pin_index = -1
@@ -241,13 +244,25 @@ func _unhandled_input(event: InputEvent):
 
 func _draw():
 	# Draw circles for valid pin locations
-	for location_data in pin_manager.valid_pin_locations:
+	var all_locations = pin_manager.valid_pin_locations
+	for location_data in all_locations:
 		if is_dragging and pin_manager.dropped_pin_data[dragged_pin_index].position == location_data.position:
 			continue
 		var circle_color = Color.BLACK
 		if location_data.placed:
 			circle_color = Color.DARK_GRAY
 		draw_circle(location_data.position, CLICK_RADIUS, circle_color)
+
+	if boat_lines:
+		for i in range(all_locations.size()):
+			for j in range(i + 1, all_locations.size()):
+				var loc1 = all_locations[i]
+				var loc2 = all_locations[j]
+				
+				var travel_mode = pin_manager.get_travel_mode(loc1.index, loc2.index)
+				
+				if travel_mode == 1: # 1 is Boat
+					_draw_dashed_line(loc1.position, loc2.position, BOAT_COLOR, 0.5)
 
 	# Draw lines connecting dropped pins
 	if pin_manager.dropped_pin_data.size() >= 2:
@@ -345,6 +360,12 @@ func _on_grid_toggle_button_toggled(button_pressed: bool):
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
 	grid_overlay.set_visibility(button_pressed)
+	
+func _on_boat_toggle_button_toggled(button_pressed: bool):
+	if GlobalState.is_sound_enabled:
+		button_sound.play()
+	boat_lines = not boat_lines
+	queue_redraw()
 
 func _on_reverse_button_pressed():
 	if GlobalState.is_sound_enabled:
@@ -472,3 +493,21 @@ func _on_sound_toggle_toggled(button_pressed: bool):
 	GlobalState.is_sound_enabled = button_pressed
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
+
+# --- Helper function to draw a styled line ---
+func _draw_dashed_line(start_pos: Vector2, end_pos: Vector2, color: Color, width: float):
+	var vector = end_pos - start_pos
+	var length = vector.length()
+	if length == 0: return
+	var direction = vector.normalized()
+
+	# Define the pattern: 10px dash, 5px gap.
+	var dash_length = 10.0
+	var gap_length = 5.0
+
+	var current_pos = 0.0
+	while current_pos < length:
+		# Draw the dash part of the pattern.
+		var dash_end = min(current_pos + dash_length, length)
+		draw_line(start_pos + direction * current_pos, start_pos + direction * dash_end, color, width)
+		current_pos = dash_end + gap_length

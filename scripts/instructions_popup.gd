@@ -69,7 +69,13 @@ In 'Completion' or 'Frustration' modes, a random trip will be generated.
 [bfont]Reverse[/bfont] switches the direction of the trip.
 [bfont]Load Max[/bfont] reloads the route that had the highest score so far.
 [bfont]Stats[/bfont] gives tabular data for cities and dropped pins.
+[/ul]
+
+Toggles:
+[ul]
 [bfont]Grid[/bfont] toggles a grid for aesthetic purposes.
+[bfont]Sound[/bfont] toggles the sound game-wide.
+[bfont]Boats[/bfont] shows possible lines that boats can take.
 [/ul]
 
 Scoring:
