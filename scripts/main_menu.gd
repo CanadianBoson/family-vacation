@@ -40,40 +40,41 @@ func _on_new_button_pressed():
 	GlobalState.mode = "family"
 	if GlobalState.is_sound_enabled:
 		button_sound.play()
-	# 1. Load the raw family data.
-	var all_family_data = Utils.load_family_data()
-	if all_family_data.is_empty():
-		print("Error: Could not load family data to start game.")
-		return
+	if GlobalState.confirmed_family.is_empty():
+		# 1. Load the raw family data.
+		var all_family_data = Utils.load_family_data()
+		if all_family_data.is_empty():
+			print("Error: Could not load family data to start game.")
+			return
 
-	# 2. Generate a random list of confirmed family members.
-	var confirmed_family = []
-	var family_keys = all_family_data.keys()
-	family_keys.shuffle() # Randomize the order of families.
-	
-	# Decide to generate between 2 and 4 family members.
-	var num_members_to_generate = randi_range(2, 4)
-	
-	# Take a unique slice from the shuffled keys.
-	for i in range(min(num_members_to_generate, family_keys.size())):
-		var family_key = family_keys[i]
-		var data = all_family_data[family_key]
+		# 2. Generate a random list of confirmed family members.
+		var confirmed_family = []
+		var family_keys = all_family_data.keys()
+		family_keys.shuffle() # Randomize the order of families.
 		
-		# Randomly choose a gender.
-		var gender = "male" if randi() % 2 == 0 else "female"
-		var family_name = data.get("default_name_" + gender, "N/A")
+		# Decide to generate between 2 and 4 family members.
+		var num_members_to_generate = randi_range(2, 4)
 		
-		# Build the data dictionary for this member.
-		confirmed_family.append({
-			"name": family_name,
-			"family_key": family_key,
-			"gender": gender
-		})
+		# Take a unique slice from the shuffled keys.
+		for i in range(min(num_members_to_generate, family_keys.size())):
+			var family_key = family_keys[i]
+			var data = all_family_data[family_key]
+			
+			# Randomly choose a gender.
+			var gender = "male" if randi() % 2 == 0 else "female"
+			var family_name = data.get("default_name_" + gender, "N/A")
+			
+			# Build the data dictionary for this member.
+			confirmed_family.append({
+				"name": family_name,
+				"family_key": family_key,
+				"gender": gender
+			})
 
-	# 3. Save the generated list to the GlobalState.
-	GlobalState.confirmed_family = confirmed_family
-	print("Generated random family: ", confirmed_family)
-	GlobalState.initial_difficulty = 3
+		# 3. Save the generated list to the GlobalState.
+		GlobalState.confirmed_family = confirmed_family
+		print("Generated random family: ", confirmed_family)
+		GlobalState.initial_difficulty = 3
 	
 	# 4. Change to the game scene.
 	get_tree().change_scene_to_file("res://scenes/game_scene.tscn")
@@ -139,7 +140,7 @@ func _sort_firebase_leaderboard_data():
 		var names_str = ", ".join(names)
 		
 		GlobalState.leaders.append(
-			[family_size, names_str, entry.progress_percent, entry.score]
+			[family_size, entry.difficulty, names_str, entry.progress_percent, entry.score]
 		)
 	print("Leaders:")
 	print(GlobalState.leaders)

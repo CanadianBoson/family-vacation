@@ -7,7 +7,7 @@ extends PanelContainer
 @onready var animation_player: AnimationPlayer = get_tree().get_root().get_node("MainMenu/AnimationPlayer")
 @onready var button_sound = get_tree().get_root().get_node("MainMenu/MainMenu/ButtonSound")
 
-const COLUMN_WIDTHS = [150, 250, 130, 80]
+const COLUMN_WIDTHS = [50, 50, 250, 100, 60]
 
 func _ready():
 	hide()
@@ -25,17 +25,19 @@ func _update_content():
 
 	# Add the table headers.
 	_add_header_label("Family Size", COLUMN_WIDTHS[0])
-	_add_header_label("Family Members", COLUMN_WIDTHS[1])
-	_add_header_label("Completion", COLUMN_WIDTHS[2])
-	_add_header_label("Score", COLUMN_WIDTHS[3])
+	_add_header_label("Difficulty", COLUMN_WIDTHS[1])
+	_add_header_label("Family Members", COLUMN_WIDTHS[2])
+	_add_header_label("Completion", COLUMN_WIDTHS[3])
+	_add_header_label("Score", COLUMN_WIDTHS[4])
 
 	# Add a row for each leader from the loaded data.
 	for l in GlobalState.leaders:
 		_add_cell_label(str(l[0]))
 		_add_cell_label(str(l[1]))
-		_add_cell_label(str(int(l[2] * 100)) + "%")
-		_add_cell_label(str(l[3]))
-		for i in range(4):
+		_add_cell_label(str(l[2]))
+		_add_cell_label(str(int(l[3] * 100)) + "%")
+		_add_cell_label(str(l[4]))
+		for i in range(5):
 			var separator = HSeparator.new()
 			info_grid.add_child(separator)
 
