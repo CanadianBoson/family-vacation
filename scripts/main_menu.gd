@@ -60,15 +60,15 @@ func _on_new_button_pressed():
 			var family_key = family_keys[i]
 			var data = all_family_data[family_key]
 			
-			# Randomly choose a gender.
-			var gender = "male" if randi() % 2 == 0 else "female"
-			var family_name = data.get("default_name_" + gender, "N/A")
+			# Randomly choose a style.
+			var style = "one" if randi() % 2 == 0 else "two"
+			var family_name = data.get("default_name_" + style, "N/A")
 			
 			# Build the data dictionary for this member.
 			confirmed_family.append({
 				"name": family_name,
 				"family_key": family_key,
-				"gender": gender
+				"style": style
 			})
 
 		# 3. Save the generated list to the GlobalState.

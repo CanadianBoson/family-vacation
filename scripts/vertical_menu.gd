@@ -182,9 +182,9 @@ func _create_menu_item_ui(index: int, member_data: Dictionary, quests: Array, av
 
 	var specific_image_path = ""
 	var family_key = member_data.get("family_key")
-	var gender = member_data.get("gender")
+	var style = member_data.get("style")
 	if all_family_data.has(family_key):
-		specific_image_path = all_family_data[family_key].get("image_path_" + gender, "")
+		specific_image_path = all_family_data[family_key].get("image_path_" + style, "")
 		
 	menu_item.setup(member_data.name, unique_color, specific_image_path, quests, quest_manager)
 

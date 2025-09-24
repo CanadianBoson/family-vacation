@@ -119,7 +119,7 @@ custom_minimum_size = Vector2(150, 250)
 layout_mode = 2
 expand_mode = 3
 
-[node name="GenderToggle" type="CheckButton" parent="VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer"]
+[node name="StyleToggle" type="CheckButton" parent="VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 0

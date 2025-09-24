@@ -5,7 +5,7 @@ const ConfirmedItemScene = preload("res://scenes/family_item.tscn")
 
 @onready var family_list_vbox: VBoxContainer = $VBoxContainer/HBoxContainer/LeftPanel/FamilyListVBox
 @onready var family_image: TextureRect = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/FamilyImage
-@onready var gender_toggle_button: CheckButton = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/GenderToggle
+@onready var style_toggle_button: CheckButton = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/StyleToggle
 @onready var name_input: LineEdit = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/NameInput
 @onready var description_label: Label = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/DescriptionLabel
 @onready var confirm_button: Button = $VBoxContainer/HBoxContainer/MiddlePanel/VBoxContainer/ConfirmButton
@@ -24,7 +24,7 @@ const ConfirmedItemScene = preload("res://scenes/family_item.tscn")
 
 var _family_data = {}
 var _selected_family_key = ""
-var _selected_gender = "male"
+var _selected_style = "one"
 var _confirmed_family_data = []
 
 func _ready():
@@ -32,7 +32,7 @@ func _ready():
 	_populate_family_list()
 	
 	_on_difficulty_slider_value_changed(GlobalState.initial_difficulty)
-	gender_toggle_button.toggled.connect(_on_gender_toggle_toggled)
+	style_toggle_button.toggled.connect(_on_style_toggle_toggled)
 	confirm_button.pressed.connect(_on_confirm_button_pressed)
 	back_button.pressed.connect(_on_back_button_pressed)
 	start_game_button.pressed.connect(_on_start_game_button_pressed)
@@ -61,20 +61,20 @@ func _on_family_selected(family_key: String):
 	_selected_family_key = family_key
 	_update_middle_panel()
 
-func _on_gender_toggle_toggled(button_pressed: bool):
-	_selected_gender = "female" if button_pressed else "male"
+func _on_style_toggle_toggled(button_pressed: bool):
+	_selected_style = "one" if button_pressed else "two"
 	_update_middle_panel()
 
 func _update_middle_panel():
 	if _selected_family_key.is_empty(): return
 	var data = _family_data[_selected_family_key]
 	description_label.text = data.get("description", "No description available.")
-	if _selected_gender == "male":
-		name_input.text = data.get("default_name_male", "N/A")
-		family_image.texture = load(data.get("image_path_male", ""))
+	if _selected_style == "one":
+		name_input.text = data.get("default_name_one", "N/A")
+		family_image.texture = load(data.get("image_path_one", ""))
 	else:
-		name_input.text = data.get("default_name_female", "N/A")
-		family_image.texture = load(data.get("image_path_female", ""))
+		name_input.text = data.get("default_name_two", "N/A")
+		family_image.texture = load(data.get("image_path_two", ""))
 
 func _on_confirm_button_pressed():
 	if confirmed_list_vbox.get_child_count() >= 6:
@@ -89,7 +89,7 @@ func _on_confirm_button_pressed():
 			return
 		
 	var new_member_data = {
-		"name": final_name, "family_key": _selected_family_key, "gender": _selected_gender
+		"name": final_name, "family_key": _selected_family_key, "style": _selected_style
 	}
 	_add_confirmed_member(new_member_data)
 	_validate_slider_value()
